@@ -1,0 +1,44 @@
+---
+title: "Driected Random"
+author: "Abdullah Alsharif"
+date: "3 January 2017"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+mutationanalysistiming <- directedRandomR::collect_mutationanalysistime()
+mutanttiming <- directedRandomR::collect_mutanttiming()
+effect_size_thresholding <- directedRandomR::analyse_vargha_delaney_effect_size_thresholding(mutationanalysistiming)
+wilcox_ranking <- directedRandomR::analyse_wilcox_rank_sum_test(mutationanalysistiming)
+```
+
+## Analyse Wilcox Rank
+
+Some Text Description (TODO: Table it write)
+
+```{r wilcox_ranking, echo=FALSE}
+wilcox_ranking2 <- dplyr::select(wilcox_ranking, p.value, dbms, vs)
+wilcox_ranking2 <- dplyr::arrange(wilcox_ranking2, vs)
+knitr::kable(wilcox_ranking2)
+```
+
+## Effect Size for AVM and Directed Random
+
+Directed Random technique is greater in regard of time in test generation. As the following table shows that size is larger meaning that the effect size of the first technique in much superior when compared to AVM. Thresh-holding meant it investigate the effect size with different levels, to establish sensitivity. Meaning that it is precipitable to humans.
+
+Some Text Description (TODO: Table it write)
+
+```{r effect_size_thresholding, echo=FALSE}
+knitr::kable(effect_size_thresholding)
+```
+
+
+## HeatMap Plot of mutant analysis per technique for each Operator
+
+Some Text Description for the heat map
+
+```{r mutanttiming, echo=FALSE}
+plot(directedRandomR::plot_heatmap_mutanttiming_allinone(mutanttiming))
+```
+

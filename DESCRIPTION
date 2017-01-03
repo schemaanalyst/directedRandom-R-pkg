@@ -1,0 +1,20 @@
+Package: directedRandomR
+Title: Directed Random
+Version: 0.0.0.9000
+Authors@R: person("Abdullah", "Alsharif", email = "afaalsharif1@sheffield.ac.uk", role = c("aut", "cre"))
+Description: Data analysis Directed Random Algorithm by Phil McMinn et al
+License: What license is it under?
+Encoding: UTF-8
+LazyData: true
+Depends:
+    R (>= 3.2.5),
+    dplyr,
+    reshape2,
+    ggplot2,
+    broom
+Imports:
+    dplyr,
+    reshape2,
+    ggplot2,
+    broom
+RoxygenNote: 5.0.1.9000

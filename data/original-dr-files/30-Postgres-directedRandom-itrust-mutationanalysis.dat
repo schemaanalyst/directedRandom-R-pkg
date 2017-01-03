@@ -1,0 +1,17 @@
+dbms,casestudy,criterion,datagenerator,randomseed,testsuitefile,coverage,evaluations,tests,mutationpipeline,scorenumerator,scoredenominator,technique,transactions,testgenerationtime,mutantgenerationtime,originalresultstime,mutationanalysistime,timetaken
+Postgres,parsedcasestudy.iTrust,ClauseAICC+AUCC+ANCC,directedRandom,1,NA,100.0,106597,1458,AllOperatorsNoFKANormalisedWithClassifiers,1358,1437,mutantTiming,true,46835,1202641,54356,105152436,106456283
+Postgres,parsedcasestudy.iTrust,ClauseAICC+AUCC+ANCC,directedRandom,2,NA,100.0,114649,1458,AllOperatorsNoFKANormalisedWithClassifiers,1357,1437,mutantTiming,true,46634,1199199,52869,82595317,83894033
+Postgres,parsedcasestudy.iTrust,ClauseAICC+AUCC+ANCC,directedRandom,3,NA,100.0,99869,1458,AllOperatorsNoFKANormalisedWithClassifiers,1361,1437,mutantTiming,true,46540,1200683,53537,106885235,108186010
+Postgres,parsedcasestudy.iTrust,ClauseAICC+AUCC+ANCC,directedRandom,4,NA,100.0,102981,1458,AllOperatorsNoFKANormalisedWithClassifiers,1357,1437,mutantTiming,true,48128,1204010,54523,82458761,83765441
+Postgres,parsedcasestudy.iTrust,ClauseAICC+AUCC+ANCC,directedRandom,5,NA,100.0,108437,1458,AllOperatorsNoFKANormalisedWithClassifiers,1359,1437,mutantTiming,true,47041,1195733,54098,107235146,108532030
+Postgres,parsedcasestudy.iTrust,ClauseAICC+AUCC+ANCC,directedRandom,6,NA,100.0,102610,1458,AllOperatorsNoFKANormalisedWithClassifiers,1356,1437,mutantTiming,true,48252,1186354,54648,82408650,83697919
+Postgres,parsedcasestudy.iTrust,ClauseAICC+AUCC+ANCC,directedRandom,7,NA,100.0,106483,1458,AllOperatorsNoFKANormalisedWithClassifiers,1361,1437,mutantTiming,true,48503,1171669,54155,106996154,108270496
+Postgres,parsedcasestudy.iTrust,ClauseAICC+AUCC+ANCC,directedRandom,8,NA,100.0,98602,1458,AllOperatorsNoFKANormalisedWithClassifiers,1357,1437,mutantTiming,true,46337,1211548,52772,82432089,83742761
+Postgres,parsedcasestudy.iTrust,ClauseAICC+AUCC+ANCC,directedRandom,9,NA,100.0,100057,1458,AllOperatorsNoFKANormalisedWithClassifiers,1360,1437,mutantTiming,true,49929,1189749,52837,106265432,107557961
+Postgres,parsedcasestudy.iTrust,ClauseAICC+AUCC+ANCC,directedRandom,10,NA,100.0,92889,1458,AllOperatorsNoFKANormalisedWithClassifiers,1360,1437,mutantTiming,true,44764,1211978,52664,82241020,83550440
+Postgres,parsedcasestudy.iTrust,ClauseAICC+AUCC+ANCC,directedRandom,11,NA,100.0,96453,1458,AllOperatorsNoFKANormalisedWithClassifiers,1360,1437,mutantTiming,true,47594,1200372,52465,106035441,107335886
+Postgres,parsedcasestudy.iTrust,ClauseAICC+AUCC+ANCC,directedRandom,12,NA,100.0,94982,1458,AllOperatorsNoFKANormalisedWithClassifiers,1359,1437,mutantTiming,true,45313,1213791,51585,82325172,83635879
+Postgres,parsedcasestudy.iTrust,ClauseAICC+AUCC+ANCC,directedRandom,13,NA,100.0,100881,1458,AllOperatorsNoFKANormalisedWithClassifiers,1359,1437,mutantTiming,true,46345,1189307,52954,106401332,107689953
+Postgres,parsedcasestudy.iTrust,ClauseAICC+AUCC+ANCC,directedRandom,14,NA,100.0,97024,1458,AllOperatorsNoFKANormalisedWithClassifiers,1357,1437,mutantTiming,true,45043,1196211,51359,82238533,83531160
+Postgres,parsedcasestudy.iTrust,ClauseAICC+AUCC+ANCC,directedRandom,15,NA,100.0,104523,1458,AllOperatorsNoFKANormalisedWithClassifiers,1360,1437,mutantTiming,true,48923,1186464,52045,106209790,107497236
+Postgres,parsedcasestudy.iTrust,ClauseAICC+AUCC+ANCC,directedRandom,16,NA,100.0,100035,1458,AllOperatorsNoFKANormalisedWithClassifiers,1359,1437,mutantTiming,true,45212,1186388,50471,82284940,83567026
