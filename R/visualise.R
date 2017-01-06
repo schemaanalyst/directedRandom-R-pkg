@@ -103,3 +103,28 @@ plot_heatmap_mutanttiming_allinone <- function(d) {
 
   return(heatmapGraph)
 }
+
+#' FUNCTION: plot_heatmap_mutanttiming_allinone_dbms
+#'
+
+#' Perform a heating plot for all cases with dbms
+#' @export
+plot_heatmap_mutanttiming_allinone_dbms <- function(d) {
+  library(ggplot2)
+  library(dplyr)
+  library(reshape2)
+  allFrames <- d
+
+  newdata <- allFrames %>% group_by(schema, generator, operator, dbms) %>% filter(generator != "random" ,type == "NORMAL") %>% summarise(killed_mutants = (length(killed[killed == "true"]) / (length(killed[killed == "false"]) + (length(killed[killed == "true"])))) * 100 )
+  data <- melt(newdata, id=c("schema", "generator", "operator", "dbms"))
+  heatmapGraph <- data  %>% ggplot(aes(dbms, generator)) + facet_grid(schema ~ operator) + geom_tile(aes(fill = value), colour = "white") + scale_fill_gradient(low = "white", high = "steelblue")+geom_text(aes(label=format(round(value, 0), nsmall = 0)))  + theme(axis.text.x = element_text(angle = 45, hjust = 1)) + theme(strip.text.y = element_text(angle = 360))
+
+  caseStudyFileName <- paste("allcasestudies-DBMSs", "-HeatMapDiagram" , ".png", sep="")
+  fileSaving <- sprintf("plots/%s",caseStudyFileName)
+  # Plot
+  png(filename = fileSaving, width = 1920, height = 1080, units = "px", res = 72)
+  plot(heatmapGraph)
+  dev.off()
+
+  return(heatmapGraph)
+}
