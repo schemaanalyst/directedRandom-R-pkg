@@ -153,3 +153,19 @@ heatmapGraph
 
 ```
 
+## HeatMap Plot of mutant analysis per technique for each Operator for all schemas
+
+Some Text Description for the heat map
+
+```{r mutanttiming2, echo=FALSE, fig.cap='Heat Map of mutant scores in regard of Mutant Operators and DBMSs - in precentage'}
+#a <- directedRandomR::plot_heatmap_mutanttiming_allinone(mutanttiming)
+library(reshape2)
+newdata <- mutanttiming %>% group_by(schema, generator, operator, dbms) %>% filter(generator != "random" ,type == "NORMAL") %>% summarise(killed_mutants = (length(killed[killed == "true"]) / (length(killed[killed == "false"]) + (length(killed[killed == "true"])))) * 100 )
+
+data <- melt(newdata, id=c("schema", "generator", "operator", "dbms"))
+
+heatmapGraph <- data %>% group_by(dbms, generator, operator) %>% summarise(value=mean(value)) %>% ggplot(aes(dbms, generator)) + facet_grid(operator ~ .) + geom_tile(aes(fill = value), colour = "white") + scale_fill_gradient(low = "white", high = "steelblue")+geom_text(aes(label=format(round(value, 2), nsmall = 2)))  + theme(axis.text.x = element_text(angle = 45, hjust = 1)) + theme(strip.text.y = element_text(angle = 360))
+
+heatmapGraph
+
+```
