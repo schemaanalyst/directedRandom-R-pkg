@@ -44,6 +44,14 @@ a <- mutationanalysistiming %>% group_by(casestudy, datagenerator, dbms) %>% fil
 a
 ```
 
+In Figure 11 I show the spread of values for test generation timing for each schema, DBMS and technique, for all runs.
+
+```{r TestBoxPlotSchemas, echo = FALSE, fig.cap='Box plot for mutation scores for DBMS, techniques and schemas - in precentage'}
+a <- mutationanalysistiming %>% group_by(casestudy, datagenerator, dbms) %>% filter(datagenerator != "random") %>% ggplot(aes(datagenerator, testgenerationtime / 1000)) + geom_boxplot() + facet_grid(dbms ~ casestudy) + theme(strip.text.x = element_text(angle = 90), axis.text.x = element_text(angle = 45, hjust = 1)) + labs(y = "Test Generation Time For all runs per Schema (In Sceconds)")
+
+a
+```
+
 ## Mutation Scores
 
 In Figure 4 I shows the average mutation score for each technique for each DBMS, for all runs and schemas. Just By looking at the graph it shows that Directed Random is batter when compared to AVM in killing more mutants.
