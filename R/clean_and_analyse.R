@@ -9,6 +9,7 @@ preform_averaging_of_samples <- function(d) {
   dbmss <- as.vector(dplyr::distinct(d, dbms))[[1]]
   dgens <- as.vector(dplyr::distinct(d, datagenerator))[[1]]
   mean_results <- NULL
+  #d <- d %>% dplyr::mutate(testgenerationtime= (testgenerationtime / 100))
   for (seed in 1:30) {
     data <- d %>% dplyr::filter(randomseed == seed)
     for (db in dbmss) {
@@ -17,6 +18,35 @@ preform_averaging_of_samples <- function(d) {
         results$mutationscore = ((results$scorenumerator/results$scoredenominator) * 100)
 
         results <- results %>% dplyr::group_by(datagenerator, randomseed, dbms)  %>% dplyr::summarise(coverage = mean(coverage),testgenerationtime = mean(testgenerationtime), mutationscore = mean(mutationscore), evaluations = mean(evaluations))
+        mean_results <- rbind(mean_results, results)
+
+        #print(results)
+      }
+    }
+  }
+
+  #print(mean_results)
+  return(mean_results)
+}
+
+#' FUNCTION: preform_sum_of_samples
+#'
+
+#' average out all schemas for each data generators and DBMS for each run
+#' @importFrom magrittr %>%
+#' @export
+preform_sum_of_samples <- function(d) {
+  dbmss <- as.vector(dplyr::distinct(d, dbms))[[1]]
+  dgens <- as.vector(dplyr::distinct(d, datagenerator))[[1]]
+  mean_results <- NULL
+  for (seed in 1:30) {
+    data <- d %>% dplyr::filter(randomseed == seed)
+    for (db in dbmss) {
+      for (gen in dgens) {
+        results <- data %>% dplyr::filter(dbms == db) %>% dplyr::filter(datagenerator == gen)
+        results$mutationscore = ((results$scorenumerator/results$scoredenominator) * 100)
+
+        results <- results %>% dplyr::group_by(datagenerator, randomseed, dbms)  %>% dplyr::summarise(coverage = sum(coverage),testgenerationtime = sum(testgenerationtime), mutationscore = sum(mutationscore), evaluations = sum(evaluations))
         mean_results <- rbind(mean_results, results)
 
         #print(results)

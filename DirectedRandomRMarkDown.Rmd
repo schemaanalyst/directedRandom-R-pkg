@@ -7,6 +7,7 @@ output:
     fig_caption: yes
 ---
 
+
 ```{r setup, include=FALSE}
 library(ggplot2)
 library(dplyr)
@@ -39,12 +40,13 @@ a
 In Figure 3 I show the spread of values of test generation times in regard of DBMS and technique using a box plot, for all runs and schemas.
 
 ```{r TestGenTimeBoxPlotDBMS, echo = FALSE, fig.cap='Test generation timing - in seconds'}
-a <- mutationanalysistiming %>% group_by(casestudy, datagenerator, dbms) %>% filter(datagenerator != "random") %>% ggplot(aes(datagenerator, (testgenerationtime / 1000))) + geom_boxplot() + facet_grid(. ~ dbms) + theme(axis.text.x = element_text(angle = 45, hjust = 1)) + labs(y = "Test Generation Time (In Seconds)For all Runs and Schemas", x = "Technique")
+summtion <- directedRandomR::preform_sum_of_samples(mutationanalysistiming)
+a <- summtion %>% group_by(datagenerator, dbms) %>% filter(datagenerator != "random") %>% ggplot(aes(datagenerator, (testgenerationtime / 1000))) + geom_boxplot() + facet_grid(. ~ dbms) + theme(axis.text.x = element_text(angle = 45, hjust = 1)) + labs(y = "Test Generation Time (In Seconds)For all Runs and Schemas", x = "Technique")
 
 a
 ```
 
-In Figure 11 I show the spread of values for test generation timing for each schema, DBMS and technique, for all runs.
+In Figure 4 I show the spread of values for test generation timing for each schema, DBMS and technique, for all runs.
 
 ```{r TestBoxPlotSchemas, echo = FALSE, fig.cap='Box plot for mutation scores for DBMS, techniques and schemas - in precentage'}
 a <- mutationanalysistiming %>% group_by(casestudy, datagenerator, dbms) %>% filter(datagenerator != "random") %>% ggplot(aes(datagenerator, testgenerationtime / 1000)) + geom_boxplot() + facet_grid(dbms ~ casestudy) + theme(strip.text.x = element_text(angle = 90), axis.text.x = element_text(angle = 45, hjust = 1)) + labs(y = "Test Generation Time For all runs per Schema (In Sceconds)")
@@ -54,7 +56,7 @@ a
 
 ## Mutation Scores
 
-In Figure 4 I shows the average mutation score for each technique for each DBMS, for all runs and schemas. Just By looking at the graph it shows that Directed Random is batter when compared to AVM in killing more mutants.
+In Figure 5 I shows the average mutation score for each technique for each DBMS, for all runs and schemas. Just By looking at the graph it shows that Directed Random is batter when compared to AVM in killing more mutants.
 
 ```{r mutationScores, echo=FALSE, fig.cap='Avrages of Mutation Score - in precentage'}
 
@@ -63,7 +65,7 @@ a <- mutationanalysistiming %>% group_by(datagenerator, dbms) %>% summarise(scor
 a
 ```
 
-In Figure 5 I review average mutation score for each techinque for each schema split by DBMSs, for all runs. We can see that Directed Random have a better or similar scores to AVM however not even one schema has less score comparing to AVM (NOTE we are still waiting for iTrust data). 
+In Figure 6 I review average mutation score for each techinque for each schema split by DBMSs, for all runs. We can see that Directed Random have a better or similar scores to AVM however not even one schema has less score comparing to AVM (NOTE we are still waiting for iTrust data). 
 
 ```{r mutationScoreSchemas, echo = FALSE, fig.cap='Avrages of Mutation Score for each schema - in precentage'}
 a <- mutationanalysistiming %>% group_by(datagenerator, dbms, casestudy) %>% filter(datagenerator != "random") %>% summarise(scorenumerator = mean(scorenumerator), scoredenominator = mean(scoredenominator)) %>% ggplot(aes(casestudy, ((scorenumerator/scoredenominator) * 100))) + geom_bar(stat = "identity", aes(fill = datagenerator), position = "dodge") + facet_grid(dbms ~ .)  + theme(axis.text.x = element_text(angle = 45, hjust = 1)) + labs(y = "Average Mutation Score (%) For all Runs", x = "Case Study") + theme(legend.position="top") + scale_fill_discrete(name="Technique", breaks=c("directedRandom", "avsDefaults"), labels=c("DR", "AVM"))
@@ -71,15 +73,19 @@ a <- mutationanalysistiming %>% group_by(datagenerator, dbms, casestudy) %>% fil
 a
 ```
 
-In Figure 6 I show the spread of values of mutation score in regard of DBMS and technique using a box plot, for all runs and schemas.
+In Figure 7 I show the spread of values of mutation score in regard of DBMS and technique using a box plot, for all runs and schemas.
 
 ```{r mutationScoreBoxPlotDBMS, echo = FALSE, fig.cap='Box plot for mutation scores for DBMSs and techniques - in precentage'}
-a <- mutationanalysistiming %>% group_by(casestudy, datagenerator, dbms) %>% filter(datagenerator != "random") %>% ggplot(aes(datagenerator, ((scorenumerator/scoredenominator) * 100))) + geom_boxplot() + facet_grid(. ~ dbms) + theme(axis.text.x = element_text(angle = 45, hjust = 1)) + labs(y = "Mutation Score (%) Faor All Runs and Schemas")
+averages <- directedRandomR::preform_averaging_of_samples(mutationanalysistiming)
+
+a <- averages %>% group_by(datagenerator, dbms) %>% filter(datagenerator != "random") %>% ggplot(aes(datagenerator, mutationscore)) + geom_boxplot() + facet_grid(. ~ dbms) + theme(axis.text.x = element_text(angle = 45, hjust = 1)) + labs(y = "Mutation Score (%) Faor All Runs and Schemas")
+
+#a <- mutationanalysistiming %>% group_by(casestudy, datagenerator, dbms) %>% filter(datagenerator != "random") %>% ggplot(aes(datagenerator, ((scorenumerator/scoredenominator) * 100))) + geom_boxplot() + facet_grid(. ~ dbms) + theme(axis.text.x = element_text(angle = 45, hjust = 1)) + labs(y = "Mutation Score (%) Faor All Runs and Schemas")
 
 a
 ```
 
-In Figure 7 I show the spread of values for mutation scores for each schema, DBMS and technique, for all runs.
+In Figure 8 I show the spread of values for mutation scores for each schema, DBMS and technique, for all runs.
 
 ```{r mutationScoreBoxPlotSchemas, echo = FALSE, fig.cap='Box plot for mutation scores for DBMS, techniques and schemas - in precentage'}
 a <- mutationanalysistiming %>% group_by(casestudy, datagenerator, dbms) %>% filter(datagenerator != "random") %>% ggplot(aes(datagenerator, ((scorenumerator/scoredenominator) * 100))) + geom_boxplot() + facet_grid(dbms ~ casestudy) + theme(strip.text.x = element_text(angle = 90), axis.text.x = element_text(angle = 45, hjust = 1)) + labs(y = "Mutation Score (%) All Runs")
@@ -89,7 +95,7 @@ a
 
 ## Mutation Scores and Mutation Operators
 
-In Figure 8 I shows the average mutation score for each technique for each DBMS and the mutatan operators, for all runs, schemas and not including Equvilant, Redundant Quasi mutants . Just By looking at the graph it shows that Directed Random is batter when compared to AVM in killing more mutants for two operators the rest shows same percentages.
+In Figure 9 I shows the average mutation score for each technique for each DBMS and the mutatan operators, for all runs, schemas and not including Equvilant, Redundant Quasi mutants . Just By looking at the graph it shows that Directed Random is batter when compared to AVM in killing more mutants for two operators the rest shows same percentages.
 
 ```{r mutationScoresOperator, echo=FALSE, fig.cap='Averages of mutant scores in regard of Mutant Operators and DBMSs - in precentage'}
 
@@ -98,7 +104,7 @@ a <- mutanttiming %>% group_by(generator, dbms, schema, operator) %>% filter(gen
 a
 ```
 
-In Figure 9 I shows a box plot mutation score for each technique for each DBMS and the mutatan operators, this will help us see the spread of values. Just By looking at the graph it shows that Directed Random is batter when compared to AVM in killing more mutants for two operators the rest shows same percentages.
+In Figure 10 I shows a box plot mutation score for each technique for each DBMS and the mutatan operators, this will help us see the spread of values. Just By looking at the graph it shows that Directed Random is batter when compared to AVM in killing more mutants for two operators the rest shows same percentages.
 
 ```{r mutationScoresBoxPlotOperator, echo=FALSE, fig.cap='Box Plot of mutant scores in regard of Mutant Operators and DBMSs - in precentage'}
 
