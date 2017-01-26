@@ -44,9 +44,10 @@ preform_sum_of_samples <- function(d) {
     for (db in dbmss) {
       for (gen in dgens) {
         results <- data %>% dplyr::filter(dbms == db) %>% dplyr::filter(datagenerator == gen)
-        results$mutationscore = ((results$scorenumerator/results$scoredenominator) * 100)
+        #results$mutationscore = ((results$scorenumerator/results$scoredenominator) * 100)
+        #results <- results %>% dplyr::group_by(datagenerator, randomseed, dbms)  %>% dplyr::summarise(coverage = sum(coverage),testgenerationtime = sum(testgenerationtime), mutationscore = sum(mutationscore), evaluations = sum(evaluations))
 
-        results <- results %>% dplyr::group_by(datagenerator, randomseed, dbms)  %>% dplyr::summarise(coverage = sum(coverage),testgenerationtime = sum(testgenerationtime), mutationscore = sum(mutationscore), evaluations = sum(evaluations))
+        results <- results %>% dplyr::group_by(datagenerator, randomseed, dbms)  %>% dplyr::summarise(coverage = sum(coverage),testgenerationtime = sum(testgenerationtime), scorenumerator = sum(scorenumerator), scoredenominator = sum(scoredenominator), evaluations = sum(evaluations))
         mean_results <- rbind(mean_results, results)
 
         #print(results)

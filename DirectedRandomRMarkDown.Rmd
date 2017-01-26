@@ -18,9 +18,62 @@ effect_size_thresholding <- directedRandomR::analyse_vargha_delaney_effect_size_
 wilcox_ranking <- directedRandomR::analyse_wilcox_rank_sum_test(mutationanalysistiming)
 ```
 
-## Test generation Timing Graph
+## Directed Random Mechanism
 
-Figure 1 shows the average test generation timing for each technique for each DBMS, for all runs and schemas. Just By looking at the graph it shows that Directed Random is much faster compared to AVM in generating tests nearly 1 second faster.
+Directed Random works as same as random technique however it is guided by predicates that are checked then fixing a solution. For instance, each INSERT statement must comply to a test requirement that have one or many predicates such as NOT NULL for a specific column, first directed random generate random insert statement then proceed to fixing the insert statement based on a given predicate and if it does not comply to the predicate. If a column is NULL but the predicate require a NOT NULL for this specific column, directed random will fix the insert statement to have NOT NULL. However, Directed random usually fixes one predicate at a time, so if there is many violated predicates in one insert statement it will only fix one then iterate to the next evaluation to fix the other remaining predicates. This means that each evaluation does not fix all predicates or search for optimal solution, however  each evaluation checks if the statement is complying with the test requirement.
+
+Predicate Checker
+
+Predicate Fixer
+
+### Directed Random Algorithm
+
+```{r, eval=FALSE}
+p <= predicate
+n <= insert statement
+CHECK method:
+  IF n Comply with p THEN
+    return true
+  ELSE
+    return false
+END METHOD
+
+FIX method:
+    GET non-Complied predicate
+    GET c <=column for non-complied predicate
+    REPEAT:
+      generate random value for column
+    UNTIL vaule comply with predicate
+END METHOD
+
+generate random values for table insert n
+result <= CHECK n aganist p
+
+while result == Ture
+  FIX n aganist p
+  result <= CHECK n aganist p
+END WHILE
+```
+
+In our experiments we ran two test data generators AVM and Directed Random (DR), from our experiment we are looking at the performance of the two techniques in regard of test generation timing and mutation score. This will help us to determine which of the techniques are better in those both factors. Looking at test generation timing will determine which of the two are faster in generating test cases. On the other hand we will look at mutation analysis of the two techniques to determine the strength and the capability of the test suite generated to detect faults.
+
+### Experiment Set Up
+
+Our experiment set-up was to run each technique 30 times for each case study using one combined coverage criteria "ClauseAICC+AUCC+ANCC". Each run has different random seed to see the difference of results.
+
+### Case Studies
+
+The following table has the case studies that are been used in our experiment:
+
+```{r case_studies, echo=FALSE}
+case_studies <- read.csv("CaseStudies.csv")
+knitr::kable(case_studies)
+```
+
+# Results
+## Test generation Timing
+
+When comparing test generation time we look at how efficient the technique are in regard of the time it takes to generate test suites (ALL AVM and DR has 100% coverage). Figure 1 shows the average test generation timing for each technique for each DBMS, for all runs and schemas. Just By looking at the graph it shows that Directed Random is much faster/efficient compared to AVM in generating test cases nearly 1 second faster for different SQL database engine. ??? Why Postgres takes longer for each AVM and DR compared to other engines ? different semantics or larger engine ?
 
 ```{r timing, echo=FALSE, fig.cap='Avrages of Test generation timing - in seconds'}
 a <- mutationanalysistiming %>% group_by(datagenerator, dbms) %>% summarise(testgenerationtime = mean(testgenerationtime)) %>% filter(datagenerator != "random") %>% ggplot(aes(datagenerator, (testgenerationtime / 1000))) + geom_bar(stat = "identity") + facet_grid(. ~ dbms)  + labs(y = "Average Test Generation Time (In Seconds) For All runs and schems", x = "Technique") 
@@ -29,15 +82,15 @@ a
 
 ```
 
-In Figure 2 we review average test generation timing for each techinque for each schema split by DBMSs and for all runs. We can see that Directed Random still winning for each schema (NOTE we are still waiting for iTrust data). 
+To look in more details we split test generation timing analysis for each case study. In Figure 2 we review average test generation timing for each techinque for each schema split by DBMSs and for all runs. We can see that Directed Random still winning for each schema (NOTE we are still waiting for iTrust data). By looking at all of the results in Figure 2 we can see that DR is better than all AVM even by fractions of seconds.
 
 ```{r timingForSchemas, echo=FALSE, fig.cap='Avrages of Test generation timing for each schema- in seconds'}
-a <- mutationanalysistiming %>% group_by(datagenerator, dbms, casestudy) %>% filter(datagenerator != "random") %>% summarise(testgenerationtime = mean(testgenerationtime)) %>% ggplot(aes(casestudy, (testgenerationtime / 1000))) + geom_bar(stat = "identity", aes(fill = datagenerator), position = "dodge") + facet_grid(dbms ~ .)  + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(y = "Average Test Generation Time (In Seconds) All Runs", x = "Case Study") + theme(legend.position="top") + scale_fill_discrete(name="Technique", breaks=c("directedRandom", "avsDefaults"), labels=c("DR", "AVM"))
+a <- mutationanalysistiming %>% group_by(datagenerator, dbms, casestudy) %>% filter(datagenerator != "random", casestudy != "iTrust") %>% summarise(testgenerationtime = mean(testgenerationtime)) %>% ggplot(aes(casestudy, (testgenerationtime / 1000))) + geom_bar(stat = "identity", aes(fill = datagenerator), position = "dodge") + facet_grid(dbms ~ .)  + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(y = "Average Test Generation Time (In Seconds) All Runs", x = "Case Study") + theme(legend.position="top") + scale_fill_discrete(name="Technique", breaks=c("directedRandom", "avsDefaults"), labels=c("DR", "AVM"))
 
 a
 ```
 
-In Figure 3 I show the spread of values of test generation times in regard of DBMS and technique using a box plot, for all runs and schemas.
+In Figure 3 I show the spread of values of test generation times in regard of DBMS and technique using a box plot, for all runs and schemas. In this plot we sum all result for each run and spread the values in the box plot, this will help to evaluate the spread of runs for all schema and for each technique split by database engine. As shown in the plot that DR is takes less time compared to AVM in generating test.
 
 ```{r TestGenTimeBoxPlotDBMS, echo = FALSE, fig.cap='Test generation timing - in seconds'}
 summtion <- directedRandomR::preform_sum_of_samples(mutationanalysistiming)
@@ -46,13 +99,16 @@ a <- summtion %>% group_by(datagenerator, dbms) %>% filter(datagenerator != "ran
 a
 ```
 
-In Figure 4 I show the spread of values for test generation timing for each schema, DBMS and technique, for all runs.
+In Figure 4 I show the spread of values for test generation timing for each schema, DBMS and technique, for all runs. This will help us seeing the spread of values for each case study and how long it takes to generate test cases.
 
 ```{r TestBoxPlotSchemas, echo = FALSE, fig.cap='Box plot for mutation scores for DBMS, techniques and schemas - in precentage'}
-a <- mutationanalysistiming %>% group_by(casestudy, datagenerator, dbms) %>% filter(datagenerator != "random") %>% ggplot(aes(datagenerator, testgenerationtime / 1000)) + geom_boxplot() + facet_grid(dbms ~ casestudy) + theme(strip.text.x = element_text(angle = 90), axis.text.x = element_text(angle = 45, hjust = 1)) + labs(y = "Test Generation Time For all runs per Schema (In Sceconds)")
+a <- mutationanalysistiming %>% group_by(casestudy, datagenerator, dbms) %>% filter(datagenerator != "random", casestudy != "iTrust") %>% ggplot(aes(datagenerator, testgenerationtime / 1000)) + geom_boxplot() + facet_grid(dbms ~ casestudy) + theme(strip.text.x = element_text(angle = 90), axis.text.x = element_text(angle = 45, hjust = 1)) + labs(y = "Test Generation Time For all runs per Schema (In Sceconds)")
 
 a
 ```
+
+
+
 
 ## Mutation Scores
 
@@ -76,9 +132,10 @@ a
 In Figure 7 I show the spread of values of mutation score in regard of DBMS and technique using a box plot, for all runs and schemas.
 
 ```{r mutationScoreBoxPlotDBMS, echo = FALSE, fig.cap='Box plot for mutation scores for DBMSs and techniques - in precentage'}
-averages <- directedRandomR::preform_averaging_of_samples(mutationanalysistiming)
-
-a <- averages %>% group_by(datagenerator, dbms) %>% filter(datagenerator != "random") %>% ggplot(aes(datagenerator, mutationscore)) + geom_boxplot() + facet_grid(. ~ dbms) + theme(axis.text.x = element_text(angle = 45, hjust = 1)) + labs(y = "Mutation Score (%) Faor All Runs and Schemas")
+#averages <- directedRandomR::preform_averaging_of_samples(mutationanalysistiming)
+summtion <- directedRandomR::preform_sum_of_samples(mutationanalysistiming)
+summtion$mutationscore = ((summtion$scorenumerator/summtion$scoredenominator) * 100)
+a <- summtion %>% group_by(datagenerator, dbms) %>% filter(datagenerator != "random") %>% ggplot(aes(datagenerator, mutationscore)) + geom_boxplot() + facet_grid(. ~ dbms) + theme(axis.text.x = element_text(angle = 45, hjust = 1)) + labs(y = "Mutation Score (%) Faor All Runs and Schemas")
 
 #a <- mutationanalysistiming %>% group_by(casestudy, datagenerator, dbms) %>% filter(datagenerator != "random") %>% ggplot(aes(datagenerator, ((scorenumerator/scoredenominator) * 100))) + geom_boxplot() + facet_grid(. ~ dbms) + theme(axis.text.x = element_text(angle = 45, hjust = 1)) + labs(y = "Mutation Score (%) Faor All Runs and Schemas")
 
@@ -113,6 +170,24 @@ a <- mutanttiming %>% group_by(generator, dbms, schema, operator) %>% filter(gen
 a
 ```
 
+### HeatMap Plot of mutant analysis per technique for each Operator for all schemas
+
+To analysis mutation score in more details we look at the mutant operators that are been killed by both techniques and for each DB engine. In Figure 11 We show that the average percentages of all schemas for each operator that is been killed for each technique. The figure shows that DR has always a higher percentage kill for all operators when compared to AVM in all DB engines which conclude that DR is much superior to AVM technique.
+
+```{r mutanttiming2, echo=FALSE, fig.cap='Heat Map of mutant scores in regard of Mutant Operators and DBMSs - in precentage'}
+#a <- directedRandomR::plot_heatmap_mutanttiming_allinone(mutanttiming)
+library(reshape2)
+newdata <- mutanttiming %>% group_by(schema, generator, operator, dbms) %>% filter(generator != "random" ,type == "NORMAL") %>% summarise(killed_mutants = (length(killed[killed == "true"]) / (length(killed[killed == "false"]) + (length(killed[killed == "true"])))) * 100 )
+
+data <- melt(newdata, id=c("schema", "generator", "operator", "dbms"))
+
+heatmapGraph <- data %>% group_by(dbms, generator, operator) %>% summarise(value=mean(value)) %>% ggplot(aes(dbms, generator)) + facet_grid(operator ~ .) + geom_tile(aes(fill = value), colour = "white") + scale_fill_gradient(low = "white", high = "steelblue")+geom_text(aes(label=format(round(value, 2), nsmall = 2)))  + theme(axis.text.x = element_text(angle = 45, hjust = 1)) + theme(strip.text.y = element_text(angle = 360))
+
+heatmapGraph
+
+```
+
+
 ## Analyse Wilcox Rank and Effect Size for AVM and Directed Random
 
 To  statistically  analyze  the  the new technique we conducted tests for significance with the nonparametric Wilcoxon rank-sum test, using the sets of 30 execution times obtained with a specific DBMS and all techniques **Hitchhicker Guide Ref**. A p-value that less than $0.05$ is considered significant. To review practical are significance tests we use the nonparametric A12 statistic of Vargha and Delaney **REF** was used to calculate effect sizes. The A12 determine the average probability that one approach beats another, or how superior one technique compared to the other.  We followed the guidelines of Vargha and Delaney in that an effect size is considered to be “large” if the value of A12 is $ < 0:29$ or $> 0.71$, “medium” if A12 is $< 0.36$ or $> 0.64$ and “small” if A12 is $< 0.44$ or $> 0.56$. However, is the values of A12 close to the 0.5 value are viewed as there no effect.
@@ -130,7 +205,7 @@ knitr::kable(wilcox_ranking2)
 
 Some Text Description (TODO: Table it write) -->
 
-```{r effect_size_thresholding, echo=FALSE}
+```{r effect_size_thresholding, eval=FALSE,echo=FALSE}
 effect_size_thresholding <- dplyr::select(effect_size_thresholding, size, rank.sum, dbms, threshold)
 knitr::kable(effect_size_thresholding)
 ```
@@ -138,7 +213,7 @@ knitr::kable(effect_size_thresholding)
 
 ## HeatMap Plot of mutant analysis per technique for each Operator
 
-Some Text Description for the heat map
+
 
 ```{r mutanttiming, echo=FALSE, fig.cap='Heat Map of mutant scores in regard of Mutant Operators and DBMSs - in precentage'}
 #a <- directedRandomR::plot_heatmap_mutanttiming_allinone(mutanttiming)
@@ -153,19 +228,3 @@ heatmapGraph
 
 ```
 
-## HeatMap Plot of mutant analysis per technique for each Operator for all schemas
-
-Some Text Description for the heat map
-
-```{r mutanttiming2, echo=FALSE, fig.cap='Heat Map of mutant scores in regard of Mutant Operators and DBMSs - in precentage'}
-#a <- directedRandomR::plot_heatmap_mutanttiming_allinone(mutanttiming)
-library(reshape2)
-newdata <- mutanttiming %>% group_by(schema, generator, operator, dbms) %>% filter(generator != "random" ,type == "NORMAL") %>% summarise(killed_mutants = (length(killed[killed == "true"]) / (length(killed[killed == "false"]) + (length(killed[killed == "true"])))) * 100 )
-
-data <- melt(newdata, id=c("schema", "generator", "operator", "dbms"))
-
-heatmapGraph <- data %>% group_by(dbms, generator, operator) %>% summarise(value=mean(value)) %>% ggplot(aes(dbms, generator)) + facet_grid(operator ~ .) + geom_tile(aes(fill = value), colour = "white") + scale_fill_gradient(low = "white", high = "steelblue")+geom_text(aes(label=format(round(value, 2), nsmall = 2)))  + theme(axis.text.x = element_text(angle = 45, hjust = 1)) + theme(strip.text.y = element_text(angle = 360))
-
-heatmapGraph
-
-```
