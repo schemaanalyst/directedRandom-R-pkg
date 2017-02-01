@@ -48,6 +48,7 @@ collect_mutanttiming <- function() {
     `30.SQLite.directedRandom.minusitrust.mutanttiming` <- read.csv("original-dr-files/30-SQLite-directedRandom-minusitrust-mutanttiming.dat")
     `30.SQLite.directedRandom.itrust.mutanttiming` <- read.csv("original-dr-files/30-SQLite-directedRandom-itrust-mutanttiming.dat")
     `30.Postgres.directedRandom.minusitrust.mutanttiming` <- read.csv("original-dr-files/30-Postgres-directedRandom-minusitrust-mutanttiming.dat")
+    `30.Postgres.directedRandom.itrust.mutanttiming` <- read.csv("original-dr-files/30-Postgres-directedRandom-itrust-mutanttiming.dat")
     `30.HyperSQL.directedRandom.itrust.mutanttiming` <- read.csv("original-dr-files/30-HyperSQL-directedRandom-itrust-mutanttiming.dat")
     `30.HyperSQL.directedRandom.minusitrust.mutanttiming` <- read.csv("original-dr-files/30-HyperSQL-directedRandom-minusitrust-mutanttiming.dat")
 
@@ -65,6 +66,7 @@ collect_mutanttiming <- function() {
     `30.Postgres.directedRandom.minusitrust.mutanttiming`[,namevector] <- "directedRandom"
     `30.HyperSQL.directedRandom.itrust.mutanttiming`[,namevector] <- "directedRandom"
     `30.HyperSQL.directedRandom.minusitrust.mutanttiming`[,namevector] <- "directedRandom"
+    `30.Postgres.directedRandom.itrust.mutanttiming`[,namevector] <- "directedRandom"
     hypersql.avmdefaults[,namevector] <- "avsDefaults"
     sqlite.avmdefaults[,namevector] <- "avsDefaults"
     postgres.avmdefaults[,namevector] <- "avsDefaults"
@@ -77,6 +79,7 @@ collect_mutanttiming <- function() {
                           `30.Postgres.directedRandom.minusitrust.mutanttiming`,
                           `30.HyperSQL.directedRandom.itrust.mutanttiming`,
                           `30.HyperSQL.directedRandom.minusitrust.mutanttiming`,
+                          `30.Postgres.directedRandom.itrust.mutanttiming`,
                           hypersql.avmdefaults,
                           sqlite.avmdefaults,
                           postgres.avmdefaults,

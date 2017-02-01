@@ -16,15 +16,15 @@ mutationanalysistiming <- directedRandomR::collect_mutationanalysistime()
 mutanttiming <- directedRandomR::collect_mutanttiming()
 effect_size_thresholding <- directedRandomR::analyse_vargha_delaney_effect_size_thresholding(mutationanalysistiming)
 wilcox_ranking <- directedRandomR::analyse_wilcox_rank_sum_test(mutationanalysistiming)
+#directedRandomR::plot_heatmap_mutanttiming(mutanttiming)
+#directedRandomR::plot_heatmap_mutanttiming_allinone(mutanttiming)
+#directedRandomR::plot_heatmap_mutanttiming_allinone_dbms(mutanttiming)
 ```
 
 ## Directed Random Mechanism
 
 Directed Random works as same as random technique however it is guided by predicates that are checked then fixing a solution. For instance, each INSERT statement must comply to a test requirement that have one or many predicates such as NOT NULL for a specific column, first directed random generate random insert statement then proceed to fixing the insert statement based on a given predicate and if it does not comply to the predicate. If a column is NULL but the predicate require a NOT NULL for this specific column, directed random will fix the insert statement to have NOT NULL. However, Directed random usually fixes one predicate at a time, so if there is many violated predicates in one insert statement it will only fix one then iterate to the next evaluation to fix the other remaining predicates. This means that each evaluation does not fix all predicates or search for optimal solution, however  each evaluation checks if the statement is complying with the test requirement.
 
-Predicate Checker
-
-Predicate Fixer
 
 ### Directed Random Algorithm
 
