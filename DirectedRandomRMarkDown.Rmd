@@ -187,6 +187,12 @@ heatmapGraph
 
 ```
 
+To look at why PKColumnA has a low kills for AVM, we investigated manually for the reason. We regenerated the test suites with same random seed, with first look we found that AVM has many empty Strings when compared by to DR test suite. Looking at the following figures 12 and 13 showing the summery. And we looked at the PKs especially that uses integers and we found that AVM always try to inset 0 as the only number and for all integer columns except if it is a unique. However, DR randomly generate numbers for integer columns rather than trying to put 0. which might have an effect to increase the strength of the test suite.  
+
+![Directed Random Bank Account case study for SQLite results](images/DRBankAccountSQLiteRun.png)
+
+![AVM Bank Account case study for SQLite results](images/AVMBankAccountSQLiteRun.png)
+
 
 ## Analyse Wilcox Rank and Effect Size for AVM and Directed Random
 
