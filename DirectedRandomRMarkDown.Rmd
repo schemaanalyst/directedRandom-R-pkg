@@ -158,7 +158,7 @@ In Figure 9 I shows the average mutation score for each technique for each DBMS 
 
 ```{r mutationScoresOperator, echo=FALSE, fig.cap='Averages of mutant scores in regard of Mutant Operators and DBMSs - in precentage'}
 
-a <- mutanttiming %>% group_by(generator, dbms, schema, operator) %>% filter(generator != "random", type == "NORMAL") %>% summarise(killed_mutants = (length(killed[killed == "true"]) / (length(killed[killed == "false"]) + (length(killed[killed == "true"])))) * 100 ) %>% ggplot(aes(operator, killed_mutants)) + geom_bar(stat = "identity", aes(fill = generator), position = "dodge") + facet_grid(dbms ~ .)  + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(y = "Average Mutation Score (%) for all Runs and Schemas", x = "Mutant Operator") + scale_fill_discrete(name="Technique", breaks=c("directedRandom", "avsDefaults"), labels=c("DR", "AVM"))
+a <- mutanttiming %>% group_by(generator, dbms, schema, operator) %>% filter(generator != "random", type == "NORMAL") %>% summarise(killed_mutants = (length(killed[killed == "true"]) / (length(killed[killed == "false"]) + (length(killed[killed == "true"])))) * 100 ) %>% ggplot(aes(operator, mean(killed_mutants))) + geom_bar(stat = "identity", aes(fill = generator), position = "dodge") + facet_grid(dbms ~ .)  + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(y = "Average Mutation Score (%) for all Runs and Schemas", x = "Mutant Operator") + scale_fill_discrete(name="Technique", breaks=c("directedRandom", "avsDefaults"), labels=c("DR", "AVM"))
 
 a
 ```
@@ -208,8 +208,12 @@ Composite primary keys usually called compound key, which consist of have two or
 
 Check Constraint Relational Expression Operator Exchange (CCRelationalExpressionOperatorE) which mean changing the relational expressions operators (<, >=, > etc.) within the check constraint. This kind of mutant is hard to kill in some instances however as for DR technique it was slightly higher than AVM, check Figure 11, this is because of DR extracts numbers within the schema and reuse them within the test cases generated. In the other hand, AVM uses default values such as 0 and 1 which in some cases does not test the boundaries of the check constraints.
 
-Unique Column Exchange is another mutant type that exchanges one unique column with another noon-unique column. In Figure 11, AVM shows it has slightly higher score than AVM, and If you check [plots/allcasestudies-DBMSs-HeatMapDiagram.png] it shows that it only happen in BrowserCookies case study. This is because one table has three composite unique keys which this type of unique key exchange one column with one that is not unique. As AVM uses default values, for performance reasons, it tries to insert a row that is similar to the T-suffiecent data, which leads to breaks the unique composite keys and it kills the mutant (failed test). However in DR the variables generated are not similar so the test will pass with no issue of breaking the unique composite keys.
+Unique Column Exchange is another mutant type that exchanges one unique column with another noon-unique column. In Figure 11, AVM shows it has slightly higher score than AVM, and If you check [plots/allcasestudies-DBMSs-HeatMapDiagram.png] it shows that it only happen in BrowserCookies case study. This is because one table has three composite unique keys which this type of unique key exchange one column with one that is not unique. As AVM uses default values, for performance reasons, it tries to insert a row that is similar to the T-suffiecent data, which leads to breaks the unique composite keys and it kills the mutant (failed test). However in DR the variables generated are not similar so the test will pass with no issue of breaking the unique composite keys, please view the followng figures 17 and 18 two see the differences of Unique Composite Keys.
 
+![Image of the mutant that DR did not kill but AVM killed](images/ExchangeColumnUnique.png)
+
+
+![AVM test case that killed the mutant because of uniques of all three column.](images/UniqueCompositeKeysTest.png)
 
 ## Analyse Wilcox Rank and Effect Size for AVM and Directed Random
 
