@@ -6,7 +6,6 @@ output:
     fig_caption: yes
 ---
 
-
 ```{r setup, include=FALSE}
 library(ggplot2)
 library(dplyr)
@@ -14,6 +13,8 @@ knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(fig.pos = 'h')
 mutationanalysistiming <- directedRandomR::collect_mutationanalysistime()
 mutanttiming <- directedRandomR::collect_mutanttiming()
+mutationanalysistiming <- mutationanalysistiming %>% filter(datagenerator != "avs")
+mutanttiming <- mutanttiming %>% filter(generator != "avs")
 effect_size_thresholding <- directedRandomR::analyse_vargha_delaney_effect_size_thresholding(mutationanalysistiming)
 wilcox_ranking <- directedRandomR::analyse_wilcox_rank_sum_test(mutationanalysistiming)
 #directedRandomR::plot_heatmap_mutanttiming(mutanttiming)
@@ -201,9 +202,14 @@ newdata <- mutanttiming %>% group_by(schema, generator, operator, dbms) %>% filt
 
 heatmapGraph <- newdata %>% group_by(dbms, generator, operator) %>% summarise(killed_mutants=mean(killed_mutants), total_mutants = mean(total_mutants)) %>% mutate(value = ((killed_mutants / total_mutants) * 100)) %>% ggplot(aes(dbms, generator)) + facet_grid(operator ~ .) + geom_tile(aes(fill = value), colour = "white") + scale_fill_gradient(low = "white", high = "steelblue")+geom_text(aes(label=format(round(value, 2), nsmall = 2)))  + theme(axis.text.x = element_text(angle = 45, hjust = 1)) + theme(strip.text.y = element_text(angle = 360))
 
-heatmapGraph
+ggsave(heatmapGraph, file = "plots/figure11.pdf", width = 12, height = 12)
+
+
+#heatmapGraph
 
 ```
+
+![Heat Map of mutant scores in regard of Mutant Operators and DBMSs - in percentage. Using mutanttiming file after selecting mutant that has type NORMAL, summing all killed mutant and total mutants (Killed + Alive) grouped by generator, schema, operator and DBMS. Then plotting by grouping the previous calculated data by DBMS, generator and operator, then got the percentage of killed mutants per DBMS, generator and DBMS.](plots/figure11.pdf)
 
 To look at why PKColumnA has a low kills for AVM, we investigated manually for the reason. We regenerated the test suites with same random seed, with first look we found that AVM has many empty Strings when compared by to DR test suite. Looking at the following figures 12 and 13, showing the summery of empty string within each test suite. I also looked at the PKs especially that uses integers and we found that AVM always try to inset 0 as the only number and for all integer columns except if it is a unique. However, DR randomly generate numbers for integer columns rather than trying to put 0. which I assumed that it might be the reason of AVM having the issue of killing added PKs. However in deeper look and comparing few test suites I found that there is an issue of what is called "composite primary key" which allows for duplication of primary keys.
 

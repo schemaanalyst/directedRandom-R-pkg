@@ -21,6 +21,9 @@ collect_mutationanalysistime <- function() {
   `HyperSQL.directedRandom.minusitrust.mutationanalysis` <- read.csv("original-dr-files/30-HyperSQL-directedRandom-minusitrust-mutationanalysis.dat")
   `HyperSQL.directedRandom.itrust.mutationanalysis` <- read.csv("original-dr-files/30-HyperSQL-directedRandom-itrust-mutationanalysis.dat")
 
+  `HyperSQL.avs.minusitrust.mutationanalysis` <- read.csv("original-avs-files/30-HyperSQL-avs-minusitrust-mutationanalysis.dat")
+
+
   `mutation.analysis` <- read.csv("transformed-files/mutation-analysis.dat")
 
   allFrames <- rbind(`Postgres.directedRandom.minusitrust.mutationanalysis`,
@@ -28,7 +31,8 @@ collect_mutationanalysistime <- function() {
                      `SQLite.directedRandom.minusitrust.mutationanalysis`,
                      `SQLite.directedRandom.itrust.mutationanalysis`,
                      `HyperSQL.directedRandom.minusitrust.mutationanalysis`,
-                     `HyperSQL.directedRandom.itrust.mutationanalysis`)
+                     `HyperSQL.directedRandom.itrust.mutationanalysis`,
+                     `HyperSQL.avs.minusitrust.mutationanalysis`)
 
   allFrames <- allFrames %>% dplyr::mutate(casestudy = as.character(gsub("parsedcasestudy.","",casestudy)))
   allFrames <- rbind(allFrames, `mutation.analysis`)
@@ -52,6 +56,8 @@ collect_mutanttiming <- function() {
     `30.HyperSQL.directedRandom.itrust.mutanttiming` <- read.csv("original-dr-files/30-HyperSQL-directedRandom-itrust-mutanttiming.dat")
     `30.HyperSQL.directedRandom.minusitrust.mutanttiming` <- read.csv("original-dr-files/30-HyperSQL-directedRandom-minusitrust-mutanttiming.dat")
 
+    `HyperSQL.avs.minusitrust.mutanttiming` <- read.csv("original-avs-files/30-HyperSQL-avs-minusitrust-mutanttiming.dat")
+
     hypersql.avmdefaults <- read.csv("transformed-files/hypersql-avmdefaults.dat")
     sqlite.avmdefaults <- read.csv("transformed-files/sqlite-avmdefaults.dat")
     postgres.avmdefaults <- read.csv("transformed-files/postgres-avmdefaults.dat")
@@ -74,6 +80,8 @@ collect_mutanttiming <- function() {
     sqlite.random[,namevector] <- "random"
     postgres.random[,namevector] <- "random"
 
+    `HyperSQL.avs.minusitrust.mutanttiming`[,namevector] <- "avs"
+
     mutanttiming <- rbind(`30.SQLite.directedRandom.minusitrust.mutanttiming`,
                           `30.SQLite.directedRandom.itrust.mutanttiming`,
                           `30.Postgres.directedRandom.minusitrust.mutanttiming`,
@@ -85,7 +93,8 @@ collect_mutanttiming <- function() {
                           postgres.avmdefaults,
                           hypersql.random,
                           postgres.random,
-                          sqlite.random
+                          sqlite.random,
+                          `HyperSQL.avs.minusitrust.mutanttiming`
     )
     #mutanttiming$schema <- gsub("IsoFlav_R2Repaired", "IsoFlav_R2", schema$casestudy)
 
