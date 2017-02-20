@@ -13,8 +13,8 @@ knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(fig.pos = 'h')
 mutationanalysistiming <- directedRandomR::collect_mutationanalysistime()
 mutanttiming <- directedRandomR::collect_mutanttiming()
-mutationanalysistiming <- mutationanalysistiming %>% filter(datagenerator != "avs")
-mutanttiming <- mutanttiming %>% filter(generator != "avs")
+#mutationanalysistiming <- mutationanalysistiming %>% filter(datagenerator != "avs")
+#mutanttiming <- mutanttiming %>% filter(generator != "avs")
 effect_size_thresholding <- directedRandomR::analyse_vargha_delaney_effect_size_thresholding(mutationanalysistiming)
 wilcox_ranking <- directedRandomR::analyse_wilcox_rank_sum_test(mutationanalysistiming)
 #directedRandomR::plot_heatmap_mutanttiming(mutanttiming)
@@ -80,17 +80,16 @@ pander(case_studies, split.cells = 30, split.table = Inf)
 When comparing test generation time we look at how efficient the technique are in regard of the time it takes to generate test suites (ALL AVM and DR has 100% coverage). Figure 1 shows the average test generation timing for each technique for each DBMS, for all runs and schemas. Just By looking at the graph it shows that Directed Random is much faster/efficient compared to AVM in generating test cases nearly 1 second faster for different SQL database engine. ??? Why Postgres takes longer for each AVM and DR compared to other engines ? different semantics or larger engine ?
 
 ```{r timing, echo=FALSE, fig.cap='Avrages of Test generation timing - in seconds. Group By data generator and DBMS, then average test generation timing and then when ploting divide by 1000 to convert to seconds'}
-a <- mutationanalysistiming %>% group_by(datagenerator, dbms) %>% summarise(testgenerationtime = mean(testgenerationtime)) %>% filter(datagenerator != "random") %>% ggplot(aes(datagenerator, (testgenerationtime / 1000))) + geom_bar(stat = "identity") + facet_grid(. ~ dbms)  + labs(y = "Average Test Generation Time (In Seconds) For All runs and schems", x = "Technique") 
-
+a <- mutationanalysistiming %>% group_by(datagenerator, dbms) %>% summarise(testgenerationtime = mean(testgenerationtime)) %>% filter(datagenerator != "random") %>% ggplot(aes(datagenerator, (testgenerationtime / 1000))) + geom_bar(stat = "identity") + facet_grid(. ~ dbms)  + labs(y = "Average Test Generation Time (In Seconds) For All runs and schems", x = "Technique") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+ggsave(a, file="plots/figure1.pdf", width = 6, height = 6)
 a
-
 ```
 
 To look in more details we split test generation timing analysis for each case study. In Figure 2, I review average test generation timing for each techinque for each schema split by DBMSs and for all runs. We can see that Directed Random still winning for each schema. By looking at all of the results in Figure 2 we can see that DR is better than all AVM even by fractions of seconds.
 
 ```{r timingForSchemas, echo=FALSE, fig.cap='Avrages of Test generation timing for each schema- in seconds. Group by data generator, DBMS and case sties, average test generation timing, then divide by 1000 to convert to second.'}
-a <- mutationanalysistiming %>% group_by(datagenerator, dbms, casestudy) %>% filter(datagenerator != "random") %>% summarise(testgenerationtime = mean(testgenerationtime)) %>% ggplot(aes(casestudy, (testgenerationtime / 1000))) + geom_bar(stat = "identity", aes(fill = datagenerator), position = "dodge") + facet_grid(dbms ~ .)  + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(y = "Average Test Generation Time (In Seconds) All Runs", x = "Case Study") + theme(legend.position="top") + scale_fill_discrete(name="Technique", breaks=c("directedRandom", "avsDefaults"), labels=c("DR", "AVM"))
-
+a <- mutationanalysistiming %>% group_by(datagenerator, dbms, casestudy) %>% filter(datagenerator != "random") %>% summarise(testgenerationtime = mean(testgenerationtime)) %>% ggplot(aes(casestudy, (testgenerationtime / 1000))) + geom_bar(stat = "identity", aes(fill = datagenerator), position = "dodge") + facet_grid(dbms ~ .)  + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(y = "Average Test Generation Time (In Seconds) All Runs", x = "Case Study") + theme(legend.position="top") + scale_fill_discrete(name="Technique", breaks=c("directedRandom", "avsDefaults", "avs"), labels=c("DR", "AVM-Default", "AVM"))
+ggsave(a, file="plots/figure2.pdf", width = 8, height = 8)
 a
 ```
 
@@ -99,7 +98,7 @@ In Figure 3, I show the spread of values of test generation times in regard of D
 ```{r TestGenTimeBoxPlotDBMS, echo = FALSE, fig.cap='Test generation timing - in seconds. First summing test generation timing for each run then group by data generator and DBMS, then divide test generation timing by 1000 to convert to second.'}
 summtion <- directedRandomR::preform_sum_of_samples(mutationanalysistiming)
 a <- summtion %>% group_by(datagenerator, dbms) %>% filter(datagenerator != "random") %>% ggplot(aes(datagenerator, (testgenerationtime / 1000))) + geom_boxplot() + facet_grid(. ~ dbms) + theme(axis.text.x = element_text(angle = 45, hjust = 1)) + labs(y = "Test Generation Time (In Seconds)For all Runs and Schemas", x = "Technique")
-
+ggsave(a, file="plots/figure3.pdf", width = 6, height = 6)
 a
 ```
 
@@ -123,6 +122,7 @@ In Figure 5, I shows the average mutation score for each technique for each DBMS
 ```{r mutationScores, echo=FALSE, fig.cap='Avrages of Mutation Score - in precentage. Grouping by data generator and DBMS, averaging score numerator and denominator for all runs and schemas, then ploting it by divding the numerator by denominator multiplying by 100'}
 
 a <- mutationanalysistiming %>% group_by(datagenerator, dbms) %>% summarise(scorenumerator = mean(scorenumerator), scoredenominator = mean(scoredenominator)) %>% filter(datagenerator != "random") %>% ggplot(aes(datagenerator, ((scorenumerator/scoredenominator) * 100))) + geom_bar(stat = "identity") + facet_grid(. ~ dbms)  + labs(y = "Average Mutation Score (%) For All Runs and Schemas", x = "Technique") 
+ggsave(a, file="plots/figure5.pdf", width = 6, height = 6) + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 a
 ```
@@ -130,7 +130,8 @@ a
 In Figure 6, I review average mutation score for each techinque for each schema split by DBMSs, for all runs. We can see that Directed Random have a better or similar scores to AVM however not even one schema has less score comparing to AVM. 
 
 ```{r mutationScoreSchemas, echo = FALSE, fig.cap='Avrages of Mutation Score for each schema - in precentage. Group by data generator, DBMS and case studies, then averaging score numerator and denominator for all runs per schema (as been grouped by it), then ploting it by divding the numerator by denominator multiplying by 100'}
-a <- mutationanalysistiming %>% group_by(datagenerator, dbms, casestudy) %>% filter(datagenerator != "random") %>% summarise(scorenumerator = mean(scorenumerator), scoredenominator = mean(scoredenominator)) %>% ggplot(aes(casestudy, ((scorenumerator/scoredenominator) * 100))) + geom_bar(stat = "identity", aes(fill = datagenerator), position = "dodge") + facet_grid(dbms ~ .)  + theme(axis.text.x = element_text(angle = 45, hjust = 1)) + labs(y = "Average Mutation Score (%) For all Runs", x = "Case Study") + theme(legend.position="top") + scale_fill_discrete(name="Technique", breaks=c("directedRandom", "avsDefaults"), labels=c("DR", "AVM"))
+a <- mutationanalysistiming %>% group_by(datagenerator, dbms, casestudy) %>% filter(datagenerator != "random") %>% summarise(scorenumerator = mean(scorenumerator), scoredenominator = mean(scoredenominator)) %>% ggplot(aes(casestudy, ((scorenumerator/scoredenominator) * 100))) + geom_bar(stat = "identity", aes(fill = datagenerator), position = "dodge") + facet_grid(dbms ~ .)  + theme(axis.text.x = element_text(angle = 45, hjust = 1)) + labs(y = "Average Mutation Score (%) For all Runs", x = "Case Study") + theme(legend.position="top") + scale_fill_discrete(name="Technique", breaks=c("directedRandom", "avsDefaults", "avs"), labels=c("DR", "AVM-Default", "AVM"))
+ggsave(a, file="plots/figure6.pdf", width = 8, height = 8)
 
 a
 ```
@@ -142,6 +143,7 @@ In Figure 7, I show the spread of values of mutation score in regard of DBMS and
 summtion <- directedRandomR::preform_sum_of_samples(mutationanalysistiming)
 summtion$mutationscore = ((summtion$scorenumerator/summtion$scoredenominator) * 100)
 a <- summtion %>% group_by(datagenerator, dbms) %>% filter(datagenerator != "random") %>% ggplot(aes(datagenerator, mutationscore)) + geom_boxplot() + facet_grid(. ~ dbms) + theme(axis.text.x = element_text(angle = 45, hjust = 1)) + labs(y = "Mutation Score (%) Faor All Runs and Schemas")
+ggsave(a, file="plots/figure7.pdf", width = 6, height = 6)
 
 #a <- mutationanalysistiming %>% group_by(casestudy, datagenerator, dbms) %>% filter(datagenerator != "random") %>% ggplot(aes(datagenerator, ((scorenumerator/scoredenominator) * 100))) + geom_boxplot() + facet_grid(. ~ dbms) + theme(axis.text.x = element_text(angle = 45, hjust = 1)) + labs(y = "Mutation Score (%) Faor All Runs and Schemas")
 
@@ -167,7 +169,8 @@ In Figure 9, I shows the average mutation score for each technique for each DBMS
 
 ```{r mutationScoresOperator, echo=FALSE, fig.cap='Averages of mutant scores in regard of Mutant Operators and DBMSs - in precentage. Using mutanttiming file, I group by generator, DBMS and operator (FIXED by removing grouping by schema). Then I only select NORMAL mutants, then calculating the percentage of killed mutant by summing all killed divided by (killed mutant plus alive mutant) multiply by 100.'}
 
-a <- mutanttiming %>% group_by(generator, dbms, operator) %>% filter(generator != "random", type == "NORMAL") %>% summarise(killed_mutants = (length(killed[killed == "true"]) / (length(killed[killed == "false"]) + (length(killed[killed == "true"])))) * 100 ) %>% ggplot(aes(operator, killed_mutants)) + geom_bar(stat = "identity", aes(fill = generator), position = "dodge") + facet_grid(dbms ~ .)  + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(y = "Average Mutation Score (%) for all Runs and Schemas", x = "Mutant Operator") + scale_fill_discrete(name="Technique", breaks=c("directedRandom", "avsDefaults"), labels=c("DR", "AVM"))
+a <- mutanttiming %>% group_by(generator, dbms, operator) %>% filter(generator != "random", type == "NORMAL") %>% summarise(killed_mutants = (length(killed[killed == "true"]) / (length(killed[killed == "false"]) + (length(killed[killed == "true"])))) * 100 ) %>% ggplot(aes(operator, killed_mutants)) + geom_bar(stat = "identity", aes(fill = generator), position = "dodge") + facet_grid(dbms ~ .)  + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(y = "Average Mutation Score (%) for all Runs and Schemas", x = "Mutant Operator") + scale_fill_discrete(name="Technique", breaks=c("directedRandom", "avsDefaults", "avs"), labels=c("DR", "AVM-Default", "AVM"))
+ggsave(a, file="plots/figure9.pdf", width = 8, height = 8)
 
 a
 ```
