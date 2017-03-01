@@ -13,8 +13,8 @@ knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(fig.pos = 'H')
 mutationanalysistiming <- directedRandomR::collect_mutationanalysistime()
 mutanttiming <- directedRandomR::collect_mutanttiming()
-#mutationanalysistiming <- mutationanalysistiming %>% filter(datagenerator != "avs")
-#mutanttiming <- mutanttiming %>% filter(generator != "avs")
+mutationanalysistiming <- mutationanalysistiming %>% filter(casestudy != "iTrust")
+mutanttiming <- mutanttiming %>% filter(schema != "iTrust")
 effect_size_thresholding <- directedRandomR::analyse_vargha_delaney_effect_size_thresholding(mutationanalysistiming)
 wilcox_ranking <- directedRandomR::analyse_wilcox_rank_sum_test(mutationanalysistiming)
 #directedRandomR::plot_heatmap_mutanttiming(mutanttiming)
@@ -122,8 +122,17 @@ a <- mutationanalysistiming %>% filter(datagenerator != "random") %>% ggplot(aes
 
 ggsave(a, file="plots/figure22.pdf", width = 12, height = 10)
 
+averages <- directedRandomR::preform_averaging_of_samples(mutationanalysistiming)
+
+a <- averages %>% filter(datagenerator != "random") %>% ggplot(aes(datagenerator, coverage)) + geom_boxplot() + facet_grid(. ~ dbms) + theme(axis.text.x = element_text(angle = 45, hjust = 1)) + labs(y = "Coverage (%)")
+
+
+ggsave(a, file="plots/figure23.pdf", width = 6, height = 6)
+
 
 ```
+
+![Box plot for Coverage, averaging all schema coverage per run](plots/figure23.pdf)
 
 
 ![Box plot for Coverage](plots/figure22.pdf)
