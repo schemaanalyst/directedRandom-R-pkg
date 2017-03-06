@@ -128,3 +128,29 @@ plot_heatmap_mutanttiming_allinone_dbms <- function(d) {
 
   return(heatmapGraph)
 }
+
+#' FUNCTION: testtimegeneration_table_bolding
+#'
+
+#' Perform a latex bolding and returning a dataframe
+#' @export
+testtimegeneration_table_bolding <- function(d) {
+  library(dplyr)
+  library(reshape2)
+  library(xtable)
+  d <- d %>% select(dbms, casestudy, datagenerator, testgenerationtime, randomseed) %>% group_by(dbms, casestudy, datagenerator) %>% summarise(testgenerationtime = round((mean(testgenerationtime) / 1000), 2))
+  d <- dcast(d, casestudy ~ dbms + datagenerator)
+  a1 <- d[1]
+  a <- d[2:5]
+  b <- d[6:9]
+  c <- d[10:13]
+  numberOfRows <- nrow(d)
+  for (i in 1:numberOfRows) {
+    a[i,] = ifelse(min(as.numeric(a[i,])) == as.numeric(a[i,]), paste("\\textbf{", a[i,], "}"), as.numeric(a[i,]))
+    b[i,] = ifelse(min(as.numeric(b[i,])) == as.numeric(b[i,]), paste("\\textbf{", b[i,], "}"), as.numeric(b[i,]))
+    c[i,] = ifelse(min(as.numeric(c[i,])) == as.numeric(c[i,]), paste("\\textbf{", c[i,], "}"), as.numeric(c[i,]))
+  }
+  d <- cbind(a1,a,b,c)
+
+  return(print(xtable(d), include.rownames=FALSE ,sanitize.text.function = function(x){x}))
+}
