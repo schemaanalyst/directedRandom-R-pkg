@@ -12,11 +12,13 @@ Depends:
     reshape2,
     ggplot2,
     tables,
+    xtable,
     broom
 Imports:
     dplyr,
     reshape2,
     ggplot2,
     tables,
+    xtable,
     broom
 RoxygenNote: 6.0.1.9000
