@@ -4,7 +4,7 @@ siginificant <- function(d) {
   library(dplyr)
   library(reshape2)
   library(xtable)
-  d1 <- d
+  d1 <- directedRandomR::transform_execution_times_for_threshold(d, 100)
   d <- d %>% select(dbms, casestudy, datagenerator, testgenerationtime, randomseed) %>% group_by(dbms, casestudy, datagenerator) %>% summarise(testgenerationtime = round((mean(testgenerationtime) / 1000), 2))
   d <- dcast(d, casestudy ~ dbms + datagenerator)
   a1 <- d[1]
