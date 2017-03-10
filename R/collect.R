@@ -87,9 +87,9 @@ collect_mutanttiming <- function() {
     `30.SQLite.directedRandom.minusitrust.mutanttiming`[,namevector] <- "directedRandom"
     `30.SQLite.directedRandom.itrust.mutanttiming`[,namevector] <- "directedRandom"
     `30.Postgres.directedRandom.minusitrust.mutanttiming`[,namevector] <- "directedRandom"
+    `30.Postgres.directedRandom.itrust.mutanttiming`[,namevector] <- "directedRandom"
     `30.HyperSQL.directedRandom.itrust.mutanttiming`[,namevector] <- "directedRandom"
     `30.HyperSQL.directedRandom.minusitrust.mutanttiming`[,namevector] <- "directedRandom"
-    `30.Postgres.directedRandom.itrust.mutanttiming`[,namevector] <- "directedRandom"
     hypersql.avmdefaults[,namevector] <- "avsDefaults"
     sqlite.avmdefaults[,namevector] <- "avsDefaults"
     postgres.avmdefaults[,namevector] <- "avsDefaults"
@@ -98,11 +98,11 @@ collect_mutanttiming <- function() {
     postgres.random[,namevector] <- "random"
 
     `HyperSQL.avs.minusitrust.mutanttiming`[,namevector] <- "avs"
-    `Postgres.avs.minusitrust.mutanttiming`[,namevector] <- "avs"
-    `SQLite.avs.minusitrust.mutanttiming`[,namevector] <- "avs"
     `HyperSQL.avs.itrust.mutanttiming`[,namevector] <- "avs"
-    `SQLite.avs.itrust.mutanttiming`[,namevector] <- "avs"
+    `Postgres.avs.minusitrust.mutanttiming`[,namevector] <- "avs"
     `Postgres.avs.itrust.mutanttiming`[,namevector] <- "avs"
+    `SQLite.avs.itrust.mutanttiming`[,namevector] <- "avs"
+    `SQLite.avs.minusitrust.mutanttiming`[,namevector] <- "avs"
 
     mutanttiming <- rbind(`30.SQLite.directedRandom.minusitrust.mutanttiming`,
                           `30.SQLite.directedRandom.itrust.mutanttiming`,
