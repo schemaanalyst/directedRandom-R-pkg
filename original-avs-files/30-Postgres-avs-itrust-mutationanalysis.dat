@@ -7,3 +7,13 @@ Postgres,parsedcasestudy.iTrust,ClauseAICC+AUCC+ANCC,avs,5,NA,100.0,176591,1458,
 Postgres,parsedcasestudy.iTrust,ClauseAICC+AUCC+ANCC,avs,6,NA,100.0,191151,1458,AllOperatorsNoFKANormalisedWithClassifiers,1358,1437,mutantTiming,true,88394,1194044,54440,82690629,84027523
 Postgres,parsedcasestudy.iTrust,ClauseAICC+AUCC+ANCC,avs,7,NA,100.0,168780,1458,AllOperatorsNoFKANormalisedWithClassifiers,1359,1437,mutantTiming,true,84645,1164550,53553,106610811,107913576
 Postgres,parsedcasestudy.iTrust,ClauseAICC+AUCC+ANCC,avs,8,NA,100.0,169339,1458,AllOperatorsNoFKANormalisedWithClassifiers,1357,1437,mutantTiming,true,82356,1168996,54509,82511194,83817071
+Postgres,parsedcasestudy.iTrust,ClauseAICC+AUCC+ANCC,avs,9,NA,100.0,157830,1458,AllOperatorsNoFKANormalisedWithClassifiers,1357,1437,mutantTiming,true,79117,1195788,54372,106252492,107581784
+Postgres,parsedcasestudy.iTrust,ClauseAICC+AUCC+ANCC,avs,10,NA,100.0,175191,1458,AllOperatorsNoFKANormalisedWithClassifiers,1356,1437,mutantTiming,true,83909,1198704,54143,82389343,83726114
+Postgres,parsedcasestudy.iTrust,ClauseAICC+AUCC+ANCC,avs,11,NA,100.0,195034,1458,AllOperatorsNoFKANormalisedWithClassifiers,1357,1437,mutantTiming,true,92524,1170630,54483,106207952,107525605
+Postgres,parsedcasestudy.iTrust,ClauseAICC+AUCC+ANCC,avs,12,NA,100.0,162510,1458,AllOperatorsNoFKANormalisedWithClassifiers,1358,1437,mutantTiming,true,83648,1195659,54948,82567290,83901561
+Postgres,parsedcasestudy.iTrust,ClauseAICC+AUCC+ANCC,avs,13,NA,100.0,164172,1458,AllOperatorsNoFKANormalisedWithClassifiers,1357,1437,mutantTiming,true,80531,1196411,51316,106607376,107935649
+Postgres,parsedcasestudy.iTrust,ClauseAICC+AUCC+ANCC,avs,14,NA,100.0,201827,1458,AllOperatorsNoFKANormalisedWithClassifiers,1358,1437,mutantTiming,true,93122,1199804,53331,82639220,83985511
+Postgres,parsedcasestudy.iTrust,ClauseAICC+AUCC+ANCC,avs,15,NA,100.0,263688,1458,AllOperatorsNoFKANormalisedWithClassifiers,1356,1437,mutantTiming,true,114501,1194488,53948,106417919,107780873
+Postgres,parsedcasestudy.iTrust,ClauseAICC+AUCC+ANCC,avs,16,NA,100.0,220112,1458,AllOperatorsNoFKANormalisedWithClassifiers,1361,1437,mutantTiming,true,94988,1190932,52838,82558742,83897518
+Postgres,parsedcasestudy.iTrust,ClauseAICC+AUCC+ANCC,avs,17,NA,100.0,174985,1458,AllOperatorsNoFKANormalisedWithClassifiers,1355,1437,mutantTiming,true,84784,1178497,50904,106200305,107514506
+Postgres,parsedcasestudy.iTrust,ClauseAICC+AUCC+ANCC,avs,18,NA,100.0,205314,1458,AllOperatorsNoFKANormalisedWithClassifiers,1358,1437,mutantTiming,true,92809,1192124,54480,82674109,84013538
