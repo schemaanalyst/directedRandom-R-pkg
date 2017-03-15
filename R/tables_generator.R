@@ -7,7 +7,7 @@ siginificant_coverage <- function(d) {
   #d1 <- directedRandomR::transform_execution_times_for_threshold(d, 1000)
   d <- d %>% arrange(casestudy)
   d1 <- d
-  d <- d %>% select(dbms, casestudy, datagenerator, coverage, randomseed) %>% group_by(dbms, casestudy, datagenerator) %>% summarise(coverage = format(round((mean(coverage)), 2), nsmall = 2))
+  d <- d %>% select(dbms, casestudy, datagenerator, coverage, randomseed) %>% group_by(dbms, casestudy, datagenerator) %>% summarise(coverage = format(round((mean(coverage)), 1), nsmall = 1))
   d <- dcast(d, casestudy ~ dbms + datagenerator)
   a1 <- d[1]
   d2 <- d[2:13]
@@ -581,7 +581,7 @@ siginificant_mutation_score <- function(d) {
   #d1 <- d %>% select(dbms, casestudy, datagenerator, scorenumerator, scoredenominator,randomseed) %>% group_by(dbms, casestudy, datagenerator) %>% mutate(mutationScore = scorenumerator/scoredenominator)#mutate(mutationScore = round((sum(scorenumerator)/sum(scoredenominator)) * 100, 2)) #summarise(scorenumerator = (sum(scorenumerator)), scoredenominator = (sum(scoredenominator)))
   #d <- d %>% select(dbms, casestudy, datagenerator, scorenumerator, scoredenominator,randomseed) %>% group_by(dbms, casestudy, datagenerator) %>% summarise(mutationScore = round((sum(scorenumerator)/sum(scoredenominator)) * 100, 2))#mutate(mutationScore = sum(scorenumerator)/sum(scoredenominator)) #summarise(scorenumerator = (sum(scorenumerator)), scoredenominator = (sum(scoredenominator)))
   d1 <- d %>% filter(type == "NORMAL") %>% select(identifier, dbms, schema, generator, killed) %>% group_by(identifier, dbms, schema, generator) %>% summarise(killed_mutants = sum(killed == "true"), total_mutants = (sum(killed == "true") + sum(killed == "false"))) %>% mutate(mutationScore = round((killed_mutants/total_mutants) * 100, 2))
-  d <- d %>% group_by(schema, generator, dbms)  %>% filter(type == "NORMAL") %>% summarise(killed_mutants = sum(killed == "true"), total_mutants = (sum(killed == "true") + sum(killed == "false"))) %>% mutate(mutationScore = format(round((killed_mutants/total_mutants) * 100, 2), nsmall = 2))
+  d <- d %>% group_by(schema, generator, dbms)  %>% filter(type == "NORMAL") %>% summarise(killed_mutants = sum(killed == "true"), total_mutants = (sum(killed == "true") + sum(killed == "false"))) %>% mutate(mutationScore = format(round((killed_mutants/total_mutants) * 100, 1), nsmall = 1))
   #d <- dcast(d, casestudy ~ dbms + datagenerator)
   d <- dcast(d, schema ~ dbms + generator)
   a1 <- d[1]
