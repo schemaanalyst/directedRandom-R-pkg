@@ -1,9 +1,41 @@
 
+generate_15_schmea_mutation_analysis <- function(d) {
+  library(kimisc)
+  library(dplyr)
+  set.seed(1)
+  #browser()
+  cases <- distinct(d, casestudy)
+  a <- sample.rows(cases %>% filter(casestudy != "iTrust", casestudy != "Products"), 13)
+  d_rest <- d %>% filter(casestudy %in% a)
+  d_itrust <- d %>% filter(casestudy == "iTrust")
+  d_products <- d %>% filter(casestudy == "Products")
+
+  d <- rbind(d_rest, d_products, d_itrust)
+
+  return(d)
+}
+
+generate_15_schmea_mutanttiming <- function(d) {
+  library(kimisc)
+  library(dplyr)
+  set.seed(1)
+  #browser()
+  cases <- distinct(d, schema)
+  a <- sample.rows(cases %>% filter(schema != "iTrust", schema != "Products"), 13)
+  d_rest <- d %>% filter(schema %in% a)
+  d_itrust <- d %>% filter(schema == "iTrust")
+  d_products <- d %>% filter(schema == "Products")
+
+  d <- rbind(d_rest, d_products, d_itrust)
+
+  return(d)
+}
 
 siginificant_coverage <- function(d) {
   library(dplyr)
   library(reshape2)
   library(xtable)
+  d <- generate_15_schmea_mutation_analysis(d)
   #d1 <- directedRandomR::transform_execution_times_for_threshold(d, 1000)
   d <- d %>% arrange(casestudy)
   d1 <- d
@@ -290,6 +322,7 @@ siginificant <- function(d) {
   library(dplyr)
   library(reshape2)
   library(xtable)
+  d <- generate_15_schmea_mutation_analysis(d)
   d <- d %>% arrange(casestudy)
   d1 <- directedRandomR::transform_execution_times_for_threshold(d, 1000)
   d2 <- d
@@ -576,6 +609,7 @@ siginificant_mutation_score <- function(d) {
   library(dplyr)
   library(reshape2)
   library(xtable)
+  d <- generate_15_schmea_mutanttiming(d)
   d <- d %>% arrange(schema, identifier, operator)
   #d1 <- directedRandomR::transform_execution_times_for_threshold(d, 1000)
   #d1 <- d %>% select(dbms, casestudy, datagenerator, scorenumerator, scoredenominator,randomseed) %>% group_by(dbms, casestudy, datagenerator) %>% mutate(mutationScore = scorenumerator/scoredenominator)#mutate(mutationScore = round((sum(scorenumerator)/sum(scoredenominator)) * 100, 2)) #summarise(scorenumerator = (sum(scorenumerator)), scoredenominator = (sum(scoredenominator)))
@@ -864,6 +898,7 @@ siginificant_mutation_score <- function(d) {
 siginificant_mutant_operators <- function(d) {
   library(dplyr)
   library(reshape2)
+  d <- generate_15_schmea_mutanttiming(d)
   d <- d %>% arrange(schema, identifier, operator)
   d1 <- d %>% filter(type == "NORMAL") %>% select(identifier, dbms, generator, killed, operator, schema) %>% group_by(identifier, dbms, generator, operator, schema) %>% summarise(killed_mutants = sum(killed == "true"), total_mutants = (sum(killed == "true") + sum(killed == "false"))) %>% mutate(mutationScore = round((killed_mutants/total_mutants) * 100, 2))
   newdata <- d %>% group_by(generator, operator, dbms) %>% filter(type == "NORMAL") %>% summarise(killed_mutants = sum(killed == "true"), total_mutants = (sum(killed == "false") + sum(killed == "true")))
@@ -1225,6 +1260,7 @@ siginificant_mutant_operators_fixed <- function(d) {
   library(dplyr)
   library(reshape2)
   library(xtable)
+  d <- generate_15_schmea_mutanttiming(d)
   #d <- d %>% arrange(schema, identifier, operator)
   d1 <- d %>% filter(type == "NORMAL")
   newdata <- d %>% group_by(generator, operator, dbms) %>% filter(type == "NORMAL") %>% summarise(killed_mutants = sum(killed == "true"), total_mutants = (sum(killed == "false") + sum(killed == "true")))

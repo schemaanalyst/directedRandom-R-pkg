@@ -17,3 +17,5 @@ Postgres,parsedcasestudy.iTrust,ClauseAICC+AUCC+ANCC,avs,15,NA,100.0,263688,1458
 Postgres,parsedcasestudy.iTrust,ClauseAICC+AUCC+ANCC,avs,16,NA,100.0,220112,1458,AllOperatorsNoFKANormalisedWithClassifiers,1361,1437,mutantTiming,true,94988,1190932,52838,82558742,83897518
 Postgres,parsedcasestudy.iTrust,ClauseAICC+AUCC+ANCC,avs,17,NA,100.0,174985,1458,AllOperatorsNoFKANormalisedWithClassifiers,1355,1437,mutantTiming,true,84784,1178497,50904,106200305,107514506
 Postgres,parsedcasestudy.iTrust,ClauseAICC+AUCC+ANCC,avs,18,NA,100.0,205314,1458,AllOperatorsNoFKANormalisedWithClassifiers,1358,1437,mutantTiming,true,92809,1192124,54480,82674109,84013538
+Postgres,parsedcasestudy.iTrust,ClauseAICC+AUCC+ANCC,avs,19,NA,100.0,164692,1458,AllOperatorsNoFKANormalisedWithClassifiers,1359,1437,mutantTiming,true,82459,1207770,42859,79483444,80816546
+Postgres,parsedcasestudy.iTrust,ClauseAICC+AUCC+ANCC,avs,20,NA,100.0,200572,1458,AllOperatorsNoFKANormalisedWithClassifiers,1357,1437,mutantTiming,true,85793,1171992,43254,100438277,101739332
