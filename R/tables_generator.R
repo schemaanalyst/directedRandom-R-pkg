@@ -1,4 +1,9 @@
+#' FUNCTION: generate_15_schmea_mutation_analysis
+#'
 
+#' gets a 15 schemas from the dataset of mutantionanalysistime file.
+#' @importFrom magrittr %>%
+#' @export
 generate_15_schmea_mutation_analysis <- function(d) {
   library(kimisc)
   library(dplyr)
@@ -15,6 +20,12 @@ generate_15_schmea_mutation_analysis <- function(d) {
   return(d)
 }
 
+#' FUNCTION: generate_15_schmea_mutanttiming
+#'
+
+#' gets a 15 schemas from the dataset of mutanttiming file.
+#' @importFrom magrittr %>%
+#' @export
 generate_15_schmea_mutanttiming <- function(d) {
   library(kimisc)
   library(dplyr)
@@ -31,6 +42,12 @@ generate_15_schmea_mutanttiming <- function(d) {
   return(d)
 }
 
+#' FUNCTION: siginificant_coverage
+#'
+
+#' generates a latex table for coverage table with effect size and U test.
+#' @importFrom magrittr %>%
+#' @export
 siginificant_coverage <- function(d) {
   library(dplyr)
   library(reshape2)
@@ -39,7 +56,7 @@ siginificant_coverage <- function(d) {
   #d1 <- directedRandomR::transform_execution_times_for_threshold(d, 1000)
   d <- d %>% arrange(casestudy)
   d1 <- d
-  d <- d %>% select(dbms, casestudy, datagenerator, coverage, randomseed) %>% group_by(dbms, casestudy, datagenerator) %>% summarise(coverage = format(round((mean(coverage)), 1), nsmall = 1))
+  d <- d %>% select(dbms, casestudy, datagenerator, coverage, randomseed) %>% group_by(dbms, casestudy, datagenerator) %>% summarise(coverage = format(round((median(coverage)), 1), nsmall = 1))
   d <- dcast(d, casestudy ~ dbms + datagenerator)
   a1 <- d[1]
   d2 <- d[2:13]
@@ -318,7 +335,13 @@ siginificant_coverage <- function(d) {
   return(print(xtable(d), include.rownames=FALSE ,sanitize.text.function = function(x){x}))
 }
 
-siginificant <- function(d) {
+#' FUNCTION: siginificant_timing
+#'
+
+#' generates a latex table for test generation timing table with effect size and U test.
+#' @importFrom magrittr %>%
+#' @export
+siginificant_timing <- function(d) {
   library(dplyr)
   library(reshape2)
   library(xtable)
@@ -326,7 +349,7 @@ siginificant <- function(d) {
   d <- d %>% arrange(casestudy)
   d1 <- directedRandomR::transform_execution_times_for_threshold(d, 1000)
   d2 <- d
-  d <- d %>% select(dbms, casestudy, datagenerator, testgenerationtime, randomseed) %>% group_by(dbms, casestudy, datagenerator) %>% summarise(testgenerationtime = format(round((mean(testgenerationtime) / 1000), 2), nsmall = 2))
+  d <- d %>% select(dbms, casestudy, datagenerator, testgenerationtime, randomseed) %>% group_by(dbms, casestudy, datagenerator) %>% summarise(testgenerationtime = format(round((median(testgenerationtime) / 1000), 2), nsmall = 2))
   d <- dcast(d, casestudy ~ dbms + datagenerator)
   a1 <- d[1]
   d2 <- d[2:13]
@@ -605,17 +628,32 @@ siginificant <- function(d) {
   return(print(xtable(d), include.rownames=FALSE ,sanitize.text.function = function(x){x}))
 }
 
+#' FUNCTION: siginificant_mutation_score
+#'
+
+#' generates a latex table for mutation score per schema table with effect size and U test.
+#' @importFrom magrittr %>%
+#' @export
 siginificant_mutation_score <- function(d) {
   library(dplyr)
   library(reshape2)
   library(xtable)
-  d <- generate_15_schmea_mutanttiming(d)
-  d <- d %>% arrange(schema, identifier, operator)
+  #d <- generate_15_schmea_mutanttiming(d)
+  #d <- d %>% arrange(schema, identifier, operator)
+  #browser()
   #d1 <- directedRandomR::transform_execution_times_for_threshold(d, 1000)
   #d1 <- d %>% select(dbms, casestudy, datagenerator, scorenumerator, scoredenominator,randomseed) %>% group_by(dbms, casestudy, datagenerator) %>% mutate(mutationScore = scorenumerator/scoredenominator)#mutate(mutationScore = round((sum(scorenumerator)/sum(scoredenominator)) * 100, 2)) #summarise(scorenumerator = (sum(scorenumerator)), scoredenominator = (sum(scoredenominator)))
   #d <- d %>% select(dbms, casestudy, datagenerator, scorenumerator, scoredenominator,randomseed) %>% group_by(dbms, casestudy, datagenerator) %>% summarise(mutationScore = round((sum(scorenumerator)/sum(scoredenominator)) * 100, 2))#mutate(mutationScore = sum(scorenumerator)/sum(scoredenominator)) #summarise(scorenumerator = (sum(scorenumerator)), scoredenominator = (sum(scoredenominator)))
-  d1 <- d %>% filter(type == "NORMAL") %>% select(identifier, dbms, schema, generator, killed) %>% group_by(identifier, dbms, schema, generator) %>% summarise(killed_mutants = sum(killed == "true"), total_mutants = (sum(killed == "true") + sum(killed == "false"))) %>% mutate(mutationScore = round((killed_mutants/total_mutants) * 100, 2))
-  d <- d %>% group_by(schema, generator, dbms)  %>% filter(type == "NORMAL") %>% summarise(killed_mutants = sum(killed == "true"), total_mutants = (sum(killed == "true") + sum(killed == "false"))) %>% mutate(mutationScore = format(round((killed_mutants/total_mutants) * 100, 1), nsmall = 1))
+  #d1 <- d %>% filter(type == "NORMAL") %>% select(identifier, dbms, schema, generator, killed) %>% group_by(identifier, dbms, schema, generator) %>% summarise(killed_mutants = sum(killed == "true"), total_mutants = (sum(killed == "true") + sum(killed == "false"))) %>% mutate(mutationScore = round((killed_mutants/total_mutants) * 100, 2))
+  #d <- d %>% group_by(schema, generator, dbms)  %>% filter(type == "NORMAL") %>% summarise(killed_mutants = sum(killed == "true"), total_mutants = (sum(killed == "true") + sum(killed == "false"))) %>% mutate(mutationScore = format(round((killed_mutants/total_mutants) * 100, 1), nsmall = 1))
+  d <- ordering_mutants_per_schema(d)
+
+  #d1 <- directedRandomR::transform_execution_times_for_threshold(d, 1000)
+  #d1 <- d %>% select(dbms, casestudy, datagenerator, scorenumerator, scoredenominator,randomseed) %>% group_by(dbms, casestudy, datagenerator) %>% mutate(mutationScore = scorenumerator/scoredenominator)#mutate(mutationScore = round((sum(scorenumerator)/sum(scoredenominator)) * 100, 2)) #summarise(scorenumerator = (sum(scorenumerator)), scoredenominator = (sum(scoredenominator)))
+  #d <- d %>% select(dbms, casestudy, datagenerator, scorenumerator, scoredenominator,randomseed) %>% group_by(dbms, casestudy, datagenerator) %>% summarise(mutationScore = round((sum(scorenumerator)/sum(scoredenominator)) * 100, 2))#mutate(mutationScore = sum(scorenumerator)/sum(scoredenominator)) #summarise(scorenumerator = (sum(scorenumerator)), scoredenominator = (sum(scoredenominator)))
+  #d1 <- d %>% filter(type == "NORMAL") %>% select(identifier, dbms, schema, generator, killed) %>% group_by(identifier, dbms, schema, generator) %>% summarise(killed_mutants = sum(killed == "true"), total_mutants = (sum(killed == "true") + sum(killed == "false"))) %>% mutate(mutationScore = round((killed_mutants/total_mutants) * 100, 2))
+  d1 <- d
+  d <- d %>% group_by(schema, generator, dbms)  %>% summarise(mutationScore = format(round(median(mutationScore), 1), nsmall = 1))
   #d <- dcast(d, casestudy ~ dbms + datagenerator)
   d <- dcast(d, schema ~ dbms + generator)
   a1 <- d[1]
@@ -895,6 +933,12 @@ siginificant_mutation_score <- function(d) {
   return(print(xtable(d), include.rownames=FALSE ,sanitize.text.function = function(x){x}))
 }
 
+#' FUNCTION: siginificant_mutant_operators
+#'
+
+#' generates a latex table for mutation operators table with effect size and U test.
+#' @importFrom magrittr %>%
+#' @export
 siginificant_mutant_operators <- function(d) {
   library(dplyr)
   library(reshape2)
@@ -902,7 +946,7 @@ siginificant_mutant_operators <- function(d) {
   d <- d %>% arrange(schema, identifier, operator)
   d1 <- d %>% filter(type == "NORMAL") %>% select(identifier, dbms, generator, killed, operator, schema) %>% group_by(identifier, dbms, generator, operator, schema) %>% summarise(killed_mutants = sum(killed == "true"), total_mutants = (sum(killed == "true") + sum(killed == "false"))) %>% mutate(mutationScore = round((killed_mutants/total_mutants) * 100, 2))
   newdata <- d %>% group_by(generator, operator, dbms) %>% filter(type == "NORMAL") %>% summarise(killed_mutants = sum(killed == "true"), total_mutants = (sum(killed == "false") + sum(killed == "true")))
-  a <- newdata %>% group_by(dbms, generator, operator) %>% summarise(killed_mutants=mean(killed_mutants), total_mutants = mean(total_mutants)) %>% mutate(value = format(round((killed_mutants / total_mutants) * 100, 2), nsmall = 2))
+  a <- newdata %>% group_by(dbms, generator, operator) %>% summarise(killed_mutants=mean(killed_mutants), total_mutants = mean(total_mutants)) %>% mutate(value = format(round((killed_mutants / total_mutants) * 100, 1), nsmall = 1))
   a <- a %>% select(dbms, generator, operator, value)
   d <- dcast(a,  operator ~ dbms + generator)
 
@@ -1232,6 +1276,13 @@ analyse_vargha_delaney_effect_size_specify_time_per_schema <- function(d, schema
   return(mean_results)
 }
 
+
+#' FUNCTION: visual_grid_ten_schemas
+#'
+
+#' generates a plot grid of top 10 schemas
+#' @importFrom magrittr %>%
+#' @export
 visual_grid_ten_schemas <- function(mutationanalysistiming) {
   library(dplyr)
   library(gridExtra)
@@ -1250,7 +1301,12 @@ visual_grid_ten_schemas <- function(mutationanalysistiming) {
 
 }
 
+#' FUNCTION: siginificant_mutant_operators_fixed
+#'
 
+#' generates a latex table for mutation operators table with effect size and U test.
+#' @importFrom magrittr %>%
+#' @export
 siginificant_mutant_operators_fixed <- function(d) {
   # BankAccount is first schema
   # ids <- a %>% filter(schema=='BankAccount') %>% select(identifier,dbms,schema,operator,type) %>% unique
@@ -1260,12 +1316,19 @@ siginificant_mutant_operators_fixed <- function(d) {
   library(dplyr)
   library(reshape2)
   library(xtable)
-  d <- generate_15_schmea_mutanttiming(d)
-  #d <- d %>% arrange(schema, identifier, operator)
-  d1 <- d %>% filter(type == "NORMAL")
-  newdata <- d %>% group_by(generator, operator, dbms) %>% filter(type == "NORMAL") %>% summarise(killed_mutants = sum(killed == "true"), total_mutants = (sum(killed == "false") + sum(killed == "true")))
-  a <- newdata %>% group_by(dbms, generator, operator) %>% summarise(killed_mutants=mean(killed_mutants), total_mutants = mean(total_mutants)) %>% mutate(value = format(round((killed_mutants / total_mutants) * 100, 2), nsmall = 2))
-  a <- a %>% select(dbms, generator, operator, value)
+  # d <- generate_15_schmea_mutanttiming(d)
+  # #d <- d %>% arrange(schema, identifier, operator)
+  # d1 <- d %>% filter(type == "NORMAL")
+  # newdata <- d %>% group_by(generator, operator, dbms) %>% filter(type == "NORMAL") %>% summarise(killed_mutants = sum(killed == "true"), total_mutants = (sum(killed == "false") + sum(killed == "true")))
+  # a <- newdata %>% group_by(dbms, generator, operator) %>% summarise(killed_mutants=mean(killed_mutants), total_mutants = mean(total_mutants)) %>% mutate(value = format(round((killed_mutants / total_mutants) * 100, 2), nsmall = 2))
+  # a <- a %>% select(dbms, generator, operator, value)
+  # d <- dcast(a,  operator ~ dbms + generator)
+
+  d <- ordering_mutants_per_operator(d)
+  d1 <- d
+  # browser()
+
+  a <- d %>% group_by(dbms, generator, operator) %>% summarise(value = format(median(mutationScore), nsmall = 1))
   d <- dcast(a,  operator ~ dbms + generator)
 
   a1 <- d[1]
@@ -1280,127 +1343,19 @@ siginificant_mutant_operators_fixed <- function(d) {
   numberOfRows <- nrow(d)
   for (i in 1:numberOfRows) {
     selected_operator <- a1[i,]
-    # filtered_data <- d1 %>% filter(operator == selected_operator, schema != "iTrust") %>% group_by(identifier, dbms)
-    # first_schema <- filtered_data[1,3]
-    # ids <- filtered_data %>% filter(schema== first_schema[[1,1]]) %>% select(identifier,dbms,schema,operator,type) %>% unique
-    # ids$number=1:nrow(ids)
-    # filtered_data %>% left_join(ids)  %>% mutate(number=as.numeric(ifelse(is.na(number),1,number))) %>% ungroup %>% mutate(number = cummax(number)) -> filtered_data
-    # browser()
-    #
-    # itrust_mutants <- d1 %>% filter(schema == "iTrust", operator == selected_operator) %>% group_by(identifier) %>% summarise(killed_mutants = sum(killed == "true"), total_mutants = (sum(killed == "true") + sum(killed == "false"))) %>% mutate(mutationScore = round((killed_mutants/total_mutants) * 100, 2))
 
-    # rbind(filtered_data, itrust_mutants)
-    postgres_dr <- NULL
-    postgres_avm <- NULL
-    postgres_avmd <- NULL
-    postgres_rand <- NULL
-
-    hsql_dr <- NULL
-    hsql_avm <- NULL
-    hsql_avmd <- NULL
-    hsql_rand <- NULL
-
-    sqlite_dr <- NULL
-    sqlite_avm <- NULL
-    sqlite_avmd <- NULL
-    sqlite_rand <- NULL
-
-    dbs <- as.vector(distinct(d1, dbms))[[1]]
-
-    for (db in dbs) {
-      filtered_data <- d1 %>% filter(operator == selected_operator, schema != "iTrust", dbms == db) %>% group_by(identifier, dbms)
-      first_schema <- filtered_data[1,3]
-
-      test <- NULL
-
-      #itrust_mutants <- d1 %>% filter(schema == "iTrust", operator == selected_operator, dbms == db)
-      #filtered_data <- filtered_data %>% filter(dbms == "SQLite")
-
-      ids <- filtered_data %>% filter(schema== first_schema[[1,1]], generator == "directedRandom") %>% select(identifier,dbms,schema,operator,type) %>% unique
-      ids$number=1:nrow(ids)
-      filtered_data %>% left_join(ids)  %>% mutate(number=as.numeric(ifelse(is.na(number),1,number))) %>% ungroup %>% mutate(number = cummax(number)) -> test
-
-      dr_minsitrust <- test %>% filter(generator == "directedRandom") %>% group_by(identifier, dbms, generator, number) %>% summarise(killed_mutants = sum(killed == "true"), total_mutants = (sum(killed == "true") + sum(killed == "false")))# %>% mutate(mutationScore = round((killed_mutants/total_mutants) * 100, 2))
-      dr_itrust <- d1 %>% filter(schema == "iTrust", generator == "directedRandom", type == "NORMAL", operator == selected_operator, dbms == db) %>% group_by(identifier, dbms, generator) %>% summarise(killed_mutants = sum(killed == "true"), total_mutants = (sum(killed == "true") + sum(killed == "false")))# %>% mutate(mutationScore = round((killed_mutants/total_mutants) * 100, 2))
-      if (nrow(dr_itrust) > 0) {
-        dr_itrust$number=1:nrow(dr_itrust)
-      }
-
-      dr <- rbind(dr_minsitrust, dr_itrust)
-      dr <- dr %>% group_by(number, generator, dbms) %>% summarise(killed_mutants = sum(killed_mutants), total_mutants = sum(total_mutants)) %>% mutate(mutationScore = round((killed_mutants/total_mutants) * 100, 2))
-
-      ids <- filtered_data %>% filter(schema== first_schema[[1,1]], generator == "avs") %>% select(identifier,dbms,schema,operator,type) %>% unique
-      ids$number=1:nrow(ids)
-      filtered_data %>% left_join(ids)  %>% mutate(number=as.numeric(ifelse(is.na(number),1,number))) %>% ungroup %>% mutate(number = cummax(number)) -> test
-
-      avs_minsitrust <- test %>% filter(generator == "avs") %>% group_by(identifier, dbms, generator, number) %>% summarise(killed_mutants = sum(killed == "true"), total_mutants = (sum(killed == "true") + sum(killed == "false")))# %>% mutate(mutationScore = round((killed_mutants/total_mutants) * 100, 2))
-      avs_itrust <- d1 %>% filter(schema == "iTrust", generator == "avs", type == "NORMAL", operator == selected_operator, dbms == db) %>% group_by(identifier, dbms, generator) %>% summarise(killed_mutants = sum(killed == "true"), total_mutants = (sum(killed == "true") + sum(killed == "false")))# %>% mutate(mutationScore = round((killed_mutants/total_mutants) * 100, 2))
-      if (nrow(avs_itrust) > 0) {
-        avs_itrust$number=1:nrow(avs_itrust)
-      }
-      avm <- rbind(avs_minsitrust, avs_itrust)
-      avm <- avm %>% group_by(number, generator, dbms) %>% summarise(killed_mutants = sum(killed_mutants), total_mutants = sum(total_mutants)) %>% mutate(mutationScore = round((killed_mutants/total_mutants) * 100, 2))
-
-      ids <- filtered_data %>% filter(schema== first_schema[[1,1]], generator == "avsDefaults") %>% select(identifier,dbms,schema,operator,type) %>% unique
-      ids$number=1:nrow(ids)
-      filtered_data %>% left_join(ids)  %>% mutate(number=as.numeric(ifelse(is.na(number),1,number))) %>% ungroup %>% mutate(number = cummax(number)) -> test
-
-
-      avsd_minsitrust <- test %>% filter(generator == "avsDefaults") %>% group_by(identifier, dbms, generator, number) %>% summarise(killed_mutants = sum(killed == "true"), total_mutants = (sum(killed == "true") + sum(killed == "false")))# %>% mutate(mutationScore = round((killed_mutants/total_mutants) * 100, 2))
-      avsd_itrust <- d1 %>% filter(schema == "iTrust", generator == "avsDefaults", type == "NORMAL", operator == selected_operator, dbms == db) %>% group_by(identifier, dbms, generator) %>% summarise(killed_mutants = sum(killed == "true"), total_mutants = (sum(killed == "true") + sum(killed == "false")))# %>% mutate(mutationScore = round((killed_mutants/total_mutants) * 100, 2))
-      if (nrow(avsd_itrust) > 0) {
-        avsd_itrust$number=1:nrow(avsd_itrust)
-      }
-      avmd <- rbind(avsd_minsitrust, avsd_itrust)
-      avmd <- avmd %>% group_by(number, generator, dbms) %>% summarise(killed_mutants = sum(killed_mutants), total_mutants = sum(total_mutants)) %>% mutate(mutationScore = round((killed_mutants/total_mutants) * 100, 2))
-
-      ran_minsitrust <- test %>% filter(generator == "random") %>% group_by(identifier, dbms, generator, number) %>% summarise(killed_mutants = sum(killed == "true"), total_mutants = (sum(killed == "true") + sum(killed == "false")))# %>% mutate(mutationScore = round((killed_mutants/total_mutants) * 100, 2))
-      ran_itrust <- d1 %>% filter(schema == "iTrust", generator == "random", type == "NORMAL", operator == selected_operator, dbms == db) %>% group_by(identifier, dbms, generator) %>% summarise(killed_mutants = sum(killed == "true"), total_mutants = (sum(killed == "true") + sum(killed == "false")))# %>% mutate(mutationScore = round((killed_mutants/total_mutants) * 100, 2))
-      if (nrow(ran_itrust) > 0) {
-        ran_itrust$number=1:nrow(avsd_itrust)
-      }
-
-      rand <- rbind(ran_minsitrust, ran_itrust)
-      rand <- rand %>% group_by(number, generator, dbms) %>% summarise(killed_mutants = sum(killed_mutants), total_mutants = sum(total_mutants)) %>% mutate(mutationScore = round((killed_mutants/total_mutants) * 100, 2))
-
-      if (db == "Postgres") {
-        postgres_dr <- dr
-        postgres_avm <- avm
-        postgres_avmd <- avmd
-        postgres_rand <- rand
-      } else if (db == "SQLite") {
-        sqlite_dr <- dr
-        sqlite_avm <- avm
-        sqlite_avmd <- avmd
-        sqlite_rand <- rand
-      } else if (db == "HyperSQL") {
-        hsql_dr <- dr
-        hsql_avm <- avm
-        hsql_avmd <- avmd
-        hsql_rand <- rand
-      }
-
-    }
-
-    postgres_dr <- arrange(postgres_dr, number)
-    postgres_avm <- arrange(postgres_avm, number)
-    postgres_avmd <- arrange(postgres_avmd, number)
-    postgres_rand <- arrange(postgres_rand, number)
-    sqlite_dr <- arrange(sqlite_dr, number)
-    sqlite_avm <- arrange(sqlite_avm, number)
-    sqlite_avmd <- arrange(sqlite_avmd, number)
-    sqlite_rand <- arrange(sqlite_rand, number)
-    hsql_dr <- arrange(hsql_dr, number)
-    hsql_avm <- arrange(hsql_avm, number)
-    hsql_avmd <- arrange(hsql_avmd, number)
-    hsql_rand <- arrange(hsql_rand, number)
-
-    print(selected_operator)
-    # dr <- filtered_data %>% filter(generator == "directedRandom")
-    # avm <- filtered_data %>% filter(generator == "avs")
-    # avmd <- filtered_data %>% filter(generator == "avsDefaults")
-    # rand <- filtered_data %>% filter(generator == "random")
-    #a[i,] = ifelse(min(as.numeric(a[i,])) == as.numeric(a[i,]), paste("\\textbf{", a[i,], "}", sep = ""), as.numeric(a[i,]))
+    postgres_dr <- d1 %>% filter(operator == selected_operator, dbms == "Postgres", generator == "directedRandom")
+    postgres_avm <- d1 %>% filter(operator == selected_operator, dbms == "Postgres", generator == "avs")
+    postgres_avmd <- d1 %>% filter(operator == selected_operator, dbms == "Postgres", generator == "avsDefaults")
+    postgres_rand <- d1 %>% filter(operator == selected_operator, dbms == "Postgres", generator == "random")
+    sqlite_dr <- d1 %>% filter(operator == selected_operator, dbms == "SQLite", generator == "directedRandom")
+    sqlite_avm <- d1 %>% filter(operator == selected_operator, dbms == "SQLite", generator == "avs")
+    sqlite_avmd <- d1 %>% filter(operator == selected_operator, dbms == "SQLite", generator == "avsDefaults")
+    sqlite_rand <- d1 %>% filter(operator == selected_operator, dbms == "SQLite", generator == "random")
+    hsql_dr <- d1 %>% filter(operator == selected_operator, dbms == "HyperSQL", generator == "directedRandom")
+    hsql_avm <- d1 %>% filter(operator == selected_operator, dbms == "HyperSQL", generator == "avs")
+    hsql_avmd <- d1 %>% filter(operator == selected_operator, dbms == "HyperSQL", generator == "avsDefaults")
+    hsql_rand <- d1 %>% filter(operator == selected_operator, dbms == "HyperSQL", generator == "random")
 
     postgres_avm_effectsize <- directedRandomR::effectsize_accurate(postgres_dr$mutationScore, postgres_avm$mutationScore)$size
     postgres_avmd_effectsize <- directedRandomR::effectsize_accurate(postgres_dr$mutationScore, postgres_avmd$mutationScore)$size
@@ -1409,7 +1364,7 @@ siginificant_mutant_operators_fixed <- function(d) {
     # postgres_avm <- directedRandomR::effectsize_accurate((dr %>% filter(dbms == "Postgres"))$mutationScore, (avm %>% filter(dbms == "Postgres"))$mutationScore)$size
     # postgres_avmd <- directedRandomR::effectsize_accurate((dr %>% filter(dbms == "Postgres"))$mutationScore, (avmd %>% filter(dbms == "Postgres"))$mutationScore)$size
     # postgres_rand <- directedRandomR::effectsize_accurate((dr %>% filter(dbms == "Postgres"))$mutationScore, (rand %>% filter(dbms == "Postgres"))$mutationScore)$size
-
+    #if (selected_operator == "UCColumnE") { browser() }
     p <- wilcox.test(postgres_avm$mutationScore, postgres_dr$mutationScore)$p.value <= 0.05
     if (isTRUE(p) == FALSE) {
 
@@ -1579,9 +1534,6 @@ siginificant_mutant_operators_fixed <- function(d) {
     hsql_avmd_effectsize <- directedRandomR::effectsize_accurate(hsql_dr$mutationScore, hsql_avmd$mutationScore)$size
     hsql_rand_effectsize <- directedRandomR::effectsize_accurate(hsql_dr$mutationScore, hsql_rand$mutationScore)$size
 
-    if (selected_operator == "CCRelationalExpressionOperatorE") {
-      browser()
-    }
     p <- wilcox.test(hsql_avm$mutationScore, hsql_dr$mutationScore)$p.value <= 0.05
 
     if (isTRUE(p) == FALSE) {
@@ -1661,3 +1613,364 @@ siginificant_mutant_operators_fixed <- function(d) {
   return(print(xtable(d), include.rownames=FALSE ,sanitize.text.function = function(x){x}))
 
 }
+
+#' FUNCTION: ordering_mutants_per_schema
+#'
+
+#' generates a a data frame ready with runs for mutant timing file per schema.
+#' @importFrom magrittr %>%
+#' @export
+ordering_mutants_per_schema <- function(d) {
+  library(dplyr)
+  library(reshape2)
+  d <- generate_15_schmea_mutanttiming(d)
+  d1 <- d %>% filter(type == "NORMAL")# %>% select(identifier, dbms, schema, generator, killed) %>% group_by(identifier, dbms, schema, generator) %>% summarise(killed_mutants = sum(killed == "true"), total_mutants = (sum(killed == "true") + sum(killed == "false"))) %>% mutate(mutationScore = round((killed_mutants/total_mutants) * 100, 2))
+
+  dt <- NULL
+
+  casestudy <- as.vector(dplyr::distinct(d1, schema))[[1]]
+  dbs <- as.vector(distinct(d1, dbms))[[1]]
+  for (case in casestudy) {
+    schema1 <- case
+    for (db in dbs) {
+      print(schema1)
+      print(db)
+      #if (schema1 == "iTrust" & db == "SQLite") { browser() }
+      filtered_data <- d1 %>% filter(schema == schema1, dbms == db) %>% group_by(identifier, dbms)
+      first_schema <- filtered_data[1,3]
+
+      test <- NULL
+
+      #itrust_mutants <- d1 %>% filter(schema == "iTrust", schema == schema1, dbms == db)
+      #filtered_data <- filtered_data %>% filter(dbms == "SQLite")
+      ids <- filtered_data %>% filter(schema== first_schema[[1,1]], generator == "directedRandom") %>% select(identifier,dbms,schema) %>% unique
+      ids$number=1:nrow(ids)
+      filtered_data %>% left_join(ids)  %>% mutate(number=as.numeric(ifelse(is.na(number),1,number))) %>% ungroup %>% mutate(number = cummax(number)) -> test
+
+      dr_minsitrust <- test %>% filter(generator == "directedRandom") %>% group_by(identifier, dbms, generator, number, schema) %>% summarise(killed_mutants = sum(killed == "true"), total_mutants = (sum(killed == "true") + sum(killed == "false")))# %>% mutate(mutationScore = round((killed_mutants/total_mutants) * 100, 2))
+
+      dr <- dr_minsitrust
+      dr <- dr %>% group_by(number, generator, dbms, schema) %>% summarise(killed_mutants = sum(killed_mutants), total_mutants = sum(total_mutants)) %>% mutate(mutationScore = round((killed_mutants/total_mutants) * 100, 2))
+
+      ids <- filtered_data %>% filter(schema== first_schema[[1,1]], generator == "avs") %>% select(identifier,dbms,schema) %>% unique
+      ids$number=1:nrow(ids)
+      filtered_data %>% left_join(ids)  %>% mutate(number=as.numeric(ifelse(is.na(number),1,number))) %>% ungroup %>% mutate(number = cummax(number)) -> test
+
+      avs_minsitrust <- test %>% filter(generator == "avs") %>% group_by(identifier, dbms, generator, number, schema) %>% summarise(killed_mutants = sum(killed == "true"), total_mutants = (sum(killed == "true") + sum(killed == "false")))# %>% mutate(mutationScore = round((killed_mutants/total_mutants) * 100, 2))
+      avm <- avs_minsitrust
+      avm <- avm %>% group_by(number, generator, dbms, schema) %>% summarise(killed_mutants = sum(killed_mutants), total_mutants = sum(total_mutants)) %>% mutate(mutationScore = round((killed_mutants/total_mutants) * 100, 2))
+
+      ids <- filtered_data %>% filter(schema== first_schema[[1,1]], generator == "avsDefaults") %>% select(identifier,dbms,schema) %>% unique
+      ids$number=1:nrow(ids)
+      filtered_data %>% left_join(ids)  %>% mutate(number=as.numeric(ifelse(is.na(number),1,number))) %>% ungroup %>% mutate(number = cummax(number)) -> test
+
+
+      avsd_minsitrust <- test %>% filter(generator == "avsDefaults") %>% group_by(identifier, dbms, generator, number, schema) %>% summarise(killed_mutants = sum(killed == "true"), total_mutants = (sum(killed == "true") + sum(killed == "false")))# %>% mutate(mutationScore = round((killed_mutants/total_mutants) * 100, 2))
+      avmd <- avsd_minsitrust
+      avmd <- avmd %>% group_by(number, generator, dbms, schema) %>% summarise(killed_mutants = sum(killed_mutants), total_mutants = sum(total_mutants)) %>% mutate(mutationScore = round((killed_mutants/total_mutants) * 100, 2))
+
+      ids <- filtered_data %>% filter(schema== first_schema[[1,1]], generator == "random") %>% select(identifier,dbms,schema) %>% unique
+      ids$number=1:nrow(ids)
+      filtered_data %>% left_join(ids)  %>% mutate(number=as.numeric(ifelse(is.na(number),1,number))) %>% ungroup %>% mutate(number = cummax(number)) -> test
+
+      ran_minsitrust <- test %>% filter(generator == "random") %>% group_by(identifier, dbms, generator, number, schema) %>% summarise(killed_mutants = sum(killed == "true"), total_mutants = (sum(killed == "true") + sum(killed == "false")))# %>% mutate(mutationScore = round((killed_mutants/total_mutants) * 100, 2))
+
+      rand <- ran_minsitrust
+      rand <- rand %>% group_by(number, generator, dbms, schema) %>% summarise(killed_mutants = sum(killed_mutants), total_mutants = sum(total_mutants)) %>% mutate(mutationScore = round((killed_mutants/total_mutants) * 100, 2))
+
+      if (db == "Postgres") {
+        postgres_dr <- dr
+        postgres_avm <- avm
+        postgres_avmd <- avmd
+        postgres_rand <- rand
+      } else if (db == "SQLite") {
+        sqlite_dr <- dr
+        sqlite_avm <- avm
+        sqlite_avmd <- avmd
+        sqlite_rand <- rand
+      } else if (db == "HyperSQL") {
+        hsql_dr <- dr
+        hsql_avm <- avm
+        hsql_avmd <- avmd
+        hsql_rand <- rand
+      }
+
+    }
+
+    postgres_dr <- arrange(postgres_dr, number)
+    postgres_avm <- arrange(postgres_avm, number)
+    postgres_avmd <- arrange(postgres_avmd, number)
+    postgres_rand <- arrange(postgres_rand, number)
+    sqlite_dr <- arrange(sqlite_dr, number)
+    sqlite_avm <- arrange(sqlite_avm, number)
+    sqlite_avmd <- arrange(sqlite_avmd, number)
+    sqlite_rand <- arrange(sqlite_rand, number)
+    hsql_dr <- arrange(hsql_dr, number)
+    hsql_avm <- arrange(hsql_avm, number)
+    hsql_avmd <- arrange(hsql_avmd, number)
+    hsql_rand <- arrange(hsql_rand, number)
+
+    postgres <- rbind(postgres_dr, postgres_avm, postgres_avmd, postgres_rand)
+    sqlite <- rbind(sqlite_dr, sqlite_avm, sqlite_avmd, sqlite_rand)
+    hsql <- rbind(hsql_dr, hsql_avm, hsql_avmd, hsql_rand)
+
+    dt <- rbind(dt, postgres, sqlite, hsql)
+  }
+
+  #browser()
+
+  return(dt)
+
+  #a <- dt %>% select(dbms, generator, schema, value)
+  #d <- dcast(a, schema ~ dbms + generator)
+}
+
+#' FUNCTION: ordering_mutants_per_operator
+#'
+
+#' generates a a data frame ready with runs for mutant timing file per operator
+#' @importFrom magrittr %>%
+#' @export
+ordering_mutants_per_operator <- function(d) {
+  library(dplyr)
+  library(reshape2)
+  d <- generate_15_schmea_mutanttiming(d)
+  d1 <- d %>% filter(type == "NORMAL")# %>% select(identifier, dbms, schema, generator, killed) %>% group_by(identifier, dbms, schema, generator) %>% summarise(killed_mutants = sum(killed == "true"), total_mutants = (sum(killed == "true") + sum(killed == "false"))) %>% mutate(mutationScore = round((killed_mutants/total_mutants) * 100, 2))
+
+  dt <- NULL
+
+  dbs <- as.vector(distinct(d1, dbms))[[1]]
+  operators <- as.vector(distinct(d1, operator))[[1]]
+  for (selected_operator in operators) {
+    for (db in dbs) {
+      print(selected_operator)
+      print(db)
+      filtered_data <- d1 %>% filter(operator == selected_operator, schema != "iTrust", dbms == db) %>% group_by(identifier, dbms)
+      first_schema <- filtered_data[1,3]
+
+      test <- NULL
+
+      #itrust_mutants <- d1 %>% filter(schema == "iTrust", operator == selected_operator, dbms == db)
+      #filtered_data <- filtered_data %>% filter(dbms == "SQLite")
+
+      ids <- filtered_data %>% filter(schema== first_schema[[1,1]], generator == "directedRandom") %>% select(identifier,dbms,schema,operator,type) %>% unique
+      ids$number=1:nrow(ids)
+      filtered_data %>% left_join(ids)  %>% mutate(number=as.numeric(ifelse(is.na(number),1,number))) %>% ungroup %>% mutate(number = cummax(number)) -> test
+
+      dr_minsitrust <- test %>% filter(generator == "directedRandom") %>% group_by(identifier, dbms, generator, number, operator) %>% summarise(killed_mutants = sum(killed == "true"), total_mutants = (sum(killed == "true") + sum(killed == "false")))# %>% mutate(mutationScore = round((killed_mutants/total_mutants) * 100, 2))
+      dr_itrust <- d1 %>% filter(schema == "iTrust", generator == "directedRandom", type == "NORMAL", operator == selected_operator, dbms == db) %>% group_by(identifier, dbms, generator, operator) %>% summarise(killed_mutants = sum(killed == "true"), total_mutants = (sum(killed == "true") + sum(killed == "false")))# %>% mutate(mutationScore = round((killed_mutants/total_mutants) * 100, 2))
+      if (nrow(dr_itrust) > 0) {
+        dr_itrust$number=1:nrow(dr_itrust)
+      }
+
+      dr <- rbind(dr_minsitrust, dr_itrust)
+      dr <- dr %>% group_by(number, generator, dbms, operator) %>% summarise(killed_mutants = sum(killed_mutants), total_mutants = sum(total_mutants)) %>% mutate(mutationScore = round((killed_mutants/total_mutants) * 100, 2))
+
+      ids <- filtered_data %>% filter(schema== first_schema[[1,1]], generator == "avs") %>% select(identifier,dbms,schema,operator,type) %>% unique
+      ids$number=1:nrow(ids)
+      filtered_data %>% left_join(ids)  %>% mutate(number=as.numeric(ifelse(is.na(number),1,number))) %>% ungroup %>% mutate(number = cummax(number)) -> test
+
+      avs_minsitrust <- test %>% filter(generator == "avs") %>% group_by(identifier, dbms, generator, number, operator) %>% summarise(killed_mutants = sum(killed == "true"), total_mutants = (sum(killed == "true") + sum(killed == "false")))# %>% mutate(mutationScore = round((killed_mutants/total_mutants) * 100, 2))
+      avs_itrust <- d1 %>% filter(schema == "iTrust", generator == "avs", type == "NORMAL", operator == selected_operator, dbms == db) %>% group_by(identifier, dbms, generator, operator) %>% summarise(killed_mutants = sum(killed == "true"), total_mutants = (sum(killed == "true") + sum(killed == "false")))# %>% mutate(mutationScore = round((killed_mutants/total_mutants) * 100, 2))
+      if (nrow(avs_itrust) > 0) {
+        avs_itrust$number=1:nrow(avs_itrust)
+      }
+      avm <- rbind(avs_minsitrust, avs_itrust)
+      avm <- avm %>% group_by(number, generator, dbms, operator) %>% summarise(killed_mutants = sum(killed_mutants), total_mutants = sum(total_mutants)) %>% mutate(mutationScore = round((killed_mutants/total_mutants) * 100, 2))
+
+      ids <- filtered_data %>% filter(schema== first_schema[[1,1]], generator == "avsDefaults") %>% select(identifier,dbms,schema,operator,type) %>% unique
+      ids$number=1:nrow(ids)
+      filtered_data %>% left_join(ids)  %>% mutate(number=as.numeric(ifelse(is.na(number),1,number))) %>% ungroup %>% mutate(number = cummax(number)) -> test
+
+
+      avsd_minsitrust <- test %>% filter(generator == "avsDefaults") %>% group_by(identifier, dbms, generator, number, operator) %>% summarise(killed_mutants = sum(killed == "true"), total_mutants = (sum(killed == "true") + sum(killed == "false")))# %>% mutate(mutationScore = round((killed_mutants/total_mutants) * 100, 2))
+      avsd_itrust <- d1 %>% filter(schema == "iTrust", generator == "avsDefaults", type == "NORMAL", operator == selected_operator, dbms == db) %>% group_by(identifier, dbms, generator, operator) %>% summarise(killed_mutants = sum(killed == "true"), total_mutants = (sum(killed == "true") + sum(killed == "false")))# %>% mutate(mutationScore = round((killed_mutants/total_mutants) * 100, 2))
+      if (nrow(avsd_itrust) > 0) {
+        avsd_itrust$number=1:nrow(avsd_itrust)
+      }
+      avmd <- rbind(avsd_minsitrust, avsd_itrust)
+      avmd <- avmd %>% group_by(number, generator, dbms, operator) %>% summarise(killed_mutants = sum(killed_mutants), total_mutants = sum(total_mutants)) %>% mutate(mutationScore = round((killed_mutants/total_mutants) * 100, 2))
+
+      ids <- filtered_data %>% filter(schema== first_schema[[1,1]], generator == "random") %>% select(identifier,dbms,schema,operator,type) %>% unique
+      ids$number=1:nrow(ids)
+      filtered_data %>% left_join(ids)  %>% mutate(number=as.numeric(ifelse(is.na(number),1,number))) %>% ungroup %>% mutate(number = cummax(number)) -> test
+
+      ran_minsitrust <- test %>% filter(generator == "random") %>% group_by(identifier, dbms, generator, number, operator) %>% summarise(killed_mutants = sum(killed == "true"), total_mutants = (sum(killed == "true") + sum(killed == "false")))# %>% mutate(mutationScore = round((killed_mutants/total_mutants) * 100, 2))
+      ran_itrust <- d1 %>% filter(schema == "iTrust", generator == "random", type == "NORMAL", operator == selected_operator, dbms == db) %>% group_by(identifier, dbms, generator, operator) %>% summarise(killed_mutants = sum(killed == "true"), total_mutants = (sum(killed == "true") + sum(killed == "false")))# %>% mutate(mutationScore = round((killed_mutants/total_mutants) * 100, 2))
+      if (nrow(ran_itrust) > 0) {
+        ran_itrust$number=1:nrow(avsd_itrust)
+      }
+
+      rand <- rbind(ran_minsitrust, ran_itrust)
+      rand <- rand %>% group_by(number, generator, dbms, operator) %>% summarise(killed_mutants = sum(killed_mutants), total_mutants = sum(total_mutants)) %>% mutate(mutationScore = round((killed_mutants/total_mutants) * 100, 2))
+
+      if (db == "Postgres") {
+        postgres_dr <- dr
+        postgres_avm <- avm
+        postgres_avmd <- avmd
+        postgres_rand <- rand
+      } else if (db == "SQLite") {
+        sqlite_dr <- dr
+        sqlite_avm <- avm
+        sqlite_avmd <- avmd
+        sqlite_rand <- rand
+      } else if (db == "HyperSQL") {
+        hsql_dr <- dr
+        hsql_avm <- avm
+        hsql_avmd <- avmd
+        hsql_rand <- rand
+      }
+
+    }
+
+    postgres_dr <- arrange(postgres_dr, number)
+    postgres_avm <- arrange(postgres_avm, number)
+    postgres_avmd <- arrange(postgres_avmd, number)
+    postgres_rand <- arrange(postgres_rand, number)
+    sqlite_dr <- arrange(sqlite_dr, number)
+    sqlite_avm <- arrange(sqlite_avm, number)
+    sqlite_avmd <- arrange(sqlite_avmd, number)
+    sqlite_rand <- arrange(sqlite_rand, number)
+    hsql_dr <- arrange(hsql_dr, number)
+    hsql_avm <- arrange(hsql_avm, number)
+    hsql_avmd <- arrange(hsql_avmd, number)
+    hsql_rand <- arrange(hsql_rand, number)
+
+    postgres <- rbind(postgres_dr, postgres_avm, postgres_avmd, postgres_rand)
+    sqlite <- rbind(sqlite_dr, sqlite_avm, sqlite_avmd, sqlite_rand)
+    hsql <- rbind(hsql_dr, hsql_avm, hsql_avmd, hsql_rand)
+
+    dt <- rbind(dt, postgres, sqlite, hsql)
+  }
+
+  #browser()
+
+  return(dt)
+}
+
+
+
+# filtered_data <- d1 %>% filter(operator == selected_operator, schema != "iTrust") %>% group_by(identifier, dbms)
+# first_schema <- filtered_data[1,3]
+# ids <- filtered_data %>% filter(schema== first_schema[[1,1]]) %>% select(identifier,dbms,schema,operator,type) %>% unique
+# ids$number=1:nrow(ids)
+# filtered_data %>% left_join(ids)  %>% mutate(number=as.numeric(ifelse(is.na(number),1,number))) %>% ungroup %>% mutate(number = cummax(number)) -> filtered_data
+# browser()
+#
+# itrust_mutants <- d1 %>% filter(schema == "iTrust", operator == selected_operator) %>% group_by(identifier) %>% summarise(killed_mutants = sum(killed == "true"), total_mutants = (sum(killed == "true") + sum(killed == "false"))) %>% mutate(mutationScore = round((killed_mutants/total_mutants) * 100, 2))
+
+# rbind(filtered_data, itrust_mutants)
+# postgres_dr <- NULL
+# postgres_avm <- NULL
+# postgres_avmd <- NULL
+# postgres_rand <- NULL
+#
+# hsql_dr <- NULL
+# hsql_avm <- NULL
+# hsql_avmd <- NULL
+# hsql_rand <- NULL
+#
+# sqlite_dr <- NULL
+# sqlite_avm <- NULL
+# sqlite_avmd <- NULL
+# sqlite_rand <- NULL
+#
+# dbs <- as.vector(distinct(d1, dbms))[[1]]
+#
+# for (db in dbs) {
+#   filtered_data <- d1 %>% filter(operator == selected_operator, schema != "iTrust", dbms == db) %>% group_by(identifier, dbms)
+#   first_schema <- filtered_data[1,3]
+#
+#   test <- NULL
+#
+#   #itrust_mutants <- d1 %>% filter(schema == "iTrust", operator == selected_operator, dbms == db)
+#   #filtered_data <- filtered_data %>% filter(dbms == "SQLite")
+#
+#   ids <- filtered_data %>% filter(schema== first_schema[[1,1]], generator == "directedRandom") %>% select(identifier,dbms,schema,operator,type) %>% unique
+#   ids$number=1:nrow(ids)
+#   filtered_data %>% left_join(ids)  %>% mutate(number=as.numeric(ifelse(is.na(number),1,number))) %>% ungroup %>% mutate(number = cummax(number)) -> test
+#
+#   dr_minsitrust <- test %>% filter(generator == "directedRandom") %>% group_by(identifier, dbms, generator, number) %>% summarise(killed_mutants = sum(killed == "true"), total_mutants = (sum(killed == "true") + sum(killed == "false")))# %>% mutate(mutationScore = round((killed_mutants/total_mutants) * 100, 2))
+#   dr_itrust <- d1 %>% filter(schema == "iTrust", generator == "directedRandom", type == "NORMAL", operator == selected_operator, dbms == db) %>% group_by(identifier, dbms, generator) %>% summarise(killed_mutants = sum(killed == "true"), total_mutants = (sum(killed == "true") + sum(killed == "false")))# %>% mutate(mutationScore = round((killed_mutants/total_mutants) * 100, 2))
+#   if (nrow(dr_itrust) > 0) {
+#     dr_itrust$number=1:nrow(dr_itrust)
+#   }
+#
+#   dr <- rbind(dr_minsitrust, dr_itrust)
+#   dr <- dr %>% group_by(number, generator, dbms) %>% summarise(killed_mutants = sum(killed_mutants), total_mutants = sum(total_mutants)) %>% mutate(mutationScore = round((killed_mutants/total_mutants) * 100, 2))
+#
+#   ids <- filtered_data %>% filter(schema== first_schema[[1,1]], generator == "avs") %>% select(identifier,dbms,schema,operator,type) %>% unique
+#   ids$number=1:nrow(ids)
+#   filtered_data %>% left_join(ids)  %>% mutate(number=as.numeric(ifelse(is.na(number),1,number))) %>% ungroup %>% mutate(number = cummax(number)) -> test
+#
+#   avs_minsitrust <- test %>% filter(generator == "avs") %>% group_by(identifier, dbms, generator, number) %>% summarise(killed_mutants = sum(killed == "true"), total_mutants = (sum(killed == "true") + sum(killed == "false")))# %>% mutate(mutationScore = round((killed_mutants/total_mutants) * 100, 2))
+#   avs_itrust <- d1 %>% filter(schema == "iTrust", generator == "avs", type == "NORMAL", operator == selected_operator, dbms == db) %>% group_by(identifier, dbms, generator) %>% summarise(killed_mutants = sum(killed == "true"), total_mutants = (sum(killed == "true") + sum(killed == "false")))# %>% mutate(mutationScore = round((killed_mutants/total_mutants) * 100, 2))
+#   if (nrow(avs_itrust) > 0) {
+#     avs_itrust$number=1:nrow(avs_itrust)
+#   }
+#   avm <- rbind(avs_minsitrust, avs_itrust)
+#   avm <- avm %>% group_by(number, generator, dbms) %>% summarise(killed_mutants = sum(killed_mutants), total_mutants = sum(total_mutants)) %>% mutate(mutationScore = round((killed_mutants/total_mutants) * 100, 2))
+#
+#   ids <- filtered_data %>% filter(schema== first_schema[[1,1]], generator == "avsDefaults") %>% select(identifier,dbms,schema,operator,type) %>% unique
+#   ids$number=1:nrow(ids)
+#   filtered_data %>% left_join(ids)  %>% mutate(number=as.numeric(ifelse(is.na(number),1,number))) %>% ungroup %>% mutate(number = cummax(number)) -> test
+#
+#
+#   avsd_minsitrust <- test %>% filter(generator == "avsDefaults") %>% group_by(identifier, dbms, generator, number) %>% summarise(killed_mutants = sum(killed == "true"), total_mutants = (sum(killed == "true") + sum(killed == "false")))# %>% mutate(mutationScore = round((killed_mutants/total_mutants) * 100, 2))
+#   avsd_itrust <- d1 %>% filter(schema == "iTrust", generator == "avsDefaults", type == "NORMAL", operator == selected_operator, dbms == db) %>% group_by(identifier, dbms, generator) %>% summarise(killed_mutants = sum(killed == "true"), total_mutants = (sum(killed == "true") + sum(killed == "false")))# %>% mutate(mutationScore = round((killed_mutants/total_mutants) * 100, 2))
+#   if (nrow(avsd_itrust) > 0) {
+#     avsd_itrust$number=1:nrow(avsd_itrust)
+#   }
+#   avmd <- rbind(avsd_minsitrust, avsd_itrust)
+#   avmd <- avmd %>% group_by(number, generator, dbms) %>% summarise(killed_mutants = sum(killed_mutants), total_mutants = sum(total_mutants)) %>% mutate(mutationScore = round((killed_mutants/total_mutants) * 100, 2))
+#
+#   ids <- filtered_data %>% filter(schema== first_schema[[1,1]], generator == "random") %>% select(identifier,dbms,schema,operator,type) %>% unique
+#   ids$number=1:nrow(ids)
+#   filtered_data %>% left_join(ids)  %>% mutate(number=as.numeric(ifelse(is.na(number),1,number))) %>% ungroup %>% mutate(number = cummax(number)) -> test
+#
+#   ran_minsitrust <- test %>% filter(generator == "random") %>% group_by(identifier, dbms, generator, number) %>% summarise(killed_mutants = sum(killed == "true"), total_mutants = (sum(killed == "true") + sum(killed == "false")))# %>% mutate(mutationScore = round((killed_mutants/total_mutants) * 100, 2))
+#   ran_itrust <- d1 %>% filter(schema == "iTrust", generator == "random", type == "NORMAL", operator == selected_operator, dbms == db) %>% group_by(identifier, dbms, generator) %>% summarise(killed_mutants = sum(killed == "true"), total_mutants = (sum(killed == "true") + sum(killed == "false")))# %>% mutate(mutationScore = round((killed_mutants/total_mutants) * 100, 2))
+#   if (nrow(ran_itrust) > 0) {
+#     ran_itrust$number=1:nrow(avsd_itrust)
+#   }
+#
+#   rand <- rbind(ran_minsitrust, ran_itrust)
+#   rand <- rand %>% group_by(number, generator, dbms) %>% summarise(killed_mutants = sum(killed_mutants), total_mutants = sum(total_mutants)) %>% mutate(mutationScore = round((killed_mutants/total_mutants) * 100, 2))
+#
+#   if (db == "Postgres") {
+#     postgres_dr <- dr
+#     postgres_avm <- avm
+#     postgres_avmd <- avmd
+#     postgres_rand <- rand
+#   } else if (db == "SQLite") {
+#     sqlite_dr <- dr
+#     sqlite_avm <- avm
+#     sqlite_avmd <- avmd
+#     sqlite_rand <- rand
+#   } else if (db == "HyperSQL") {
+#     hsql_dr <- dr
+#     hsql_avm <- avm
+#     hsql_avmd <- avmd
+#     hsql_rand <- rand
+#   }
+#
+# }
+#
+# postgres_dr <- arrange(postgres_dr, number)
+# postgres_avm <- arrange(postgres_avm, number)
+# postgres_avmd <- arrange(postgres_avmd, number)
+# postgres_rand <- arrange(postgres_rand, number)
+# sqlite_dr <- arrange(sqlite_dr, number)
+# sqlite_avm <- arrange(sqlite_avm, number)
+# sqlite_avmd <- arrange(sqlite_avmd, number)
+# sqlite_rand <- arrange(sqlite_rand, number)
+# hsql_dr <- arrange(hsql_dr, number)
+# hsql_avm <- arrange(hsql_avm, number)
+# hsql_avmd <- arrange(hsql_avmd, number)
+# hsql_rand <- arrange(hsql_rand, number)
+
+# dr <- filtered_data %>% filter(generator == "directedRandom")
+# avm <- filtered_data %>% filter(generator == "avs")
+# avmd <- filtered_data %>% filter(generator == "avsDefaults")
+# rand <- filtered_data %>% filter(generator == "random")
+#a[i,] = ifelse(min(as.numeric(a[i,])) == as.numeric(a[i,]), paste("\\textbf{", a[i,], "}", sep = ""), as.numeric(a[i,]))

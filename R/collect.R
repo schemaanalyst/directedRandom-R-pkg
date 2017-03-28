@@ -14,23 +14,24 @@ library(reshape2)
 #' @importFrom magrittr %>%
 #' @export
 collect_mutationanalysistime <- function() {
-  `SQLite.directedRandom.minusitrust.mutationanalysis` <- read.csv("original-dr-files/30-SQLite-directedRandom-minusitrust-mutationanalysis.dat")
-  `SQLite.directedRandom.itrust.mutationanalysis` <- read.csv("original-dr-files/30-SQLite-directedRandom-itrust-mutationanalysis.dat")
-  `Postgres.directedRandom.minusitrust.mutationanalysis` <- read.csv("original-dr-files/30-Postgres-directedRandom-minusitrust-mutationanalysis.dat")
-  `Postgres.directedRandom.itrust.mutationanalysis` <- read.csv("original-dr-files/30-Postgres-directedRandom-itrust-mutationanalysis.dat")
-  `HyperSQL.directedRandom.minusitrust.mutationanalysis` <- read.csv("original-dr-files/30-HyperSQL-directedRandom-minusitrust-mutationanalysis.dat")
-  `HyperSQL.directedRandom.itrust.mutationanalysis` <- read.csv("original-dr-files/30-HyperSQL-directedRandom-itrust-mutationanalysis.dat")
+  #print(getwd())
+  `SQLite.directedRandom.minusitrust.mutationanalysis` <- read.csv("data/original-dr-files/30-SQLite-directedRandom-minusitrust-mutationanalysis.dat")
+  `SQLite.directedRandom.itrust.mutationanalysis` <- read.csv("data/original-dr-files/30-SQLite-directedRandom-itrust-mutationanalysis.dat")
+  `Postgres.directedRandom.minusitrust.mutationanalysis` <- read.csv("data/original-dr-files/30-Postgres-directedRandom-minusitrust-mutationanalysis.dat")
+  `Postgres.directedRandom.itrust.mutationanalysis` <- read.csv("data/original-dr-files/30-Postgres-directedRandom-itrust-mutationanalysis.dat")
+  `HyperSQL.directedRandom.minusitrust.mutationanalysis` <- read.csv("data/original-dr-files/30-HyperSQL-directedRandom-minusitrust-mutationanalysis.dat")
+  `HyperSQL.directedRandom.itrust.mutationanalysis` <- read.csv("data/original-dr-files/30-HyperSQL-directedRandom-itrust-mutationanalysis.dat")
 
-  `HyperSQL.avs.minusitrust.mutationanalysis` <- read.csv("original-avs-files/30-HyperSQL-avs-minusitrust-mutationanalysis.dat")
-  `Postgres.avs.minusitrust.mutationanalysis` <- read.csv("original-avs-files/30-Postgres-avs-minusitrust-mutationanalysis.dat")
-  `SQLite.avs.minusitrust.mutationanalysis` <- read.csv("original-avs-files/30-SQLite-avs-minusitrust-mutationanalysis.dat")
+  `HyperSQL.avs.minusitrust.mutationanalysis` <- read.csv("data/original-avs-files/30-HyperSQL-avs-minusitrust-mutationanalysis.dat")
+  `Postgres.avs.minusitrust.mutationanalysis` <- read.csv("data/original-avs-files/30-Postgres-avs-minusitrust-mutationanalysis.dat")
+  `SQLite.avs.minusitrust.mutationanalysis` <- read.csv("data/original-avs-files/30-SQLite-avs-minusitrust-mutationanalysis.dat")
 
 
-  `HyperSQL.avs.itrust.mutationanalysis` <- read.csv("original-avs-files/30-HyperSQL-avs-itrust-mutationanalysis.dat")
-  `SQLite.avs.itrust.mutationanalysis` <- read.csv("original-avs-files/30-SQLite-avs-itrust-mutationanalysis.dat")
-  `Postgres.avs.itrust.mutationanalysis` <- read.csv("original-avs-files/30-Postgres-avs-itrust-mutationanalysis.dat")
+  `HyperSQL.avs.itrust.mutationanalysis` <- read.csv("data/original-avs-files/30-HyperSQL-avs-itrust-mutationanalysis.dat")
+  `SQLite.avs.itrust.mutationanalysis` <- read.csv("data/original-avs-files/30-SQLite-avs-itrust-mutationanalysis.dat")
+  `Postgres.avs.itrust.mutationanalysis` <- read.csv("data/original-avs-files/30-Postgres-avs-itrust-mutationanalysis.dat")
 
-  `mutation.analysis` <- read.csv("transformed-files/mutation-analysis.dat")
+  `mutation.analysis` <- read.csv("data/transformed-files/mutation-analysis.dat")
 
   allFrames <- rbind(`Postgres.directedRandom.minusitrust.mutationanalysis`,
                      `Postgres.directedRandom.itrust.mutationanalysis`,
@@ -60,28 +61,28 @@ collect_mutationanalysistime <- function() {
 #' @export
 collect_mutanttiming <- function() {
     # deep mutation analysis
-    `30.SQLite.directedRandom.minusitrust.mutanttiming` <- read.csv("original-dr-files/30-SQLite-directedRandom-minusitrust-mutanttiming.dat")
-    `30.SQLite.directedRandom.itrust.mutanttiming` <- read.csv("original-dr-files/30-SQLite-directedRandom-itrust-mutanttiming.dat")
-    `30.Postgres.directedRandom.minusitrust.mutanttiming` <- read.csv("original-dr-files/30-Postgres-directedRandom-minusitrust-mutanttiming.dat")
-    `30.Postgres.directedRandom.itrust.mutanttiming` <- read.csv("original-dr-files/30-Postgres-directedRandom-itrust-mutanttiming.dat")
-    `30.HyperSQL.directedRandom.itrust.mutanttiming` <- read.csv("original-dr-files/30-HyperSQL-directedRandom-itrust-mutanttiming.dat")
-    `30.HyperSQL.directedRandom.minusitrust.mutanttiming` <- read.csv("original-dr-files/30-HyperSQL-directedRandom-minusitrust-mutanttiming.dat")
+    `30.SQLite.directedRandom.minusitrust.mutanttiming` <- read.csv("data/original-dr-files/30-SQLite-directedRandom-minusitrust-mutanttiming.dat")
+    `30.SQLite.directedRandom.itrust.mutanttiming` <- read.csv("data/original-dr-files/30-SQLite-directedRandom-itrust-mutanttiming.dat")
+    `30.Postgres.directedRandom.minusitrust.mutanttiming` <- read.csv("data/original-dr-files/30-Postgres-directedRandom-minusitrust-mutanttiming.dat")
+    `30.Postgres.directedRandom.itrust.mutanttiming` <- read.csv("data/original-dr-files/30-Postgres-directedRandom-itrust-mutanttiming.dat")
+    `30.HyperSQL.directedRandom.itrust.mutanttiming` <- read.csv("data/original-dr-files/30-HyperSQL-directedRandom-itrust-mutanttiming.dat")
+    `30.HyperSQL.directedRandom.minusitrust.mutanttiming` <- read.csv("data/original-dr-files/30-HyperSQL-directedRandom-minusitrust-mutanttiming.dat")
 
-    `HyperSQL.avs.minusitrust.mutanttiming` <- read.csv("original-avs-files/30-HyperSQL-avs-minusitrust-mutanttiming.dat")
-    `Postgres.avs.minusitrust.mutanttiming` <- read.csv("original-avs-files/30-Postgres-avs-minusitrust-mutanttiming.dat")
-    `SQLite.avs.minusitrust.mutanttiming` <- read.csv("original-avs-files/30-SQLite-avs-minusitrust-mutanttiming.dat")
+    `HyperSQL.avs.minusitrust.mutanttiming` <- read.csv("data/original-avs-files/30-HyperSQL-avs-minusitrust-mutanttiming.dat")
+    `Postgres.avs.minusitrust.mutanttiming` <- read.csv("data/original-avs-files/30-Postgres-avs-minusitrust-mutanttiming.dat")
+    `SQLite.avs.minusitrust.mutanttiming` <- read.csv("data/original-avs-files/30-SQLite-avs-minusitrust-mutanttiming.dat")
 
-    `HyperSQL.avs.itrust.mutanttiming` <- read.csv("original-avs-files/30-HyperSQL-avs-itrust-mutanttiming.dat")
-    `SQLite.avs.itrust.mutanttiming` <- read.csv("original-avs-files/30-SQLite-avs-itrust-mutanttiming.dat")
-    `Postgres.avs.itrust.mutanttiming` <- read.csv("original-avs-files/30-Postgres-avs-itrust-mutanttiming.dat")
+    `HyperSQL.avs.itrust.mutanttiming` <- read.csv("data/original-avs-files/30-HyperSQL-avs-itrust-mutanttiming.dat")
+    `SQLite.avs.itrust.mutanttiming` <- read.csv("data/original-avs-files/30-SQLite-avs-itrust-mutanttiming.dat")
+    `Postgres.avs.itrust.mutanttiming` <- read.csv("data/original-avs-files/30-Postgres-avs-itrust-mutanttiming.dat")
 
-    hypersql.avmdefaults <- read.csv("transformed-files/hypersql-avmdefaults.dat")
-    sqlite.avmdefaults <- read.csv("transformed-files/sqlite-avmdefaults.dat")
-    postgres.avmdefaults <- read.csv("transformed-files/postgres-avmdefaults.dat")
+    hypersql.avmdefaults <- read.csv("data/transformed-files/hypersql-avmdefaults.dat")
+    sqlite.avmdefaults <- read.csv("data/transformed-files/sqlite-avmdefaults.dat")
+    postgres.avmdefaults <- read.csv("data/transformed-files/postgres-avmdefaults.dat")
 
-    hypersql.random <- read.csv("transformed-files/hypersql-random.dat")
-    sqlite.random <- read.csv("transformed-files/sqlite-random.dat")
-    postgres.random <- read.csv("transformed-files/postgres-random.dat")
+    hypersql.random <- read.csv("data/transformed-files/hypersql-random.dat")
+    sqlite.random <- read.csv("data/transformed-files/sqlite-random.dat")
+    postgres.random <- read.csv("data/transformed-files/postgres-random.dat")
 
     namevector <- c("generator")
     `30.SQLite.directedRandom.minusitrust.mutanttiming`[,namevector] <- "directedRandom"

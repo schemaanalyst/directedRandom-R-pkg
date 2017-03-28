@@ -13,6 +13,7 @@ Depends:
     ggplot2,
     tables,
     xtable,
+    kimisc,
     broom
 Imports:
     dplyr,
@@ -20,5 +21,6 @@ Imports:
     ggplot2,
     tables,
     xtable,
+    kimisc,
     broom
 RoxygenNote: 6.0.1.9000
