@@ -331,9 +331,9 @@ siginificant_coverage <- function(d) {
     #b[i,] = ifelse(min(as.numeric(b[i,])) == as.numeric(b[i,]), paste("$",sqlite,"$","\\textbf{", b[i,], "}", sep = ""), as.numeric(b[i,]))
     #c[i,] = ifelse(min(as.numeric(c[i,])) == as.numeric(c[i,]), paste("$",hsql,"$","\\textbf{", c[i,], "}", sep = ""), as.numeric(c[i,]))
   }
-  a <- a[c(1,3,2,4)]
-  b <- b[c(1,3,2,4)]
-  c <- c[c(1,3,2,4)]
+  a <- a[c(1,4,3,2)]
+  b <- b[c(1,4,3,2)]
+  c <- c[c(1,4,3,2)]
   d <- cbind(a1,c,a,b)
   #return(d)
   return(print(xtable(d), include.rownames=FALSE ,sanitize.text.function = function(x){x}))
@@ -623,9 +623,9 @@ siginificant_timing <- function(d) {
     #b[i,] = ifelse(min(as.numeric(b[i,])) == as.numeric(b[i,]), paste("$",sqlite,"$","\\textbf{", b[i,], "}", sep = ""), as.numeric(b[i,]))
     #c[i,] = ifelse(min(as.numeric(c[i,])) == as.numeric(c[i,]), paste("$",hsql,"$","\\textbf{", c[i,], "}", sep = ""), as.numeric(c[i,]))
   }
-  a <- a[c(1,3,2,4)]
-  b <- b[c(1,3,2,4)]
-  c <- c[c(1,3,2,4)]
+  a <- a[c(1,4,3,2)]
+  b <- b[c(1,4,3,2)]
+  c <- c[c(1,4,3,2)]
 
   d <- cbind(a1,c,a,b)
   #return(d)
@@ -687,7 +687,7 @@ siginificant_mutation_score <- function(d) {
     avmp <- d1 %>% filter(schema == schema1, generator == "avs")
     avmdp <- d1 %>% filter(schema == schema1, generator == "avsDefaults")
     randp <- d1 %>% filter(schema == schema1, generator == "random")
-
+    if (schema1 == "Products") { browser() }
     p <- wilcox.test((avmp %>% filter(dbms == "Postgres"))$mutationScore, (drp %>% filter(dbms == "Postgres"))$mutationScore)$p.value <= 0.05
     if (isTRUE(p) == FALSE) {
 
@@ -929,9 +929,9 @@ siginificant_mutation_score <- function(d) {
     #b[i,] = ifelse(min(as.numeric(b[i,])) == as.numeric(b[i,]), paste("$",sqlite,"$","\\textbf{", b[i,], "}", sep = ""), as.numeric(b[i,]))
     #c[i,] = ifelse(min(as.numeric(c[i,])) == as.numeric(c[i,]), paste("$",hsql,"$","\\textbf{", c[i,], "}", sep = ""), as.numeric(c[i,]))
   }
-  a <- a[c(1,3,2,4)]
-  b <- b[c(1,3,2,4)]
-  c <- c[c(1,3,2,4)]
+  a <- a[c(1,4,3,2)]
+  b <- b[c(1,4,3,2)]
+  c <- c[c(1,4,3,2)]
   d <- cbind(a1,c,a,b)
   #return(d)
   return(print(xtable(d), include.rownames=FALSE ,sanitize.text.function = function(x){x}))
@@ -1608,9 +1608,9 @@ siginificant_mutant_operators_fixed <- function(d) {
 
 
   }
-  a <- a[c(1,3,2,4)]
-  b <- b[c(1,3,2,4)]
-  c <- c[c(1,3,2,4)]
+  a <- a[c(1,4,3,2)]
+  b <- b[c(1,4,3,2)]
+  c <- c[c(1,4,3,2)]
 
   d <- cbind(a1,c,a,b)
   #return(d)
