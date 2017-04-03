@@ -7,16 +7,19 @@
 generate_15_schmea_mutation_analysis <- function(d) {
   library(kimisc)
   library(dplyr)
-  set.seed(1)
+  set.seed(2)
   #browser()
-  cases <- distinct(d, casestudy)
-  a <- sample.rows(cases %>% filter(casestudy != "iTrust", casestudy != "Products"), 13)
-  d_rest <- d %>% filter(casestudy %in% a)
-  d_itrust <- d %>% filter(casestudy == "iTrust")
-  d_products <- d %>% filter(casestudy == "Products")
+  #cases <- distinct(d, casestudy)
 
-  d <- rbind(d_rest, d_products, d_itrust)
+  #a <- sample.rows(cases %>% filter(casestudy != "iTrust", casestudy != "Products"), 13)
+  c <- c("ArtistTerm", "BookTown", "BrowserCookies", "Cloc", "DellStore", "Flights", "Inventory", "UnixUsage", "JWhoisServer", "MozillaExtensions", "NistXTS749", "RiskIt", "StudentResidence","Products", "iTrust")
 
+  d_rest <- d %>% filter(casestudy %in% c)
+  #d_itrust <- d %>% filter(casestudy == "iTrust")
+  #d_products <- d %>% filter(casestudy == "Products")
+
+  #d <- rbind(d_rest, d_products, d_itrust)
+  d <- d_rest
   return(d)
 }
 
@@ -31,14 +34,15 @@ generate_15_schmea_mutanttiming <- function(d) {
   library(dplyr)
   set.seed(1)
   #browser()
-  cases <- distinct(d, schema)
-  a <- sample.rows(cases %>% filter(schema != "iTrust", schema != "Products"), 13)
-  d_rest <- d %>% filter(schema %in% a)
-  d_itrust <- d %>% filter(schema == "iTrust")
-  d_products <- d %>% filter(schema == "Products")
+  #cases <- distinct(d, schema)
+  #a <- sample.rows(cases %>% filter(schema != "iTrust", schema != "Products"), 13)
+  c <- c("ArtistTerm", "BookTown", "BrowserCookies", "Cloc", "DellStore", "Flights", "Inventory", "UnixUsage", "JWhoisServer", "MozillaExtensions", "NistXTS749", "RiskIt", "StudentResidence","Products", "iTrust")
+  d_rest <- d %>% filter(schema %in% c)
+  #d_itrust <- d %>% filter(schema == "iTrust")
+  #d_products <- d %>% filter(schema == "Products")
 
-  d <- rbind(d_rest, d_products, d_itrust)
-
+  #d <- rbind(d_rest, d_products, d_itrust)
+  d <- d_rest
   return(d)
 }
 
