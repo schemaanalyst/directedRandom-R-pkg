@@ -34,9 +34,18 @@ following command to first clone this repository:
 * tests directory tests all the tables generated.
 * data directory (and this must be the working directory for R scripts to collect data)
 
+Major functions used in the paper is:
+
+* R/tables_generator.R `siginificant_timing(analysis, rtrn = "data")`
+* R/tables_generator.R `siginificant_coverage(analysis, rtrn = "data")`
+* R/tables_generator.R `siginificant_mutation_score(mutanttiming, rtrn = "data")`
+* R/tables_generator.R `siginificant_mutant_operators_fixed(mutanttiming, rtrn = "data")`
+
 ## Example Run
 All in the R shell
+
 * Collect Data
+
 ```shell
 mutants <- directedRandomR::collect_mutanttiming()
 analysis <- directedRandomR::collect_mutationanalysistime()
