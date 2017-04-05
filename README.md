@@ -17,13 +17,24 @@ package. This method is ideal if you plan to leverage, without modification, our
 your own work. 
 
 ```shell
-devtools::install_github("NONENOW/NONWNOW")
+devtools::install_github("schemaanalyst/directedRandom-R-pkg")
 ```
+
+To Use the data within the package and Knit the files you have to clone this repo
+
+```shell
+mkdir data
+cd data
+git clone https://github.com/schemaanalyst/directedRandom-R-pkg.git
+cd directedRandom-R-pkg
+```
+NOTE: use the R shell after those then go to the commands in sction Example Run
 
 If you are interested in extending this package with new data sets and your own functions, then you can run the
 following command to first clone this repository:
 
 ```shell
+git clone https://github.com/schemaanalyst/directedRandom-R-pkg.git
 ```
 
 ### What is this repository for? ###
@@ -71,6 +82,8 @@ devtools::test()
 ```
 
 ## Building Rmarkdown and Sweave (latex)
+
+All done in terminal command NOT in the R shell
 
 ### Rmarkdown
 
