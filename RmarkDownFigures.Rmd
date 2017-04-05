@@ -61,23 +61,24 @@ In our experiments we ran two test data generators AVM and Directed Random (DR),
 ### Experiment Set Up
 
 Our experiment set-up was to run each technique 30 times for each case study using one combined coverage criteria "ClauseAICC+AUCC+ANCC". Each run has different random seed to see the difference of results.
-
+<!--
 ### Case Studies
 
 The following table has the case studies that are been used in our experiment:
 
 ```{r case_studies, echo=FALSE}
-case_studies <- read.csv("CaseStudies.csv", check.names=FALSE)
+#case_studies <- read.csv("CaseStudies.csv", check.names=FALSE)
 #knitr::kable(case_studies)
-library(pander)
+#library(pander)
 #pander(case_studies, style = "multiline")
-pander(case_studies, split.cells = 30, split.table = Inf)
+#pander(case_studies, split.cells = 30, split.table = Inf)
 ```
-
+-->
 # Results
 ## Test generation Timing
 
 When comparing test generation time we look at how efficient the technique are in regard of the time it takes to generate test suites (ALL AVM and DR has 100% coverage). Figure 1 shows the average test generation timing for each technique for each DBMS, for all runs and schemas. Just By looking at the graph it shows that Directed Random is much faster/efficient compared to AVM in generating test cases nearly 1 second faster for different SQL database engine. ??? Why Postgres takes longer for each AVM and DR compared to other engines ? different semantics or larger engine ?
+
 
 ```{r timing, echo=FALSE, fig.cap='Avrages of Test generation timing - in seconds. Group By data generator and DBMS, then average test generation timing and then when ploting divide by 1000 to convert to seconds'}
 a <- mutationanalysistiming %>% group_by(datagenerator, dbms) %>% summarise(testgenerationtime = mean(testgenerationtime)) %>% filter(datagenerator != "random") %>% ggplot(aes(datagenerator, (testgenerationtime / 1000))) + geom_bar(stat = "identity") + facet_grid(. ~ dbms)  + labs(y = "Average Test Generation Time (In Seconds) For All runs and schems", x = "Technique") + theme(axis.text.x = element_text(angle = 45, hjust = 1))

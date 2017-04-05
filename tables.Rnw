@@ -1,0 +1,306 @@
+\documentclass{article}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{adjustbox}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{dirtytalk}
+\usepackage{graphicx}
+\usepackage{newfloat}
+\usepackage{pifont}
+\usepackage{setspace}
+\usepackage{tabularx}
+\usepackage{textcomp}
+\usepackage[table]{xcolor}
+\usepackage{xspace}
+
+\newcommand{\schemaForTable}[1]{#1\xspace}
+\newcommand{\schema}[1]{{\it #1}\xspace}
+
+\newcommand{\ArtistTermForTable}{\schemaForTable{ArtistTerm}}
+\newcommand{\BookTownForTable}{\schemaForTable{BookTown}}
+\newcommand{\BrowserCookiesForTable}{\schemaForTable{BrowserCookies}}
+\newcommand{\ClocForTable}{\schemaForTable{Cloc}}
+\newcommand{\DellStoreForTable}{\schemaForTable{DellStore}}
+\newcommand{\FlightsForTable}{\schemaForTable{Flights}}
+\newcommand{\InventoryForTable}{\schemaForTable{Inventory}}
+\newcommand{\iTrustForTable}{\schemaForTable{iTrust}}
+\newcommand{\JWhoisServerForTable}{\schemaForTable{JWhoisServer}}
+\newcommand{\MozillaExtensionsForTable}{\schemaForTable{MozillaExtensions}}
+\newcommand{\NistXTSNineForTable}{\schemaForTable{NistXTS749}}
+\newcommand{\ProductsForTable}{\schemaForTable{Products}}
+\newcommand{\RiskItForTable}{\schemaForTable{RiskIt}}
+\newcommand{\StudentResidenceForTable}{\schemaForTable{StudentResidence}}
+\newcommand{\UnixUsageForTable}{\schemaForTable{UnixUsage}}
+
+\newcommand{\mutopname}[1]{{#1}\xspace}
+\newcommand{\CInListElementR}{\mutopname{CInListElementR}}
+\newcommand{\CR}{\mutopname{CR}}
+\newcommand{\CRelOpE}{\mutopname{CRelOpE}}
+\newcommand{\FKColumnPairA}{\mutopname{FKColumnPairA}}
+\newcommand{\FKColumnPairE}{\mutopname{FKColumnPairE}}
+\newcommand{\FKColumnPairR}{\mutopname{FKColumnPairR}}
+\newcommand{\NNA}{\mutopname{NNA}}
+\newcommand{\NNR}{\mutopname{NNR}}
+\newcommand{\PKColumnA}{\mutopname{PKColumnA}}
+\newcommand{\PKColumnE}{\mutopname{PKColumnE}}
+\newcommand{\PKColumnR}{\mutopname{PKColumnR}}
+\newcommand{\UColumnA}{\mutopname{UColumnA}}
+\newcommand{\UColumnE}{\mutopname{UColumnE}}
+\newcommand{\UColumnR}{\mutopname{UColumnR}}
+
+% short-named macros
+
+\newcommand{\CIR}{\CInListElementR}
+\newcommand{\CCR}{\CR}
+\newcommand{\COE}{\CRelOpE}
+\newcommand{\FKA}{\FKColumnPairA}
+\newcommand{\FKE}{\FKColumnPairE}
+\newcommand{\FKR}{\FKColumnPairR}
+\newcommand{\PKA}{\PKColumnA}
+\newcommand{\PKE}{\PKColumnE}
+\newcommand{\PKR}{\PKColumnR}
+\newcommand{\UCA}{\UColumnA}
+\newcommand{\UCE}{\UColumnE}
+\newcommand{\UCR}{\UColumnR}
+
+% long-named macros
+
+\newcommand{\CCInExpressionRHSListExpressionElementR}{\CInListElementR}
+\newcommand{\CCNullifier}{\CR}
+\newcommand{\CCRelationalExpressionOperatorE}{\CRelOpE}
+\newcommand{\FKCColumnPairA}{\FKColumnPairA}
+\newcommand{\FKCColumnPairE}{\FKColumnPairE}
+\newcommand{\FKCColumnPairR}{\FKColumnPairR}
+\newcommand{\NNCA}{\NNA}
+\newcommand{\NNCR}{\NNR}
+\newcommand{\PKCColumnA}{\PKColumnA}
+\newcommand{\PKCColumnE}{\PKColumnE}
+\newcommand{\PKCColumnR}{\PKColumnR}
+\newcommand{\UCColumnA}{\UColumnA}
+\newcommand{\UCColumnE}{\UColumnE}
+\newcommand{\UCColumnR}{\UColumnR}
+
+% with the text 'operator' appended to the operator name
+
+\newcommand{\mutop}[1]{\mutopname{#1}~operator\xspace}
+\newcommand{\CCIListElementRop}{\mutop{\CInListElementR}}
+\newcommand{\CRop}{\mutop{\CR}}
+\newcommand{\CRelOpEop}{\mutop{\CRelOpE}}
+\newcommand{\FKColumnPairAop}{\mutop{\FKColumnPairA}}
+\newcommand{\FKColumnPairEop}{\mutop{\FKColumnPairE}}
+\newcommand{\FKColumnPairRop}{\mutop{\FKColumnPairR}}
+\newcommand{\NNAop}{\mutop{\NNA}}
+\newcommand{\NNRop}{\mutop{\NNR}}
+\newcommand{\PKColumnAop}{\mutop{\PKColumnA}}
+\newcommand{\PKColumnEop}{\mutop{\PKColumnE}}
+\newcommand{\PKColumnRop}{\mutop{\PKColumnR}}
+\newcommand{\UColumnAop}{\mutop{\UColumnA}}
+\newcommand{\UColumnEop}{\mutop{\UColumnE}}
+\newcommand{\UColumnRop}{\mutop{\UColumnR}}
+\newcommand{\CIRop}{\mutop{\CInListElementR}}
+\newcommand{\CCRop}{\mutop{\CR}}
+\newcommand{\COEop}{\mutop{\CRelOpE}}
+\newcommand{\FKAop}{\mutop{\FKColumnPairA}}
+\newcommand{\FKEop}{\mutop{\FKColumnPairE}}
+\newcommand{\FKRop}{\mutop{\FKColumnPairR}}
+\newcommand{\PKAop}{\mutop{\PKColumnA}}
+\newcommand{\PKEop}{\mutop{\PKColumnE}}
+\newcommand{\PKRop}{\mutop{\PKColumnR}}
+\newcommand{\UCAop}{\mutop{\UColumnA}}
+\newcommand{\UCEop}{\mutop{\UColumnE}}
+\newcommand{\UCRop}{\mutop{\UColumnR}}
+\newcommand{\CCInExpressionRHSListExpressionElementRop}{\mutop{\CInListElementR}}
+\newcommand{\CCNullifierop}{\mutop{\CR}}
+\newcommand{\CCRelationalExpressionOperatorEop}{\mutop{\CRelOpE}}
+\newcommand{\FKCColumnPairAop}{\mutop{\FKColumnPairA}}
+\newcommand{\FKCColumnPairEop}{\mutop{\FKColumnPairE}}
+\newcommand{\FKCColumnPairRop}{\mutop{\FKColumnPairR}}
+\newcommand{\NNCAop}{\mutop{\NNA}}
+\newcommand{\NNCRop}{\mutop{\NNR}}
+\newcommand{\PKCColumnAop}{\mutop{\PKColumnA}}
+\newcommand{\PKCColumnEop}{\mutop{\PKColumnE}}
+\newcommand{\PKCColumnRop}{\mutop{\PKColumnR}}
+\newcommand{\UCColumnAop}{\mutop{\UColumnA}}
+\newcommand{\UCColumnEop}{\mutop{\UColumnE}}
+\newcommand{\UCColumnRop}{\mutop{\UColumnR}}
+
+\newcommand{\postgres}{PostgreSQL\xspace}
+\newcommand{\postgresql}{\postgres}
+\newcommand{\Postgres}{\postgres}
+\newcommand{\PostgreSQL}{\postgres}
+\newcommand{\hypersql}{HyperSQL\xspace}
+\newcommand{\hsqldb}{\hypersql}
+\newcommand{\HSQLDB}{\hypersql}
+\newcommand{\HyperSQL}{\hypersql}
+\newcommand{\postgreshypersql}{\postgres/\hypersql}
+\newcommand{\sqlite}{SQLite\xspace}
+\newcommand{\SQLite}{\sqlite}
+
+\newcommand{\avm}{{\it AVM\/}\xspace}
+\newcommand{\AVM}{\avm}
+\newcommand{\AVMD}{AVM-D\xspace}
+\newcommand{\AVMDi}{AVM-Defaults\xspace}
+\newcommand{\AVMR}{AVM-R\xspace}
+\newcommand{\AVMRi}{AVM-Random\xspace}
+\newcommand{\theAVM}{the \avm}
+\newcommand{\TheAVM}{The \avm}
+
+\newcommand{\AVMName}{Alternating Variable Method (AVM)}
+
+\newcommand{\RAGTAG}{RAGTAG\xspace}
+\newcommand{\RAGTAGName}{\underline{R}andom d\underline{A}ta \underline{G}eneration \underline{T}hrough v\underline{A}lue copyin\underline{G}\xspace}
+
+\newcommand{\DR}{\RAGTAG}
+\newcommand{\Dr}{Directed random\xspace}
+\newcommand{\dr}{directed random\xspace}
+
+\newcommand{\R}{R$^{+}$\xspace}
+\newcommand{\rand}{{\it Random$^{+}$\/}\xspace}
+\newcommand{\random}{\rand}
+\newcommand{\Random}{\rand}
+\newcommand{\rnd}{\rand}
+
+\newcommand{\tableHeadingSchema}{& \multicolumn{4}{c}{\postgres} & \multicolumn{4}{c}{\sqlite} \\
+                                      Schema  & \DR & \multicolumn{1}{c}{\R} & \AVMD & \AVMR
+                                              & \DR & \multicolumn{1}{c}{\R} & \AVMD & \AVMR \\}
+
+\newcommand{\tableHeadingOperator}{& \multicolumn{4}{c}{\postgres} & \multicolumn{4}{c}{\sqlite} \\
+                                      Operator  & \DR & \multicolumn{1}{c}{\R} & \AVMD & \AVMR
+                                                & \DR & \multicolumn{1}{c}{\R} & \AVMD & \AVMR \\}
+<<data_prepare, echo=FALSE>>=
+library(ggplot2)
+library(dplyr)
+mutanttiming <- directedRandomR::collect_mutanttiming()
+mutationanalysistiming <- directedRandomR::collect_mutationanalysistime()
+
+@
+
+\begin{document}
+
+<<time, echo=FALSE, results=tex>>=
+#require(xtable)
+x <- directedRandomR::siginificant_timing(mutationanalysistiming, rtrn = "data")
+@
+
+
+\begin{table}[!ht]
+  \caption{\label{tab:timing}The table shows the median of test generation timing.}
+  \begin{center}
+    \resizebox{\textwidth}{!}{
+      \begin{tabular}{lrrrr|rrrr}
+        \hline
+        \tableHeadingSchema
+        \hline
+<<manualtab1, results=tex,echo=FALSE>>=
+nr = nrow(x); nc = ncol(x)
+for (i in 1:nr)
+  for(j in 1:nc) {
+    cat(x[i,j])
+    if(j < nc)
+      cat("&")
+    else
+      cat("\\\\\n")
+  }
+@
+      \hline
+      \end{tabular}
+    }
+  \end{center}
+\end{table}
+
+<<coverage, echo=FALSE, results=tex>>=
+#require(xtable)
+x <- directedRandomR::siginificant_coverage(mutationanalysistiming, rtrn = "data")
+@
+
+
+\begin{table}[!ht]
+  \caption{\label{tab:coverage}The table shows the median of coverage.}
+  \begin{center}
+    \resizebox{\textwidth}{!}{
+      \begin{tabular}{lrrrr|rrrr}
+        \hline
+        \tableHeadingSchema
+        \hline
+<<manualtab2, results=tex,echo=FALSE>>=
+nr = nrow(x); nc = ncol(x)
+for (i in 1:nr)
+  for(j in 1:nc) {
+    cat(x[i,j])
+    if(j < nc)
+      cat("&")
+    else
+      cat("\\\\\n")
+  }
+@
+      \hline
+      \end{tabular}
+    }
+  \end{center}
+\end{table}
+
+<<schema_socre, echo=FALSE, results=tex>>=
+#require(xtable)
+x <- directedRandomR::siginificant_mutation_score(mutanttiming, rtrn = "data")
+@
+
+
+\begin{table}[!ht]
+  \caption{\label{tab:mutant_score}The table shows the median of Mutattion Score.}
+  \begin{center}
+    \resizebox{\textwidth}{!}{
+      \begin{tabular}{lrrrr|rrrr}
+        \hline
+        \tableHeadingSchema
+        \hline
+<<manualtab3, results=tex,echo=FALSE>>=
+nr = nrow(x); nc = ncol(x)
+for (i in 1:nr)
+  for(j in 1:nc) {
+    cat(x[i,j])
+    if(j < nc)
+      cat("&")
+    else
+      cat("\\\\\n")
+  }
+@
+      \hline
+      \end{tabular}
+    }
+  \end{center}
+\end{table}
+
+
+<<operators_socre, echo=FALSE, results=tex>>=
+#require(xtable)
+x <- directedRandomR::siginificant_mutant_operators_fixed(mutanttiming, rtrn = "data")
+@
+
+
+\begin{table}[!ht]
+  \caption{\label{tab:operators}The table shows the median of Mutattion Score for mutation operattors.}
+  \begin{center}
+    \resizebox{\textwidth}{!}{
+      \begin{tabular}{lrrrr|rrrr|rrrr}
+        \hline
+        \tableHeadingOperator
+        \hline
+<<manualtab4, results=tex,echo=FALSE>>=
+nr = nrow(x); nc = ncol(x)
+for (i in 1:nr)
+  for(j in 1:nc) {
+    cat(x[i,j])
+    if(j < nc)
+      cat("&")
+    else
+      cat("\\\\\n")
+  }
+@
+      \hline
+      \end{tabular}
+    }
+  \end{center}
+\end{table}
+
+\end{document}

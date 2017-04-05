@@ -4,7 +4,7 @@
 \alias{siginificant_mutant_operators_fixed}
 \title{FUNCTION: siginificant_mutant_operators_fixed}
 \usage{
-siginificant_mutant_operators_fixed(d)
+siginificant_mutant_operators_fixed(d, rtrn = "tex")
 }
 \description{
 generates a latex table for mutation operators table with effect size and U test.

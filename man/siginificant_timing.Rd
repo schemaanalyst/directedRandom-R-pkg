@@ -4,7 +4,7 @@
 \alias{siginificant_timing}
 \title{FUNCTION: siginificant_timing}
 \usage{
-siginificant_timing(d)
+siginificant_timing(d, rtrn = "tex")
 }
 \description{
 generates a latex table for test generation timing table with effect size and U test.
