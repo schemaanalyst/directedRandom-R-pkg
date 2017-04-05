@@ -71,6 +71,7 @@ siginificant_coverage <- function(d) {
   a <- a[c(3,1,2,4)]
   b <- d[9:12]
   b <- b[c(3,1,2,4)]
+  a1$casestudy <- as.character(a1$casestudy)
   numberOfRows <- nrow(d)
   for (i in 1:numberOfRows) {
     schema <- a1[i,]
@@ -90,15 +91,38 @@ siginificant_coverage <- function(d) {
     avmdp <- d1 %>% filter(casestudy == schema, datagenerator == "avsDefaults")
     randp <- d1 %>% filter(casestudy == schema, datagenerator == "random")
 
-    p <- wilcox.test((avmp %>% filter(dbms == "Postgres"))$coverage, (drp %>% filter(dbms == "Postgres"))$coverage)$p.value <= 0.05
-    if (isTRUE(p) == FALSE) {
+    # p <- wilcox.test((avmp %>% filter(dbms == "Postgres"))$coverage, (drp %>% filter(dbms == "Postgres"))$coverage)$p.value <= 0.05
+    # if (isTRUE(p) == FALSE) {
+    #
+    # } else if (p) {
+    #   if (as.numeric(a[i,2]) > as.numeric(a[i,1])) {
+    #     a[i,2] = paste("\\textit{",a[i,2],"}", sep = "")
+    #   } else {
+    #     a[i,2] = paste("\\textbf{",a[i,2],"}", sep = "")
+    #   }
+    # }
 
-    } else if (p) {
-      if (as.numeric(a[i,2]) > as.numeric(a[i,1])) {
-        a[i,2] = paste("\\textit{",a[i,2],"}", sep = "")
-      } else {
-        a[i,2] = paste("\\textbf{",a[i,2],"}", sep = "")
-      }
+    dr_coverage <- (drp %>% filter(dbms == "Postgres"))$coverage
+    avmr_coverage <- (avmp %>% filter(dbms == "Postgres"))$coverage
+
+    p1 <- wilcox.test(dr_coverage, avmr_coverage, alternative = "greater")$p.value <= 0.01
+    p2 <- wilcox.test(dr_coverage, avmr_coverage, alternative = "less")$p.value <= 0.01
+
+    #if (isTRUE(p1) == FALSE & isTRUE(p2) == FALSE) {
+    #  oh = paste("Schema => ", schema, " All False ", sep = "")
+    #  print(oh)
+    #} else
+    if (p1 == TRUE & p2 == FALSE) {
+      oh = paste("Postgers Schema => ", schema, " DR YES ", a[i,1], " AVM-R NOT ", a[i,2], sep = "")
+      print(oh)
+      a[i,2] = paste("\\textbf{",a[i,2],"}", sep = "")
+    } else if (p1 == FALSE & p2 == TRUE) {
+      oh = paste("Postgers Schema => ", schema, " DR NOT ", a[i,1], " AVM-R YES ", a[i,2], sep = "")
+      print(oh)
+      a[i,2] = paste("\\textit{",a[i,2],"}", sep = "")
+    } else {
+      oh = paste("Postgers Schema => ", schema, " DR NOT ", a[i,1], " AVM-R NOT ", a[i,2], sep = "")
+      print(oh)
     }
 
     if (postgres_avm == "large") {
@@ -111,16 +135,38 @@ siginificant_coverage <- function(d) {
 
     }
 
-    p <- wilcox.test((avmdp %>% filter(dbms == "Postgres"))$coverage, (drp %>% filter(dbms == "Postgres"))$coverage)$p.value <= 0.05
+    # p <- wilcox.test((avmdp %>% filter(dbms == "Postgres"))$coverage, (drp %>% filter(dbms == "Postgres"))$coverage)$p.value <= 0.05
+    #
+    # if (isTRUE(p) == FALSE) {
+    #
+    # } else if (p) {
+    #   if (as.numeric(a[i,3]) > as.numeric(a[i,1])) {
+    #     a[i,3] = paste("\\textit{",a[i,3],"}", sep = "")
+    #   } else {
+    #     a[i,3] = paste("\\textbf{",a[i,3],"}", sep = "")
+    #   }
+    # }
 
-    if (isTRUE(p) == FALSE) {
+    avmd_coverage <- (avmdp %>% filter(dbms == "Postgres"))$coverage
 
-    } else if (p) {
-      if (as.numeric(a[i,3]) > as.numeric(a[i,1])) {
-        a[i,3] = paste("\\textit{",a[i,3],"}", sep = "")
-      } else {
-        a[i,3] = paste("\\textbf{",a[i,3],"}", sep = "")
-      }
+    p1 <- wilcox.test(dr_coverage, avmd_coverage, alternative = "greater")$p.value <= 0.01
+    p2 <- wilcox.test(dr_coverage, avmd_coverage, alternative = "less")$p.value <= 0.01
+
+    #if (isTRUE(p1) == FALSE & isTRUE(p2) == FALSE) {
+    #  oh = paste("Schema => ", schema, " All False ", sep = "")
+    #  print(oh)
+    #} else
+    if (p1 == TRUE & p2 == FALSE) {
+      oh = paste("Postgers Schema => ", schema, " DR YES ", a[i,1], " AVM-R NOT ", a[i,2], sep = "")
+      print(oh)
+      a[i,3] = paste("\\textbf{",a[i,3],"}", sep = "")
+    } else if (p1 == FALSE & p2 == TRUE) {
+      oh = paste("Postgers Schema => ", schema, " DR NOT ", a[i,1], " AVM-R YES ", a[i,2], sep = "")
+      print(oh)
+      a[i,3] = paste("\\textit{",a[i,3],"}", sep = "")
+    } else {
+      oh = paste("Postgers Schema => ", schema, " DR NOT ", a[i,1], " AVM-R NOT ", a[i,2], sep = "")
+      print(oh)
     }
 
     if (postgres_avmd == "large") {
@@ -136,17 +182,39 @@ siginificant_coverage <- function(d) {
     #check1 <- (randp %>% filter(dbms == "Postgres"))$mutationScore
     #check2 <- (drp %>% filter(dbms == "Postgres"))$mutationScore
     #browser(condition = (schema == "NistWeather"))
-    p <- wilcox.test((randp %>% filter(dbms == "Postgres"))$coverage, (drp %>% filter(dbms == "Postgres"))$coverage)$p.value <= 0.05
+    # p <- wilcox.test((randp %>% filter(dbms == "Postgres"))$coverage, (drp %>% filter(dbms == "Postgres"))$coverage)$p.value <= 0.05
+    #
+    # if (isTRUE(p) == FALSE) {
+    #
+    # } else if (p) {
+    #   if (as.numeric(a[i,4]) > as.numeric(a[i,1])) {
+    #     a[i,4] = paste("\\textit{",a[i,4],"}", sep = "")
+    #   } else {
+    #     #browser()
+    #     a[i,4] = paste("\\textbf{",a[i,4],"}", sep = "")
+    #   }
+    # }
 
-    if (isTRUE(p) == FALSE) {
+    rand_coverage <- (randp %>% filter(dbms == "Postgres"))$coverage
 
-    } else if (p) {
-      if (as.numeric(a[i,4]) > as.numeric(a[i,1])) {
-        a[i,4] = paste("\\textit{",a[i,4],"}", sep = "")
-      } else {
-        #browser()
-        a[i,4] = paste("\\textbf{",a[i,4],"}", sep = "")
-      }
+    p1 <- wilcox.test(dr_coverage, rand_coverage, alternative = "greater")$p.value <= 0.01
+    p2 <- wilcox.test(dr_coverage, rand_coverage, alternative = "less")$p.value <= 0.01
+
+    #if (isTRUE(p1) == FALSE & isTRUE(p2) == FALSE) {
+    #  oh = paste("Schema => ", schema, " All False ", sep = "")
+    #  print(oh)
+    #} else
+    if (p1 == TRUE & p2 == FALSE) {
+      oh = paste("Postgers Schema => ", schema, " DR YES ", a[i,1], " AVM-R NOT ", a[i,2], sep = "")
+      print(oh)
+      a[i,4] = paste("\\textbf{",a[i,4],"}", sep = "")
+    } else if (p1 == FALSE & p2 == TRUE) {
+      oh = paste("Postgers Schema => ", schema, " DR NOT ", a[i,1], " AVM-R YES ", a[i,2], sep = "")
+      print(oh)
+      a[i,4] = paste("\\textit{",a[i,4],"}", sep = "")
+    } else {
+      oh = paste("Postgers Schema => ", schema, " DR NOT ", a[i,1], " AVM-R NOT ", a[i,2], sep = "")
+      print(oh)
     }
 
     if (postgres_rand == "large") {
@@ -172,17 +240,35 @@ siginificant_coverage <- function(d) {
     sqlite_rand <- directedRandomR::effectsize_accurate((dr %>% filter(dbms == "SQLite"))$coverage, (rand %>% filter(dbms == "SQLite"))$coverage)$size
     #sqlite <- NULL
 
-    p <- wilcox.test((avmp %>% filter(dbms == "SQLite"))$coverage, (drp %>% filter(dbms == "SQLite"))$coverage)$p.value <= 0.05
+    # p <- wilcox.test((avmp %>% filter(dbms == "SQLite"))$coverage, (drp %>% filter(dbms == "SQLite"))$coverage)$p.value <= 0.05
+    #
+    # if (isTRUE(p) == FALSE) {
+    #
+    # } else if (p) {
+    #   if (as.numeric(b[i,2]) > as.numeric(b[i,1])) {
+    #     b[i,2] = paste("\\textit{",b[i,2],"}", sep = "")
+    #   } else {
+    #     b[i,2] = paste("\\textbf{",b[i,2],"}", sep = "")
+    #   }
+    # }
 
-    if (isTRUE(p) == FALSE) {
+    dr_coverage <- (drp %>% filter(dbms == "SQLite"))$coverage
+    avmr_coverage <- (avmp %>% filter(dbms == "SQLite"))$coverage
 
-    } else if (p) {
-      if (as.numeric(b[i,2]) > as.numeric(b[i,1])) {
-        b[i,2] = paste("\\textit{",b[i,2],"}", sep = "")
-      } else {
-        b[i,2] = paste("\\textbf{",b[i,2],"}", sep = "")
-      }
+    p1 <- wilcox.test(dr_coverage, avmr_coverage, alternative = "greater")$p.value <= 0.01
+    p2 <- wilcox.test(dr_coverage, avmr_coverage, alternative = "less")$p.value <= 0.01
+
+    #if (isTRUE(p1) == FALSE & isTRUE(p2) == FALSE) {
+    #  oh = paste("Schema => ", schema, " All False ", sep = "")
+    #  print(oh)
+    #} else
+    if (p1 == TRUE & p2 == FALSE) {
+      b[i,2] = paste("\\textbf{",b[i,2],"}", sep = "")
+    } else if (p1 == FALSE & p2 == TRUE) {
+      b[i,2] = paste("\\textit{",b[i,2],"}", sep = "")
+    } else {
     }
+
 
     if (sqlite_avm == "large") {
       b[i,2] = paste("$^{\\ast\\ast\\ast}$",b[i,2], sep = "")
@@ -194,16 +280,31 @@ siginificant_coverage <- function(d) {
 
     }
 
-    p <- wilcox.test((avmdp %>% filter(dbms == "SQLite"))$coverage, (drp %>% filter(dbms == "SQLite"))$coverage)$p.value <= 0.05
+    # p <- wilcox.test((avmdp %>% filter(dbms == "SQLite"))$coverage, (drp %>% filter(dbms == "SQLite"))$coverage)$p.value <= 0.05
+    #
+    # if (isTRUE(p) == FALSE) {
+    #
+    # } else if (p) {
+    #   if (as.numeric(b[i,3]) > as.numeric(b[i,1])) {
+    #     b[i,3] = paste("\\textit{",b[i,3],"}", sep = "")
+    #   } else {
+    #     b[i,3] = paste("\\textbf{",b[i,3],"}", sep = "")
+    #   }
+    # }
+    avmd_coverage <- (avmdp %>% filter(dbms == "SQLite"))$coverage
 
-    if (isTRUE(p) == FALSE) {
+    p1 <- wilcox.test(dr_coverage, avmd_coverage, alternative = "greater")$p.value <= 0.01
+    p2 <- wilcox.test(dr_coverage, avmd_coverage, alternative = "less")$p.value <= 0.01
 
-    } else if (p) {
-      if (as.numeric(b[i,3]) > as.numeric(b[i,1])) {
-        b[i,3] = paste("\\textit{",b[i,3],"}", sep = "")
-      } else {
-        b[i,3] = paste("\\textbf{",b[i,3],"}", sep = "")
-      }
+    #if (isTRUE(p1) == FALSE & isTRUE(p2) == FALSE) {
+    #  oh = paste("Schema => ", schema, " All False ", sep = "")
+    #  print(oh)
+    #} else
+    if (p1 == TRUE & p2 == FALSE) {
+      b[i,3] = paste("\\textbf{",b[i,3],"}", sep = "")
+    } else if (p1 == FALSE & p2 == TRUE) {
+      b[i,3] = paste("\\textit{",b[i,3],"}", sep = "")
+    } else {
     }
 
     if (sqlite_avmd == "large") {
@@ -216,16 +317,32 @@ siginificant_coverage <- function(d) {
 
     }
 
-    p <- wilcox.test((randp %>% filter(dbms == "SQLite"))$coverage, (drp %>% filter(dbms == "SQLite"))$coverage)$p.value <= 0.05
+    # p <- wilcox.test((randp %>% filter(dbms == "SQLite"))$coverage, (drp %>% filter(dbms == "SQLite"))$coverage)$p.value <= 0.05
+    #
+    # if (isTRUE(p) == FALSE) {
+    #
+    # } else if (p) {
+    #   if (as.numeric(b[i,4]) > as.numeric(b[i,1])) {
+    #     b[i,4] = paste("\\textit{",b[i,4],"}", sep = "")
+    #   } else {
+    #     b[i,4] = paste("\\textbf{",b[i,4],"}", sep = "")
+    #   }
+    # }
 
-    if (isTRUE(p) == FALSE) {
+    rand_coverage <- (randp %>% filter(dbms == "SQLite"))$coverage
 
-    } else if (p) {
-      if (as.numeric(b[i,4]) > as.numeric(b[i,1])) {
-        b[i,4] = paste("\\textit{",b[i,4],"}", sep = "")
-      } else {
-        b[i,4] = paste("\\textbf{",b[i,4],"}", sep = "")
-      }
+    p1 <- wilcox.test(dr_coverage, rand_coverage, alternative = "greater")$p.value <= 0.01
+    p2 <- wilcox.test(dr_coverage, rand_coverage, alternative = "less")$p.value <= 0.01
+
+    #if (isTRUE(p1) == FALSE & isTRUE(p2) == FALSE) {
+    #  oh = paste("Schema => ", schema, " All False ", sep = "")
+    #  print(oh)
+    #} else
+    if (p1 == TRUE & p2 == FALSE) {
+      b[i,4] = paste("\\textbf{",b[i,4],"}", sep = "")
+    } else if (p1 == FALSE & p2 == TRUE) {
+      b[i,4] = paste("\\textit{",b[i,4],"}", sep = "")
+    } else {
     }
 
     if (sqlite_rand == "large") {
@@ -252,16 +369,33 @@ siginificant_coverage <- function(d) {
     #c[i,] = ifelse(min(as.numeric(c[i,])) == as.numeric(c[i,]), paste("\\textbf{", c[i,], "}", sep = ""), as.numeric(c[i,]))
 
 
-    p <- wilcox.test((avmp %>% filter(dbms == "HyperSQL"))$coverage, (drp %>% filter(dbms == "HyperSQL"))$coverage)$p.value <= 0.05
+    # p <- wilcox.test((avmp %>% filter(dbms == "HyperSQL"))$coverage, (drp %>% filter(dbms == "HyperSQL"))$coverage)$p.value <= 0.05
+    #
+    # if (isTRUE(p) == FALSE) {
+    #
+    # } else if (p) {
+    #   if (as.numeric(c[i,2]) > as.numeric(c[i,1])) {
+    #     c[i,2] = paste("\\textit{",c[i,2],"}", sep = "")
+    #   } else {
+    #     c[i,2] = paste("\\textbf{",c[i,2],"}", sep = "")
+    #   }
+    # }
 
-    if (isTRUE(p) == FALSE) {
+    dr_coverage <- (drp %>% filter(dbms == "HyperSQL"))$coverage
+    avmr_coverage <- (avmp %>% filter(dbms == "HyperSQL"))$coverage
 
-    } else if (p) {
-      if (as.numeric(c[i,2]) > as.numeric(c[i,1])) {
-        c[i,2] = paste("\\textit{",c[i,2],"}", sep = "")
-      } else {
-        c[i,2] = paste("\\textbf{",c[i,2],"}", sep = "")
-      }
+    p1 <- wilcox.test(dr_coverage, avmr_coverage, alternative = "greater")$p.value <= 0.01
+    p2 <- wilcox.test(dr_coverage, avmr_coverage, alternative = "less")$p.value <= 0.01
+
+    #if (isTRUE(p1) == FALSE & isTRUE(p2) == FALSE) {
+    #  oh = paste("Schema => ", schema, " All False ", sep = "")
+    #  print(oh)
+    #} else
+    if (p1 == TRUE & p2 == FALSE) {
+      c[i,2] = paste("\\textbf{",c[i,2],"}", sep = "")
+    } else if (p1 == FALSE & p2 == TRUE) {
+      c[i,2] = paste("\\textit{",c[i,2],"}", sep = "")
+    } else {
     }
 
     if (hsql_avm == "large") {
@@ -274,16 +408,32 @@ siginificant_coverage <- function(d) {
 
     }
 
-    p <- wilcox.test((avmdp %>% filter(dbms == "HyperSQL"))$coverage, (drp %>% filter(dbms == "HyperSQL"))$coverage)$p.value <= 0.05
+    # p <- wilcox.test((avmdp %>% filter(dbms == "HyperSQL"))$coverage, (drp %>% filter(dbms == "HyperSQL"))$coverage)$p.value <= 0.05
+    #
+    # if (isTRUE(p) == FALSE) {
+    #
+    # } else if (p) {
+    #   if (as.numeric(c[i,3]) > as.numeric(c[i,1])) {
+    #     c[i,3] = paste("\\textit{",c[i,3],"}", sep = "")
+    #   } else {
+    #     c[i,3] = paste("\\textbf{",c[i,3],"}", sep = "")
+    #   }
+    # }
 
-    if (isTRUE(p) == FALSE) {
+    avmd_coverage <- (avmdp %>% filter(dbms == "HyperSQL"))$coverage
 
-    } else if (p) {
-      if (as.numeric(c[i,3]) > as.numeric(c[i,1])) {
-        c[i,3] = paste("\\textit{",c[i,3],"}", sep = "")
-      } else {
-        c[i,3] = paste("\\textbf{",c[i,3],"}", sep = "")
-      }
+    p1 <- wilcox.test(dr_coverage, avmd_coverage, alternative = "greater")$p.value <= 0.01
+    p2 <- wilcox.test(dr_coverage, avmd_coverage, alternative = "less")$p.value <= 0.01
+
+    #if (isTRUE(p1) == FALSE & isTRUE(p2) == FALSE) {
+    #  oh = paste("Schema => ", schema, " All False ", sep = "")
+    #  print(oh)
+    #} else
+    if (p1 == TRUE & p2 == FALSE) {
+      c[i,3] = paste("\\textbf{",c[i,3],"}", sep = "")
+    } else if (p1 == FALSE & p2 == TRUE) {
+      c[i,3] = paste("\\textit{",c[i,3],"}", sep = "")
+    } else {
     }
 
     if (hsql_avmd == "large") {
@@ -296,16 +446,32 @@ siginificant_coverage <- function(d) {
 
     }
 
-    p <- wilcox.test((randp %>% filter(dbms == "HyperSQL"))$coverage, (drp %>% filter(dbms == "HyperSQL"))$coverage)$p.value <= 0.05
+    # p <- wilcox.test((randp %>% filter(dbms == "HyperSQL"))$coverage, (drp %>% filter(dbms == "HyperSQL"))$coverage)$p.value <= 0.05
+    #
+    # if (isTRUE(p) == FALSE) {
+    #
+    # } else if (p) {
+    #   if (as.numeric(c[i,4]) > as.numeric(c[i,1])) {
+    #     c[i,4] = paste("\\textit{",c[i,4],"}", sep = "")
+    #   } else {
+    #     c[i,4] = paste("\\textbf{",c[i,4],"}", sep = "")
+    #   }
+    # }
 
-    if (isTRUE(p) == FALSE) {
+    rand_coverage <- (randp %>% filter(dbms == "HyperSQL"))$coverage
 
-    } else if (p) {
-      if (as.numeric(c[i,4]) > as.numeric(c[i,1])) {
-        c[i,4] = paste("\\textit{",c[i,4],"}", sep = "")
-      } else {
-        c[i,4] = paste("\\textbf{",c[i,4],"}", sep = "")
-      }
+    p1 <- wilcox.test(dr_coverage, rand_coverage, alternative = "greater")$p.value <= 0.01
+    p2 <- wilcox.test(dr_coverage, rand_coverage, alternative = "less")$p.value <= 0.01
+
+    #if (isTRUE(p1) == FALSE & isTRUE(p2) == FALSE) {
+    #  oh = paste("Schema => ", schema, " All False ", sep = "")
+    #  print(oh)
+    #} else
+    if (p1 == TRUE & p2 == FALSE) {
+      c[i,4] = paste("\\textbf{",c[i,4],"}", sep = "")
+    } else if (p1 == FALSE & p2 == TRUE) {
+      c[i,4] = paste("\\textit{",c[i,4],"}", sep = "")
+    } else {
     }
 
     if (hsql_rand == "large") {
@@ -326,6 +492,7 @@ siginificant_coverage <- function(d) {
     # } else {
     #   hsql <- "^{\\ast}"
     # }
+    a1[i,] <- paste("\\", a1[i,], "ForTable", sep = "")
 
     #a[i,] = ifelse(min(as.numeric(a[i,])) == as.numeric(a[i,]), paste("$",postgres,"$","\\textbf{", a[i,], "}", sep = ""), as.numeric(a[i,]))
     #b[i,] = ifelse(min(as.numeric(b[i,])) == as.numeric(b[i,]), paste("$",sqlite,"$","\\textbf{", b[i,], "}", sep = ""), as.numeric(b[i,]))
@@ -351,6 +518,7 @@ siginificant_timing <- function(d) {
   library(xtable)
   d <- generate_15_schmea_mutation_analysis(d)
   d <- d %>% arrange(casestudy)
+  d3 <- d
   d1 <- directedRandomR::transform_execution_times_for_threshold(d, 1000)
   d2 <- d
   d <- d %>% select(dbms, casestudy, datagenerator, testgenerationtime, randomseed) %>% group_by(dbms, casestudy, datagenerator) %>% summarise(testgenerationtime = format(round((median(testgenerationtime) / 1000), 2), nsmall = 2))
@@ -365,6 +533,7 @@ siginificant_timing <- function(d) {
   b <- d[9:12]
   b <- b[c(3,1,2,4)]
   numberOfRows <- nrow(d)
+  a1$casestudy <- as.character(a1$casestudy)
   for (i in 1:numberOfRows) {
     schema <- a1[i,]
     dr <- d1 %>% filter(casestudy == schema, datagenerator == "directedRandom")
@@ -378,20 +547,43 @@ siginificant_timing <- function(d) {
     postgres_rand <- directedRandomR::effectsize_accurate((dr %>% filter(dbms == "Postgres"))$testgenerationtime, (rand %>% filter(dbms == "Postgres"))$testgenerationtime)$size
     #postgres <- NULL
 
-    drp <- d1 %>% filter(casestudy == schema, datagenerator == "directedRandom")
-    avmp <- d1 %>% filter(casestudy == schema, datagenerator == "avs")
-    avmdp <- d1 %>% filter(casestudy == schema, datagenerator == "avsDefaults")
-    randp <- d1 %>% filter(casestudy == schema, datagenerator == "random")
+    drp <- d3 %>% filter(casestudy == schema, datagenerator == "directedRandom")
+    avmp <- d3 %>% filter(casestudy == schema, datagenerator == "avs")
+    avmdp <- d3 %>% filter(casestudy == schema, datagenerator == "avsDefaults")
+    randp <- d3 %>% filter(casestudy == schema, datagenerator == "random")
 
-    p <- wilcox.test((avmp %>% filter(dbms == "Postgres"))$testgenerationtime, (drp %>% filter(dbms == "Postgres"))$testgenerationtime)$p.value <= 0.05
-    if (isTRUE(p) == FALSE) {
+    # p <- wilcox.test((avmp %>% filter(dbms == "Postgres"))$testgenerationtime, (drp %>% filter(dbms == "Postgres"))$testgenerationtime)$p.value <= 0.05
+    # if (isTRUE(p) == FALSE) {
+    #
+    # } else if (p) {
+    #   if (as.numeric(a[i,2]) < as.numeric(a[i,1])) {
+    #     a[i,2] = paste("\\textit{",a[i,2],"}", sep = "")
+    #   } else {
+    #     a[i,2] = paste("\\textbf{",a[i,2],"}", sep = "")
+    #   }
+    # }
 
-    } else if (p) {
-      if (as.numeric(a[i,2]) < as.numeric(a[i,1])) {
-        a[i,2] = paste("\\textit{",a[i,2],"}", sep = "")
-      } else {
-        a[i,2] = paste("\\textbf{",a[i,2],"}", sep = "")
-      }
+    dr_time <- (drp %>% filter(dbms == "Postgres"))$testgenerationtime
+    avmr_time <- (avmp %>% filter(dbms == "Postgres"))$testgenerationtime
+
+    p1 <- wilcox.test(dr_time, avmr_time, alternative = "greater")$p.value >= 0.01
+    p2 <- wilcox.test(dr_time, avmr_time, alternative = "less")$p.value >= 0.01
+
+    #if (isTRUE(p1) == FALSE & isTRUE(p2) == FALSE) {
+    #  oh = paste("Schema => ", schema, " All False ", sep = "")
+    #  print(oh)
+    #} else
+    if (p1 == TRUE & p2 == FALSE) {
+      oh = paste("Postgers Schema => ", schema, " DR YES ", a[i,1], " AVM-R NOT ", a[i,2], sep = "")
+      print(oh)
+      a[i,2] = paste("\\textbf{",a[i,2],"}", sep = "")
+    } else if (p1 == FALSE & p2 == TRUE) {
+      oh = paste("Postgers Schema => ", schema, " DR NOT ", a[i,1], " AVM-R YES ", a[i,2], sep = "")
+      print(oh)
+      a[i,2] = paste("\\textit{",a[i,2],"}", sep = "")
+    } else {
+      oh = paste("Postgers Schema => ", schema, " DR NOT ", a[i,1], " AVM-R NOT ", a[i,2], sep = "")
+      print(oh)
     }
 
     if (postgres_avm == "large") {
@@ -403,16 +595,38 @@ siginificant_timing <- function(d) {
     } else {
 
     }
-    p <- wilcox.test((avmdp %>% filter(dbms == "Postgres"))$testgenerationtime, (drp %>% filter(dbms == "Postgres"))$testgenerationtime)$p.value <= 0.05
+    # p <- wilcox.test((avmdp %>% filter(dbms == "Postgres"))$testgenerationtime, (drp %>% filter(dbms == "Postgres"))$testgenerationtime)$p.value <= 0.05
+    #
+    # if (isTRUE(p) == FALSE) {
+    #
+    # } else if (p) {
+    #   if (as.numeric(a[i,3]) < as.numeric(a[i,1])) {
+    #     a[i,3] = paste("\\textit{",a[i,3],"}", sep = "")
+    #   } else {
+    #     a[i,3] = paste("\\textbf{",a[i,3],"}", sep = "")
+    #   }
+    # }
 
-    if (isTRUE(p) == FALSE) {
+    avmd_time <- (avmdp %>% filter(dbms == "Postgres"))$testgenerationtime
 
-    } else if (p) {
-      if (as.numeric(a[i,3]) < as.numeric(a[i,1])) {
-        a[i,3] = paste("\\textit{",a[i,3],"}", sep = "")
-      } else {
-        a[i,3] = paste("\\textbf{",a[i,3],"}", sep = "")
-      }
+    p1 <- wilcox.test(dr_time, avmd_time, alternative = "greater")$p.value >= 0.01
+    p2 <- wilcox.test(dr_time, avmd_time, alternative = "less")$p.value >= 0.01
+
+    #if (isTRUE(p1) == FALSE & isTRUE(p2) == FALSE) {
+    #  oh = paste("Schema => ", schema, " All False ", sep = "")
+    #  print(oh)
+    #} else
+    if (p1 == TRUE & p2 == FALSE) {
+      oh = paste("Postgers Schema => ", schema, " DR YES ", a[i,1], " AVM-R NOT ", a[i,3], sep = "")
+      print(oh)
+      a[i,3] = paste("\\textbf{",a[i,3],"}", sep = "")
+    } else if (p1 == FALSE & p2 == TRUE) {
+      oh = paste("Postgers Schema => ", schema, " DR NOT ", a[i,1], " AVM-R YES ", a[i,3], sep = "")
+      print(oh)
+      a[i,3] = paste("\\textit{",a[i,3],"}", sep = "")
+    } else {
+      oh = paste("Postgers Schema => ", schema, " DR NOT ", a[i,1], " AVM-R NOT ", a[i,3], sep = "")
+      print(oh)
     }
 
     if (postgres_avmd == "large") {
@@ -428,17 +642,39 @@ siginificant_timing <- function(d) {
     #check1 <- (randp %>% filter(dbms == "Postgres"))$mutationScore
     #check2 <- (drp %>% filter(dbms == "Postgres"))$mutationScore
     #browser(condition = (schema == "NistWeather"))
-    p <- wilcox.test((randp %>% filter(dbms == "Postgres"))$testgenerationtime, (drp %>% filter(dbms == "Postgres"))$testgenerationtime)$p.value <= 0.05
+    # p <- wilcox.test((randp %>% filter(dbms == "Postgres"))$testgenerationtime, (drp %>% filter(dbms == "Postgres"))$testgenerationtime)$p.value <= 0.05
+    #
+    # if (isTRUE(p) == FALSE) {
+    #
+    # } else if (p) {
+    #   if (as.numeric(a[i,4]) < as.numeric(a[i,1])) {
+    #     a[i,4] = paste("\\textit{",a[i,4],"}", sep = "")
+    #   } else {
+    #     #browser()
+    #     a[i,4] = paste("\\textbf{",a[i,4],"}", sep = "")
+    #   }
+    # }
 
-    if (isTRUE(p) == FALSE) {
+    rand_time <- (randp %>% filter(dbms == "Postgres"))$testgenerationtime
 
-    } else if (p) {
-      if (as.numeric(a[i,4]) < as.numeric(a[i,1])) {
-        a[i,4] = paste("\\textit{",a[i,4],"}", sep = "")
-      } else {
-        #browser()
-        a[i,4] = paste("\\textbf{",a[i,4],"}", sep = "")
-      }
+    p1 <- wilcox.test(dr_time, rand_time, alternative = "greater")$p.value >= 0.01
+    p2 <- wilcox.test(dr_time, rand_time, alternative = "less")$p.value >= 0.01
+
+    #if (isTRUE(p1) == FALSE & isTRUE(p2) == FALSE) {
+    #  oh = paste("Schema => ", schema, " All False ", sep = "")
+    #  print(oh)
+    #} else
+    if (p1 == TRUE & p2 == FALSE) {
+      oh = paste("Postgers Schema => ", schema, " DR YES ", a[i,1], " AVM-R NOT ", a[i,4], sep = "")
+      print(oh)
+      a[i,4] = paste("\\textbf{",a[i,4],"}", sep = "")
+    } else if (p1 == FALSE & p2 == TRUE) {
+      oh = paste("Postgers Schema => ", schema, " DR NOT ", a[i,1], " AVM-R YES ", a[i,4], sep = "")
+      print(oh)
+      a[i,4] = paste("\\textit{",a[i,4],"}", sep = "")
+    } else {
+      oh = paste("Postgers Schema => ", schema, " DR NOT ", a[i,1], " AVM-R NOT ", a[i,4], sep = "")
+      print(oh)
     }
 
     if (postgres_rand == "large") {
@@ -464,16 +700,39 @@ siginificant_timing <- function(d) {
     sqlite_rand <- directedRandomR::effectsize_accurate((dr %>% filter(dbms == "SQLite"))$testgenerationtime, (rand %>% filter(dbms == "SQLite"))$testgenerationtime)$size
     #sqlite <- NULL
 
-    p <- wilcox.test((avmp %>% filter(dbms == "SQLite"))$testgenerationtime, (drp %>% filter(dbms == "SQLite"))$testgenerationtime)$p.value <= 0.05
+    # p <- wilcox.test((avmp %>% filter(dbms == "SQLite"))$testgenerationtime, (drp %>% filter(dbms == "SQLite"))$testgenerationtime)$p.value <= 0.05
+    #
+    # if (isTRUE(p) == FALSE) {
+    #
+    # } else if (p) {
+    #   if (as.numeric(b[i,2]) < as.numeric(b[i,1])) {
+    #     b[i,2] = paste("\\textit{",b[i,2],"}", sep = "")
+    #   } else {
+    #     b[i,2] = paste("\\textbf{",b[i,2],"}", sep = "")
+    #   }
+    # }
 
-    if (isTRUE(p) == FALSE) {
+    dr_time <- (drp %>% filter(dbms == "SQLite"))$testgenerationtime
+    avmr_time <- (avmp %>% filter(dbms == "SQLite"))$testgenerationtime
 
-    } else if (p) {
-      if (as.numeric(b[i,2]) < as.numeric(b[i,1])) {
-        b[i,2] = paste("\\textit{",b[i,2],"}", sep = "")
-      } else {
-        b[i,2] = paste("\\textbf{",b[i,2],"}", sep = "")
-      }
+    p1 <- wilcox.test(dr_time, avmr_time, alternative = "greater")$p.value >= 0.01
+    p2 <- wilcox.test(dr_time, avmr_time, alternative = "less")$p.value >= 0.01
+
+    #if (isTRUE(p1) == FALSE & isTRUE(p2) == FALSE) {
+    #  oh = paste("Schema => ", schema, " All False ", sep = "")
+    #  print(oh)
+    #} else
+    if (p1 == TRUE & p2 == FALSE) {
+      oh = paste("Postgers Schema => ", schema, " DR YES ", b[i,1], " AVM-R NOT ", b[i,2], sep = "")
+      print(oh)
+      b[i,2] = paste("\\textbf{",b[i,2],"}", sep = "")
+    } else if (p1 == FALSE & p2 == TRUE) {
+      oh = paste("Postgers Schema => ", schema, " DR NOT ", b[i,1], " AVM-R YES ", b[i,2], sep = "")
+      print(oh)
+      b[i,2] = paste("\\textit{",b[i,2],"}", sep = "")
+    } else {
+      oh = paste("Postgers Schema => ", schema, " DR NOT ", b[i,1], " AVM-R NOT ", b[i,2], sep = "")
+      print(oh)
     }
 
     if (sqlite_avm == "large") {
@@ -486,16 +745,38 @@ siginificant_timing <- function(d) {
 
     }
 
-    p <- wilcox.test((avmdp %>% filter(dbms == "SQLite"))$testgenerationtime, (drp %>% filter(dbms == "SQLite"))$testgenerationtime)$p.value <= 0.05
+    # p <- wilcox.test((avmdp %>% filter(dbms == "SQLite"))$testgenerationtime, (drp %>% filter(dbms == "SQLite"))$testgenerationtime)$p.value <= 0.05
+    #
+    # if (isTRUE(p) == FALSE) {
+    #
+    # } else if (p) {
+    #   if (as.numeric(b[i,3]) < as.numeric(b[i,1])) {
+    #     b[i,3] = paste("\\textit{",b[i,3],"}", sep = "")
+    #   } else {
+    #     b[i,3] = paste("\\textbf{",b[i,3],"}", sep = "")
+    #   }
+    # }
 
-    if (isTRUE(p) == FALSE) {
+    avmd_time <- (avmdp %>% filter(dbms == "SQLite"))$testgenerationtime
 
-    } else if (p) {
-      if (as.numeric(b[i,3]) < as.numeric(b[i,1])) {
-        b[i,3] = paste("\\textit{",b[i,3],"}", sep = "")
-      } else {
-        b[i,3] = paste("\\textbf{",b[i,3],"}", sep = "")
-      }
+    p1 <- wilcox.test(dr_time, avmd_time, alternative = "greater")$p.value >= 0.01
+    p2 <- wilcox.test(dr_time, avmd_time, alternative = "less")$p.value >= 0.01
+
+    #if (isTRUE(p1) == FALSE & isTRUE(p2) == FALSE) {
+    #  oh = paste("Schema => ", schema, " All False ", sep = "")
+    #  print(oh)
+    #} else
+    if (p1 == TRUE & p2 == FALSE) {
+      oh = paste("Postgers Schema => ", schema, " DR YES ", b[i,1], " AVM-R NOT ", b[i,3], sep = "")
+      print(oh)
+      b[i,3] = paste("\\textbf{",b[i,3],"}", sep = "")
+    } else if (p1 == FALSE & p2 == TRUE) {
+      oh = paste("Postgers Schema => ", schema, " DR NOT ", b[i,1], " AVM-R YES ", b[i,3], sep = "")
+      print(oh)
+      b[i,3] = paste("\\textit{",b[i,3],"}", sep = "")
+    } else {
+      oh = paste("Postgers Schema => ", schema, " DR NOT ", b[i,1], " AVM-R NOT ", b[i,3], sep = "")
+      print(oh)
     }
 
     if (sqlite_avmd == "large") {
@@ -508,16 +789,38 @@ siginificant_timing <- function(d) {
 
     }
 
-    p <- wilcox.test((randp %>% filter(dbms == "SQLite"))$testgenerationtime, (drp %>% filter(dbms == "SQLite"))$testgenerationtime)$p.value <= 0.05
+    # p <- wilcox.test((randp %>% filter(dbms == "SQLite"))$testgenerationtime, (drp %>% filter(dbms == "SQLite"))$testgenerationtime)$p.value <= 0.05
+    #
+    # if (isTRUE(p) == FALSE) {
+    #
+    # } else if (p) {
+    #   if (as.numeric(b[i,4]) < as.numeric(b[i,1])) {
+    #     b[i,4] = paste("\\textit{",b[i,4],"}", sep = "")
+    #   } else {
+    #     b[i,4] = paste("\\textbf{",b[i,4],"}", sep = "")
+    #   }
+    # }
+    #
+    rand_time <- (randp %>% filter(dbms == "SQLite"))$testgenerationtime
 
-    if (isTRUE(p) == FALSE) {
+    p1 <- wilcox.test(dr_time, avmd_time, alternative = "greater")$p.value >= 0.01
+    p2 <- wilcox.test(dr_time, avmd_time, alternative = "less")$p.value >= 0.01
 
-    } else if (p) {
-      if (as.numeric(b[i,4]) < as.numeric(b[i,1])) {
-        b[i,4] = paste("\\textit{",b[i,4],"}", sep = "")
-      } else {
-        b[i,4] = paste("\\textbf{",b[i,4],"}", sep = "")
-      }
+    #if (isTRUE(p1) == FALSE & isTRUE(p2) == FALSE) {
+    #  oh = paste("Schema => ", schema, " All False ", sep = "")
+    #  print(oh)
+    #} else
+    if (p1 == TRUE & p2 == FALSE) {
+      oh = paste("Postgers Schema => ", schema, " DR YES ", b[i,1], " AVM-R NOT ", b[i,4], sep = "")
+      print(oh)
+      b[i,4] = paste("\\textbf{",b[i,4],"}", sep = "")
+    } else if (p1 == FALSE & p2 == TRUE) {
+      oh = paste("Postgers Schema => ", schema, " DR NOT ", b[i,1], " AVM-R YES ", b[i,4], sep = "")
+      print(oh)
+      b[i,4] = paste("\\textit{",b[i,4],"}", sep = "")
+    } else {
+      oh = paste("Postgers Schema => ", schema, " DR NOT ", b[i,1], " AVM-R NOT ", b[i,4], sep = "")
+      print(oh)
     }
 
     if (sqlite_rand == "large") {
@@ -544,16 +847,39 @@ siginificant_timing <- function(d) {
     #c[i,] = ifelse(min(as.numeric(c[i,])) == as.numeric(c[i,]), paste("\\textbf{", c[i,], "}", sep = ""), as.numeric(c[i,]))
 
 
-    p <- wilcox.test((avmp %>% filter(dbms == "HyperSQL"))$testgenerationtime, (drp %>% filter(dbms == "HyperSQL"))$testgenerationtime)$p.value <= 0.05
+    # p <- wilcox.test((avmp %>% filter(dbms == "HyperSQL"))$testgenerationtime, (drp %>% filter(dbms == "HyperSQL"))$testgenerationtime)$p.value <= 0.05
+    #
+    # if (isTRUE(p) == FALSE) {
+    #
+    # } else if (p) {
+    #   if (as.numeric(c[i,2]) < as.numeric(c[i,1])) {
+    #     c[i,2] = paste("\\textit{",c[i,2],"}", sep = "")
+    #   } else {
+    #     c[i,2] = paste("\\textbf{",c[i,2],"}", sep = "")
+    #   }
+    # }
 
-    if (isTRUE(p) == FALSE) {
+    dr_time <- (drp %>% filter(dbms == "HyperSQL"))$testgenerationtime
+    avmr_time <- (avmp %>% filter(dbms == "HyperSQL"))$testgenerationtime
 
-    } else if (p) {
-      if (as.numeric(c[i,2]) < as.numeric(c[i,1])) {
-        c[i,2] = paste("\\textit{",c[i,2],"}", sep = "")
-      } else {
-        c[i,2] = paste("\\textbf{",c[i,2],"}", sep = "")
-      }
+    p1 <- wilcox.test(dr_time, avmr_time, alternative = "greater")$p.value >= 0.01
+    p2 <- wilcox.test(dr_time, avmr_time, alternative = "less")$p.value >= 0.01
+
+    #if (isTRUE(p1) == FALSE & isTRUE(p2) == FALSE) {
+    #  oh = paste("Schema => ", schema, " All False ", sep = "")
+    #  print(oh)
+    #} else
+    if (p1 == TRUE & p2 == FALSE) {
+      oh = paste("Postgers Schema => ", schema, " DR YES ", c[i,1], " AVM-R NOT ", c[i,2], sep = "")
+      print(oh)
+      c[i,2] = paste("\\textbf{",c[i,2],"}", sep = "")
+    } else if (p1 == FALSE & p2 == TRUE) {
+      oh = paste("Postgers Schema => ", schema, " DR NOT ", c[i,1], " AVM-R YES ", c[i,2], sep = "")
+      print(oh)
+      c[i,2] = paste("\\textit{",c[i,2],"}", sep = "")
+    } else {
+      oh = paste("Postgers Schema => ", schema, " DR NOT ", c[i,1], " AVM-R NOT ", c[i,2], sep = "")
+      print(oh)
     }
 
     if (hsql_avm == "large") {
@@ -566,16 +892,38 @@ siginificant_timing <- function(d) {
 
     }
 
-    p <- wilcox.test((avmdp %>% filter(dbms == "HyperSQL"))$testgenerationtime, (drp %>% filter(dbms == "HyperSQL"))$testgenerationtime)$p.value <= 0.05
+    # p <- wilcox.test((avmdp %>% filter(dbms == "HyperSQL"))$testgenerationtime, (drp %>% filter(dbms == "HyperSQL"))$testgenerationtime)$p.value <= 0.05
+    #
+    # if (isTRUE(p) == FALSE) {
+    #
+    # } else if (p) {
+    #   if (as.numeric(c[i,3]) < as.numeric(c[i,1])) {
+    #     c[i,3] = paste("\\textit{",c[i,3],"}", sep = "")
+    #   } else {
+    #     c[i,3] = paste("\\textbf{",c[i,3],"}", sep = "")
+    #   }
+    # }
 
-    if (isTRUE(p) == FALSE) {
+    avmd_time <- (avmdp %>% filter(dbms == "HyperSQL"))$testgenerationtime
 
-    } else if (p) {
-      if (as.numeric(c[i,3]) < as.numeric(c[i,1])) {
-        c[i,3] = paste("\\textit{",c[i,3],"}", sep = "")
-      } else {
-        c[i,3] = paste("\\textbf{",c[i,3],"}", sep = "")
-      }
+    p1 <- wilcox.test(dr_time, avmd_time, alternative = "greater")$p.value >= 0.01
+    p2 <- wilcox.test(dr_time, avmd_time, alternative = "less")$p.value >= 0.01
+
+    #if (isTRUE(p1) == FALSE & isTRUE(p2) == FALSE) {
+    #  oh = paste("Schema => ", schema, " All False ", sep = "")
+    #  print(oh)
+    #} else
+    if (p1 == TRUE & p2 == FALSE) {
+      oh = paste("Postgers Schema => ", schema, " DR YES ", c[i,1], " AVM-R NOT ", c[i,2], sep = "")
+      print(oh)
+      c[i,3] = paste("\\textbf{",c[i,3],"}", sep = "")
+    } else if (p1 == FALSE & p2 == TRUE) {
+      oh = paste("Postgers Schema => ", schema, " DR NOT ", c[i,1], " AVM-R YES ", c[i,2], sep = "")
+      print(oh)
+      c[i,3] = paste("\\textit{",c[i,3],"}", sep = "")
+    } else {
+      oh = paste("Postgers Schema => ", schema, " DR NOT ", c[i,1], " AVM-R NOT ", c[i,2], sep = "")
+      print(oh)
     }
 
     if (hsql_avmd == "large") {
@@ -588,16 +936,38 @@ siginificant_timing <- function(d) {
 
     }
 
-    p <- wilcox.test((randp %>% filter(dbms == "HyperSQL"))$testgenerationtime, (drp %>% filter(dbms == "HyperSQL"))$testgenerationtime)$p.value <= 0.05
+    # p <- wilcox.test((randp %>% filter(dbms == "HyperSQL"))$testgenerationtime, (drp %>% filter(dbms == "HyperSQL"))$testgenerationtime)$p.value <= 0.05
+    #
+    # if (isTRUE(p) == FALSE) {
+    #
+    # } else if (p) {
+    #   if (as.numeric(c[i,4]) < as.numeric(c[i,1])) {
+    #     c[i,4] = paste("\\textit{",c[i,4],"}", sep = "")
+    #   } else {
+    #     c[i,4] = paste("\\textbf{",c[i,4],"}", sep = "")
+    #   }
+    # }
 
-    if (isTRUE(p) == FALSE) {
+    rand_time <- (randp %>% filter(dbms == "HyperSQL"))$testgenerationtime
 
-    } else if (p) {
-      if (as.numeric(c[i,4]) < as.numeric(c[i,1])) {
-        c[i,4] = paste("\\textit{",c[i,4],"}", sep = "")
-      } else {
-        c[i,4] = paste("\\textbf{",c[i,4],"}", sep = "")
-      }
+    p1 <- wilcox.test(dr_time, rand_time, alternative = "greater")$p.value >= 0.01
+    p2 <- wilcox.test(dr_time, rand_time, alternative = "less")$p.value >= 0.01
+
+    #if (isTRUE(p1) == FALSE & isTRUE(p2) == FALSE) {
+    #  oh = paste("Schema => ", schema, " All False ", sep = "")
+    #  print(oh)
+    #} else
+    if (p1 == TRUE & p2 == FALSE) {
+      oh = paste("Postgers Schema => ", schema, " DR YES ", c[i,1], " AVM-R NOT ", c[i,4], sep = "")
+      print(oh)
+      c[i,4] = paste("\\textbf{",c[i,4],"}", sep = "")
+    } else if (p1 == FALSE & p2 == TRUE) {
+      oh = paste("Postgers Schema => ", schema, " DR NOT ", c[i,1], " AVM-R YES ", c[i,4], sep = "")
+      print(oh)
+      c[i,4] = paste("\\textit{",c[i,4],"}", sep = "")
+    } else {
+      oh = paste("Postgers Schema => ", schema, " DR NOT ", c[i,1], " AVM-R NOT ", c[i,4], sep = "")
+      print(oh)
     }
 
     if (hsql_rand == "large") {
@@ -618,6 +988,7 @@ siginificant_timing <- function(d) {
     # } else {
     #   hsql <- "^{\\ast}"
     # }
+    a1[i,] <- paste("\\", a1[i,], "ForTable", sep = "")
 
     #a[i,] = ifelse(min(as.numeric(a[i,])) == as.numeric(a[i,]), paste("$",postgres,"$","\\textbf{", a[i,], "}", sep = ""), as.numeric(a[i,]))
     #b[i,] = ifelse(min(as.numeric(b[i,])) == as.numeric(b[i,]), paste("$",sqlite,"$","\\textbf{", b[i,], "}", sep = ""), as.numeric(b[i,]))
@@ -669,6 +1040,7 @@ siginificant_mutation_score <- function(d) {
   a <- a[c(3,1,2,4)]
   b <- d[9:12]
   b <- b[c(3,1,2,4)]
+  a1$schema <- as.character(a1$schema)
   numberOfRows <- nrow(d)
   for (i in 1:numberOfRows) {
     schema1 <- a1[i,]
@@ -687,17 +1059,41 @@ siginificant_mutation_score <- function(d) {
     avmp <- d1 %>% filter(schema == schema1, generator == "avs")
     avmdp <- d1 %>% filter(schema == schema1, generator == "avsDefaults")
     randp <- d1 %>% filter(schema == schema1, generator == "random")
-    if (schema1 == "Products") { browser() }
-    p <- wilcox.test((avmp %>% filter(dbms == "Postgres"))$mutationScore, (drp %>% filter(dbms == "Postgres"))$mutationScore)$p.value <= 0.05
-    if (isTRUE(p) == FALSE) {
+    #p <- wilcox.test((avmp %>% filter(dbms == "Postgres"))$mutationScore, (drp %>% filter(dbms == "Postgres"))$mutationScore, alternative = "greater")$p.value <= 0.01
 
-    } else if (p) {
-      if (as.numeric(a[i,2]) > as.numeric(a[i,1])) {
-        a[i,2] = paste("\\textit{",a[i,2],"}", sep = "")
-      } else {
-        a[i,2] = paste("\\textbf{",a[i,2],"}", sep = "")
-      }
+    dr_mutation <- (drp %>% filter(dbms == "Postgres"))$mutationScore
+    avmr_mutation <- (avmp %>% filter(dbms == "Postgres"))$mutationScore
+
+    p1 <- wilcox.test(dr_mutation, avmr_mutation, alternative = "greater")$p.value <= 0.01
+    p2 <- wilcox.test(dr_mutation, avmr_mutation, alternative = "less")$p.value <= 0.01
+
+    #if (isTRUE(p1) == FALSE & isTRUE(p2) == FALSE) {
+    #  oh = paste("Schema => ", schema1, " All False ", sep = "")
+    #  print(oh)
+    #} else
+    if (p1 == TRUE & p2 == FALSE) {
+      oh = paste("Postgers Schema => ", schema1, " DR YES ", a[i,1], " AVM-R NOT ", a[i,2], sep = "")
+      print(oh)
+      a[i,2] = paste("\\textbf{",a[i,2],"}", sep = "")
+    } else if (p1 == FALSE & p2 == TRUE) {
+      oh = paste("Postgers Schema => ", schema1, " DR NOT ", a[i,1], " AVM-R YES ", a[i,2], sep = "")
+      print(oh)
+      a[i,2] = paste("\\textit{",a[i,2],"}", sep = "")
+    } else {
+      oh = paste("Postgers Schema => ", schema1, " DR NOT ", a[i,1], " AVM-R NOT ", a[i,2], sep = "")
+      print(oh)
     }
+
+
+    # if (isTRUE(p) == FALSE) {
+    #
+    # } else if (p) {
+    #   if (as.numeric(a[i,2]) > as.numeric(a[i,1])) {
+    #     a[i,2] = paste("\\textit{",a[i,2],"}", sep = "")
+    #   } else {
+    #     a[i,2] = paste("\\textbf{",a[i,2],"}", sep = "")
+    #   }
+    # }
 
     if (postgres_avm == "large") {
       a[i,2] = paste("$^{\\ast\\ast\\ast}$",a[i,2], sep = "")
@@ -709,17 +1105,38 @@ siginificant_mutation_score <- function(d) {
       a[i,2] = paste("$",a[i,2],"$", sep = "")
     }
 
-    p <- wilcox.test((avmdp %>% filter(dbms == "Postgres"))$mutationScore, (drp %>% filter(dbms == "Postgres"))$mutationScore)$p.value <= 0.05
+    #p <- wilcox.test((avmdp %>% filter(dbms == "Postgres"))$mutationScore, (drp %>% filter(dbms == "Postgres"))$mutationScore)$p.value <= 0.05
 
-    if (isTRUE(p) == FALSE) {
+    avmd_mutation <- (avmdp %>% filter(dbms == "Postgres"))$mutationScore
 
-    } else if (p) {
-      if (as.numeric(a[i,3]) > as.numeric(a[i,1])) {
-        a[i,3] = paste("\\textit{",a[i,3],"}", sep = "")
-      } else {
-        a[i,3] = paste("\\textbf{",a[i,3],"}", sep = "")
-      }
+    p1 <- wilcox.test(dr_mutation, avmd_mutation, alternative = "greater")$p.value <= 0.01
+    p2 <- wilcox.test(dr_mutation, avmd_mutation, alternative = "less")$p.value <= 0.01
+
+    #if (isTRUE(p1) == FALSE & isTRUE(p2) == FALSE) {
+    #  oh = paste("Schema => ", schema1, " All False ", sep = "")
+    #  print(oh)
+    #} else
+    if (p1 == TRUE & p2 == FALSE) {
+      oh = paste("Postgers Schema => ", schema1, " DR YES ", a[i,1], " AVM-D NOT ", a[i,3], sep = "")
+      print(oh)
+      a[i,3] = paste("\\textbf{",a[i,3],"}", sep = "")
+    } else if (p1 == FALSE & p2 == TRUE) {
+      oh = paste("Postgers Schema => ", schema1, " DR NOT ", a[i,1], " AVM-D YES ", a[i,3], sep = "")
+      print(oh)
+      a[i,3] = paste("\\textit{",a[i,3],"}", sep = "")
+    } else {
+      oh = paste("Postgers Schema => ", schema1, " DR NOT ", a[i,1], " AVM-D NOT ", a[i,3], sep = "")
+      print(oh)
     }
+    # if (isTRUE(p) == FALSE) {
+    #
+    # } else if (p) {
+    #   if (as.numeric(a[i,3]) > as.numeric(a[i,1])) {
+    #     a[i,3] = paste("\\textit{",a[i,3],"}", sep = "")
+    #   } else {
+    #     a[i,3] = paste("\\textbf{",a[i,3],"}", sep = "")
+    #   }
+    # }
 
     if (postgres_avmd == "large") {
       a[i,3] = paste("$^{\\ast\\ast\\ast}$",a[i,3], sep = "")
@@ -734,18 +1151,40 @@ siginificant_mutation_score <- function(d) {
     #check1 <- (randp %>% filter(dbms == "Postgres"))$mutationScore
     #check2 <- (drp %>% filter(dbms == "Postgres"))$mutationScore
     #browser(condition = (schema == "NistWeather"))
-    p <- wilcox.test((randp %>% filter(dbms == "Postgres"))$mutationScore, (drp %>% filter(dbms == "Postgres"))$mutationScore)$p.value <= 0.05
+    #p <- wilcox.test((randp %>% filter(dbms == "Postgres"))$mutationScore, (drp %>% filter(dbms == "Postgres"))$mutationScore)$p.value <= 0.05
 
-    if (isTRUE(p) == FALSE) {
+    rand_mutation <- (randp %>% filter(dbms == "Postgres"))$mutationScore
 
-    } else if (p) {
-      if (as.numeric(a[i,4]) > as.numeric(a[i,1])) {
-        a[i,4] = paste("\\textit{",a[i,4],"}", sep = "")
-      } else {
-        #browser()
-        a[i,4] = paste("\\textbf{",a[i,4],"}", sep = "")
-      }
+    p1 <- wilcox.test(dr_mutation, rand_mutation, alternative = "greater")$p.value <= 0.01
+    p2 <- wilcox.test(dr_mutation, rand_mutation, alternative = "less")$p.value <= 0.01
+
+    #if (isTRUE(p1) == FALSE & isTRUE(p2) == FALSE) {
+    #  oh = paste("Schema => ", schema1, " All False ", sep = "")
+    #  print(oh)
+    #} else
+    if (p1 == TRUE & p2 == FALSE) {
+      oh = paste("Postgers Schema => ", schema1, " DR YES ", a[i,1], " AVM-D NOT ", a[i,4], sep = "")
+      print(oh)
+      a[i,4] = paste("\\textbf{",a[i,4],"}", sep = "")
+    } else if (p1 == FALSE & p2 == TRUE) {
+      oh = paste("Postgers Schema => ", schema1, " DR NOT ", a[i,1], " AVM-D YES ", a[i,4], sep = "")
+      print(oh)
+      a[i,4] = paste("\\textit{",a[i,4],"}", sep = "")
+    } else {
+      oh = paste("Postgers Schema => ", schema1, " DR NOT ", a[i,1], " AVM-D NOT ", a[i,4], sep = "")
+      print(oh)
     }
+
+    # if (isTRUE(p) == FALSE) {
+    #
+    # } else if (p) {
+    #   if (as.numeric(a[i,4]) > as.numeric(a[i,1])) {
+    #     a[i,4] = paste("\\textit{",a[i,4],"}", sep = "")
+    #   } else {
+    #     #browser()
+    #     a[i,4] = paste("\\textbf{",a[i,4],"}", sep = "")
+    #   }
+    # }
 
     if (postgres_rand == "large") {
       a[i,4] = paste("$^{\\ast\\ast\\ast}$",a[i,4], sep = "")
@@ -770,17 +1209,41 @@ siginificant_mutation_score <- function(d) {
     sqlite_rand <- directedRandomR::effectsize_accurate((dr %>% filter(dbms == "SQLite"))$mutationScore, (rand %>% filter(dbms == "SQLite"))$mutationScore)$size
     #sqlite <- NULL
 
-    p <- wilcox.test((avmp %>% filter(dbms == "SQLite"))$mutationScore, (drp %>% filter(dbms == "SQLite"))$mutationScore)$p.value <= 0.05
+    #p <- wilcox.test((avmp %>% filter(dbms == "SQLite"))$mutationScore, (drp %>% filter(dbms == "SQLite"))$mutationScore)$p.value <= 0.05
 
-    if (isTRUE(p) == FALSE) {
+    dr_mutation <- (drp %>% filter(dbms == "SQLite"))$mutationScore
+    avmr_mutation <- (avmp %>% filter(dbms == "SQLite"))$mutationScore
 
-    } else if (p) {
-      if (as.numeric(b[i,2]) > as.numeric(b[i,1])) {
-        b[i,2] = paste("\\textit{",b[i,2],"}", sep = "")
-      } else {
-        b[i,2] = paste("\\textbf{",b[i,2],"}", sep = "")
-      }
+    p1 <- wilcox.test(dr_mutation, avmr_mutation, alternative = "greater")$p.value <= 0.01
+    p2 <- wilcox.test(dr_mutation, avmr_mutation, alternative = "less")$p.value <= 0.01
+
+    #if (isTRUE(p1) == FALSE & isTRUE(p2) == FALSE) {
+    #  oh = paste("Schema => ", schema1, " All False ", sep = "")
+    #  print(oh)
+    #} else
+    if (p1 == TRUE & p2 == FALSE) {
+      oh = paste("SQLite Schema => ", schema1, " DR YES ", b[i,1], " AVM-D NOT ", b[i,2], sep = "")
+      print(oh)
+      b[i,2] = paste("\\textbf{",b[i,2],"}", sep = "")
+    } else if (p1 == FALSE & p2 == TRUE) {
+      oh = paste("SQLite Schema => ", schema1, " DR NOT ", b[i,1], " AVM-D YES ", b[i,2], sep = "")
+      print(oh)
+      b[i,2] = paste("\\textit{",b[i,2],"}", sep = "")
+    } else {
+      oh = paste("SQLite Schema => ", schema1, " DR NOT ", b[i,1], " AVM-D NOT ", b[i,2], sep = "")
+      print(oh)
     }
+
+
+    # if (isTRUE(p) == FALSE) {
+    #
+    # } else if (p) {
+    #   if (as.numeric(b[i,2]) > as.numeric(b[i,1])) {
+    #     b[i,2] = paste("\\textit{",b[i,2],"}", sep = "")
+    #   } else {
+    #     b[i,2] = paste("\\textbf{",b[i,2],"}", sep = "")
+    #   }
+    # }
 
     if (sqlite_avm == "large") {
       b[i,2] = paste("$^{\\ast\\ast\\ast}$",b[i,2], sep = "")
@@ -792,17 +1255,40 @@ siginificant_mutation_score <- function(d) {
 
     }
 
-    p <- wilcox.test((avmdp %>% filter(dbms == "SQLite"))$mutationScore, (drp %>% filter(dbms == "SQLite"))$mutationScore)$p.value <= 0.05
+    #p <- wilcox.test((avmdp %>% filter(dbms == "SQLite"))$mutationScore, (drp %>% filter(dbms == "SQLite"))$mutationScore)$p.value <= 0.05
 
-    if (isTRUE(p) == FALSE) {
+    avmd_mutation <- (avmdp %>% filter(dbms == "SQLite"))$mutationScore
+    #if (schema1 == "RiskIt") { browser() }
 
-    } else if (p) {
-      if (as.numeric(b[i,3]) > as.numeric(b[i,1])) {
-        b[i,3] = paste("\\textit{",b[i,3],"}", sep = "")
-      } else {
-        b[i,3] = paste("\\textbf{",b[i,3],"}", sep = "")
-      }
+    p1 <- wilcox.test(dr_mutation, avmd_mutation, alternative = "greater")$p.value <= 0.01
+    p2 <- wilcox.test(dr_mutation, avmd_mutation, alternative = "less")$p.value <= 0.01
+
+    #if (isTRUE(p1) == FALSE & isTRUE(p2) == FALSE) {
+    #  oh = paste("Schema => ", schema1, " All False ", sep = "")
+    #  print(oh)
+    #} else
+    if (p1 == TRUE & p2 == FALSE) {
+      oh = paste("SQLite Schema => ", schema1, " DR YES ", b[i,1], " AVM-D NOT ", b[i,3], sep = "")
+      print(oh)
+      b[i,3] = paste("\\textbf{",b[i,3],"}", sep = "")
+    } else if (p1 == FALSE & p2 == TRUE) {
+      oh = paste("SQLite Schema => ", schema1, " DR NOT ", b[i,1], " AVM-D YES ", b[i,3], sep = "")
+      print(oh)
+      b[i,3] = paste("\\textit{",b[i,3],"}", sep = "")
+    } else {
+      oh = paste("SQLite Schema => ", schema1, " DR NOT ", b[i,1], " AVM-D NOT ", b[i,3], sep = "")
+      print(oh)
     }
+
+    # if (isTRUE(p) == FALSE) {
+    #
+    # } else if (p) {
+    #   if (as.numeric(b[i,3]) > as.numeric(b[i,1])) {
+    #     b[i,3] = paste("\\textit{",b[i,3],"}", sep = "")
+    #   } else {
+    #     b[i,3] = paste("\\textbf{",b[i,3],"}", sep = "")
+    #   }
+    # }
 
     if (sqlite_avmd == "large") {
       b[i,3] = paste("$^{\\ast\\ast\\ast}$",b[i,3], sep = "")
@@ -814,17 +1300,39 @@ siginificant_mutation_score <- function(d) {
 
     }
 
-    p <- wilcox.test((randp %>% filter(dbms == "SQLite"))$mutationScore, (drp %>% filter(dbms == "SQLite"))$mutationScore)$p.value <= 0.05
+    #p <- wilcox.test((randp %>% filter(dbms == "SQLite"))$mutationScore, (drp %>% filter(dbms == "SQLite"))$mutationScore)$p.value <= 0.05
 
-    if (isTRUE(p) == FALSE) {
+    rand_mutation <- (randp %>% filter(dbms == "SQLite"))$mutationScore
 
-    } else if (p) {
-      if (as.numeric(b[i,4]) > as.numeric(b[i,1])) {
-        b[i,4] = paste("\\textit{",b[i,4],"}", sep = "")
-      } else {
-        b[i,4] = paste("\\textbf{",b[i,4],"}", sep = "")
-      }
+    p1 <- wilcox.test(dr_mutation, rand_mutation, alternative = "greater")$p.value <= 0.01
+    p2 <- wilcox.test(dr_mutation, rand_mutation, alternative = "less")$p.value <= 0.01
+
+    #if (isTRUE(p1) == FALSE & isTRUE(p2) == FALSE) {
+    #  oh = paste("Schema => ", schema1, " All False ", sep = "")
+    #  print(oh)
+    #} else
+    if (p1 == TRUE & p2 == FALSE) {
+      oh = paste("SQLite Schema => ", schema1, " DR YES ", b[i,1], " AVM-D NOT ", b[i,3], sep = "")
+      print(oh)
+      b[i,4] = paste("\\textbf{",b[i,4],"}", sep = "")
+    } else if (p1 == FALSE & p2 == TRUE) {
+      oh = paste("SQLite Schema => ", schema1, " DR NOT ", b[i,1], " AVM-D YES ", b[i,3], sep = "")
+      print(oh)
+      b[i,4] = paste("\\textit{",b[i,4],"}", sep = "")
+    } else {
+      oh = paste("SQLite Schema => ", schema1, " DR NOT ", b[i,1], " AVM-D NOT ", b[i,3], sep = "")
+      print(oh)
     }
+
+    # if (isTRUE(p) == FALSE) {
+    #
+    # } else if (p) {
+    #   if (as.numeric(b[i,4]) > as.numeric(b[i,1])) {
+    #     b[i,4] = paste("\\textit{",b[i,4],"}", sep = "")
+    #   } else {
+    #     b[i,4] = paste("\\textbf{",b[i,4],"}", sep = "")
+    #   }
+    # }
 
     if (sqlite_rand == "large") {
       b[i,4] = paste("$^{\\ast\\ast\\ast}$",b[i,4], sep = "")
@@ -850,17 +1358,40 @@ siginificant_mutation_score <- function(d) {
     #c[i,] = ifelse(min(as.numeric(c[i,])) == as.numeric(c[i,]), paste("\\textbf{", c[i,], "}", sep = ""), as.numeric(c[i,]))
 
 
-    p <- wilcox.test((avmp %>% filter(dbms == "HyperSQL"))$mutationScore, (drp %>% filter(dbms == "HyperSQL"))$mutationScore)$p.value <= 0.05
+    #p <- wilcox.test((avmp %>% filter(dbms == "HyperSQL"))$mutationScore, (drp %>% filter(dbms == "HyperSQL"))$mutationScore)$p.value <= 0.05
 
-    if (isTRUE(p) == FALSE) {
+    dr_mutation <- (drp %>% filter(dbms == "HyperSQL"))$mutationScore
+    avmr_mutation <- (avmp %>% filter(dbms == "HyperSQL"))$mutationScore
 
-    } else if (p) {
-      if (as.numeric(c[i,2]) > as.numeric(c[i,1])) {
-        c[i,2] = paste("\\textit{",c[i,2],"}", sep = "")
-      } else {
-        c[i,2] = paste("\\textbf{",c[i,2],"}", sep = "")
-      }
+    p1 <- wilcox.test(dr_mutation, avmr_mutation, alternative = "greater")$p.value <= 0.01
+    p2 <- wilcox.test(dr_mutation, avmr_mutation, alternative = "less")$p.value <= 0.01
+
+    #if (isTRUE(p1) == FALSE & isTRUE(p2) == FALSE) {
+    #  oh = paste("Schema => ", schema1, " All False ", sep = "")
+    #  print(oh)
+    #} else
+    if (p1 == TRUE & p2 == FALSE) {
+      oh = paste("HyperSQL Schema => ", schema1, " DR YES ", c[i,1], " AVM-D NOT ", c[i,2], sep = "")
+      print(oh)
+      c[i,2] = paste("\\textbf{",c[i,2],"}", sep = "")
+    } else if (p1 == FALSE & p2 == TRUE) {
+      oh = paste("Schema => ", schema1, " DR NOT ", c[i,1], " AVM-D YES ", c[i,2], sep = "")
+      print(oh)
+      c[i,2] = paste("\\textit{",c[i,2],"}", sep = "")
+    } else {
+      oh = paste("Schema => ", schema1, " DR NOT ", c[i,1], " AVM-D NOT ", c[i,2], sep = "")
+      print(oh)
     }
+
+    # if (isTRUE(p) == FALSE) {
+    #
+    # } else if (p) {
+    #   if (as.numeric(c[i,2]) > as.numeric(c[i,1])) {
+    #     c[i,2] = paste("\\textit{",c[i,2],"}", sep = "")
+    #   } else {
+    #     c[i,2] = paste("\\textbf{",c[i,2],"}", sep = "")
+    #   }
+    # }
 
     if (hsql_avm == "large") {
       c[i,2] = paste("$^{\\ast\\ast\\ast}$",c[i,2], sep = "")
@@ -872,17 +1403,39 @@ siginificant_mutation_score <- function(d) {
 
     }
 
-    p <- wilcox.test((avmdp %>% filter(dbms == "HyperSQL"))$mutationScore, (drp %>% filter(dbms == "HyperSQL"))$mutationScore)$p.value <= 0.05
+    #p <- wilcox.test((avmdp %>% filter(dbms == "HyperSQL"))$mutationScore, (drp %>% filter(dbms == "HyperSQL"))$mutationScore)$p.value <= 0.05
 
-    if (isTRUE(p) == FALSE) {
+    avmd_mutation <- (avmdp %>% filter(dbms == "HyperSQL"))$mutationScore
 
-    } else if (p) {
-      if (as.numeric(c[i,3]) > as.numeric(c[i,1])) {
-        c[i,3] = paste("\\textit{",c[i,3],"}", sep = "")
-      } else {
-        c[i,3] = paste("\\textbf{",c[i,3],"}", sep = "")
-      }
+    p1 <- wilcox.test(dr_mutation, avmd_mutation, alternative = "greater")$p.value <= 0.01
+    p2 <- wilcox.test(dr_mutation, avmd_mutation, alternative = "less")$p.value <= 0.01
+
+    #if (isTRUE(p1) == FALSE & isTRUE(p2) == FALSE) {
+    #  oh = paste("Schema => ", schema1, " All False ", sep = "")
+    #  print(oh)
+    #} else
+    if (p1 == TRUE & p2 == FALSE) {
+      oh = paste("Schema => ", schema1, " DR YES ", c[i,1], " AVM-D NOT ", c[i,3], sep = "")
+      print(oh)
+      c[i,3] = paste("\\textbf{",c[i,3],"}", sep = "")
+    } else if (p1 == FALSE & p2 == TRUE) {
+      oh = paste("Schema => ", schema1, " DR NOT ", c[i,1], " AVM-D YES ", c[i,3], sep = "")
+      print(oh)
+      c[i,3] = paste("\\textit{",c[i,3],"}", sep = "")
+    } else {
+      oh = paste("Schema => ", schema1, " DR NOT ", c[i,1], " AVM-D NOT ", c[i,3], sep = "")
+      print(oh)
     }
+
+    # if (isTRUE(p) == FALSE) {
+    #
+    # } else if (p) {
+    #   if (as.numeric(c[i,3]) > as.numeric(c[i,1])) {
+    #     c[i,3] = paste("\\textit{",c[i,3],"}", sep = "")
+    #   } else {
+    #     c[i,3] = paste("\\textbf{",c[i,3],"}", sep = "")
+    #   }
+    # }
 
     if (hsql_avmd == "large") {
       c[i,3] = paste("$^{\\ast\\ast\\ast}$",c[i,3], sep = "")
@@ -894,17 +1447,39 @@ siginificant_mutation_score <- function(d) {
 
     }
 
-    p <- wilcox.test((randp %>% filter(dbms == "HyperSQL"))$mutationScore, (drp %>% filter(dbms == "HyperSQL"))$mutationScore)$p.value <= 0.05
+    #p <- wilcox.test((randp %>% filter(dbms == "HyperSQL"))$mutationScore, (drp %>% filter(dbms == "HyperSQL"))$mutationScore)$p.value <= 0.05
 
-    if (isTRUE(p) == FALSE) {
+    rand_mutation <- (randp %>% filter(dbms == "HyperSQL"))$mutationScore
 
-    } else if (p) {
-      if (as.numeric(c[i,4]) > as.numeric(c[i,1])) {
-        c[i,4] = paste("\\textit{",c[i,4],"}", sep = "")
-      } else {
-        c[i,4] = paste("\\textbf{",c[i,4],"}", sep = "")
-      }
+    p1 <- wilcox.test(dr_mutation, rand_mutation, alternative = "greater")$p.value <= 0.01
+    p2 <- wilcox.test(dr_mutation, rand_mutation, alternative = "less")$p.value <= 0.01
+
+    #if (isTRUE(p1) == FALSE & isTRUE(p2) == FALSE) {
+    #  oh = paste("Schema => ", schema1, " All False ", sep = "")
+    #  print(oh)
+    #} else
+    if (p1 == TRUE & p2 == FALSE) {
+      oh = paste("Schema => ", schema1, " DR YES ", c[i,1], " AVM-D NOT ", c[i,4], sep = "")
+      print(oh)
+      c[i,4] = paste("\\textbf{",c[i,4],"}", sep = "")
+    } else if (p1 == FALSE & p2 == TRUE) {
+      oh = paste("Schema => ", schema1, " DR NOT ", c[i,1], " AVM-D YES ", c[i,4], sep = "")
+      print(oh)
+      c[i,4] = paste("\\textit{",c[i,4],"}", sep = "")
+    } else {
+      oh = paste("Schema => ", schema1, " DR NOT ", c[i,1], " AVM-D NOT ", c[i,4], sep = "")
+      print(oh)
     }
+
+    # if (isTRUE(p) == FALSE) {
+    #
+    # } else if (p) {
+    #   if (as.numeric(c[i,4]) > as.numeric(c[i,1])) {
+    #     c[i,4] = paste("\\textit{",c[i,4],"}", sep = "")
+    #   } else {
+    #     c[i,4] = paste("\\textbf{",c[i,4],"}", sep = "")
+    #   }
+    # }
 
     if (hsql_rand == "large") {
       c[i,4] = paste("$^{\\ast\\ast\\ast}$",c[i,4], sep = "")
@@ -924,7 +1499,8 @@ siginificant_mutation_score <- function(d) {
     # } else {
     #   hsql <- "^{\\ast}"
     # }
-
+    #browser()
+    a1[i,] <- paste("\\", a1[i,], "ForTable", sep = "")
     #a[i,] = ifelse(min(as.numeric(a[i,])) == as.numeric(a[i,]), paste("$",postgres,"$","\\textbf{", a[i,], "}", sep = ""), as.numeric(a[i,]))
     #b[i,] = ifelse(min(as.numeric(b[i,])) == as.numeric(b[i,]), paste("$",sqlite,"$","\\textbf{", b[i,], "}", sep = ""), as.numeric(b[i,]))
     #c[i,] = ifelse(min(as.numeric(c[i,])) == as.numeric(c[i,]), paste("$",hsql,"$","\\textbf{", c[i,], "}", sep = ""), as.numeric(c[i,]))
