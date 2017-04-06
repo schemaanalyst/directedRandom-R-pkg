@@ -52,7 +52,7 @@ generate_15_schmea_mutanttiming <- function(d) {
 #' generates a latex table for coverage table with effect size and U test.
 #' @importFrom magrittr %>%
 #' @export
-siginificant_coverage <- function(d, rtrn = "tex") {
+siginificant_coverage <- function(d, rtrn = "tex", m = "median") {
   library(dplyr)
   library(reshape2)
   library(xtable)
@@ -60,7 +60,11 @@ siginificant_coverage <- function(d, rtrn = "tex") {
   #d1 <- directedRandomR::transform_execution_times_for_threshold(d, 1000)
   d <- d %>% arrange(casestudy)
   d1 <- d
-  d <- d %>% select(dbms, casestudy, datagenerator, coverage, randomseed) %>% group_by(dbms, casestudy, datagenerator) %>% summarise(coverage = format(round((median(coverage)), 1), nsmall = 1))
+  if (m == "mean") {
+    d <- d %>% select(dbms, casestudy, datagenerator, coverage, randomseed) %>% group_by(dbms, casestudy, datagenerator) %>% summarise(coverage = format(round((mean(coverage)), 1), nsmall = 1))
+  } else {
+    d <- d %>% select(dbms, casestudy, datagenerator, coverage, randomseed) %>% group_by(dbms, casestudy, datagenerator) %>% summarise(coverage = format(round((median(coverage)), 1), nsmall = 1))
+  }
   d <- dcast(d, casestudy ~ dbms + datagenerator)
   a1 <- d[1]
   d2 <- d[2:13]
@@ -523,7 +527,7 @@ siginificant_coverage <- function(d, rtrn = "tex") {
 #' generates a latex table for test generation timing table with effect size and U test.
 #' @importFrom magrittr %>%
 #' @export
-siginificant_timing <- function(d, rtrn = "tex") {
+siginificant_timing <- function(d, rtrn = "tex", m = "median") {
   library(dplyr)
   library(reshape2)
   library(xtable)
@@ -532,7 +536,11 @@ siginificant_timing <- function(d, rtrn = "tex") {
   d3 <- d
   d1 <- directedRandomR::transform_execution_times_for_threshold(d, 1000)
   d2 <- d
-  d <- d %>% select(dbms, casestudy, datagenerator, testgenerationtime, randomseed) %>% group_by(dbms, casestudy, datagenerator) %>% summarise(testgenerationtime = format(round((median(testgenerationtime) / 1000), 2), nsmall = 2))
+  if (m == "mean") {
+    d <- d %>% select(dbms, casestudy, datagenerator, testgenerationtime, randomseed) %>% group_by(dbms, casestudy, datagenerator) %>% summarise(testgenerationtime = format(round((mean(testgenerationtime) / 1000), 2), nsmall = 2))
+  } else {
+    d <- d %>% select(dbms, casestudy, datagenerator, testgenerationtime, randomseed) %>% group_by(dbms, casestudy, datagenerator) %>% summarise(testgenerationtime = format(round((median(testgenerationtime) / 1000), 2), nsmall = 2))
+  }
   d <- dcast(d, casestudy ~ dbms + datagenerator)
   a1 <- d[1]
   d2 <- d[2:13]
@@ -1030,7 +1038,7 @@ siginificant_timing <- function(d, rtrn = "tex") {
 #' generates a latex table for mutation score per schema table with effect size and U test.
 #' @importFrom magrittr %>%
 #' @export
-siginificant_mutation_score <- function(d, rtrn = "tex") {
+siginificant_mutation_score <- function(d, rtrn = "tex", m = "median") {
   library(dplyr)
   library(reshape2)
   library(xtable)
@@ -1048,7 +1056,11 @@ siginificant_mutation_score <- function(d, rtrn = "tex") {
   #d <- d %>% select(dbms, casestudy, datagenerator, scorenumerator, scoredenominator,randomseed) %>% group_by(dbms, casestudy, datagenerator) %>% summarise(mutationScore = round((sum(scorenumerator)/sum(scoredenominator)) * 100, 2))#mutate(mutationScore = sum(scorenumerator)/sum(scoredenominator)) #summarise(scorenumerator = (sum(scorenumerator)), scoredenominator = (sum(scoredenominator)))
   #d1 <- d %>% filter(type == "NORMAL") %>% select(identifier, dbms, schema, generator, killed) %>% group_by(identifier, dbms, schema, generator) %>% summarise(killed_mutants = sum(killed == "true"), total_mutants = (sum(killed == "true") + sum(killed == "false"))) %>% mutate(mutationScore = round((killed_mutants/total_mutants) * 100, 2))
   d1 <- d
-  d <- d %>% group_by(schema, generator, dbms)  %>% summarise(mutationScore = format(round(median(mutationScore), 1), nsmall = 1))
+  if (m == "mean") {
+    d <- d %>% group_by(schema, generator, dbms)  %>% summarise(mutationScore = format(round(mean(mutationScore), 1), nsmall = 1))
+  } else {
+    d <- d %>% group_by(schema, generator, dbms)  %>% summarise(mutationScore = format(round(median(mutationScore), 1), nsmall = 1))
+  }
   #d <- dcast(d, casestudy ~ dbms + datagenerator)
   d <- dcast(d, schema ~ dbms + generator)
   a1 <- d[1]
@@ -1918,7 +1930,7 @@ visual_grid_ten_schemas <- function(mutationanalysistiming) {
 #' generates a latex table for mutation operators table with effect size and U test.
 #' @importFrom magrittr %>%
 #' @export
-siginificant_mutant_operators_fixed <- function(d, rtrn = "tex") {
+siginificant_mutant_operators_fixed <- function(d, rtrn = "tex", m = "median") {
   # BankAccount is first schema
   # ids <- a %>% filter(schema=='BankAccount') %>% select(identifier,dbms,schema,operator,type) %>% unique
   # ids$number=1:nrow(ids)
@@ -1939,7 +1951,11 @@ siginificant_mutant_operators_fixed <- function(d, rtrn = "tex") {
   d1 <- d
   # browser()
 
-  a <- d %>% group_by(dbms, generator, operator) %>% summarise(value = format(median(mutationScore), nsmall = 1))
+  if (m == "mean") {
+    a <- d %>% group_by(dbms, generator, operator) %>% summarise(value = format(mean(mutationScore), nsmall = 1))
+  } else {
+    a <- d %>% group_by(dbms, generator, operator) %>% summarise(value = format(median(mutationScore), nsmall = 1))
+  }
   d <- dcast(a,  operator ~ dbms + generator)
 
   a1 <- d[1]

@@ -4,7 +4,7 @@
 \alias{siginificant_coverage}
 \title{FUNCTION: siginificant_coverage}
 \usage{
-siginificant_coverage(d, rtrn = "tex")
+siginificant_coverage(d, rtrn = "tex", m = "median")
 }
 \description{
 generates a latex table for coverage table with effect size and U test.

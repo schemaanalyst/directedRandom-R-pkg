@@ -47,10 +47,10 @@ git clone https://github.com/schemaanalyst/directedRandom-R-pkg.git
 
 Major functions used in the paper is:
 
-* R/tables_generator.R `siginificant_timing(analysis, rtrn = "data")`
-* R/tables_generator.R `siginificant_coverage(analysis, rtrn = "data")`
-* R/tables_generator.R `siginificant_mutation_score(mutanttiming, rtrn = "data")`
-* R/tables_generator.R `siginificant_mutant_operators_fixed(mutanttiming, rtrn = "data")`
+* R/tables_generator.R `siginificant_timing(analysis, rtrn = "data", m = "median")`
+* R/tables_generator.R `siginificant_coverage(analysis, rtrn = "data", m = "median")`
+* R/tables_generator.R `siginificant_mutation_score(mutanttiming, rtrn = "data", m = "median")`
+* R/tables_generator.R `siginificant_mutant_operators_fixed(mutanttiming, rtrn = "data", m = "median")`
 
 ## Example Run
 All in the R shell
@@ -61,7 +61,7 @@ All in the R shell
 mutants <- directedRandomR::collect_mutanttiming()
 analysis <- directedRandomR::collect_mutationanalysistime()
 ```
-* Generate Tables (Latex or dataframes) change `rtrn = "data"` for data frame or `rtrn = "tex"` for latex table
+* Generate Tables (Latex or dataframes) change `rtrn = "data"` for data frame or `rtrn = "tex"` for latex table. `m` parameter can print the table to `median` or `mean`
 
 ```shell
 x1 <- directedRandomR::siginificant_timing(analysis, rtrn = "data")

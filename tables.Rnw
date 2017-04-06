@@ -303,4 +303,131 @@ for (i in 1:nr)
   \end{center}
 \end{table}
 
+% MEANS
+
+<<time, echo=FALSE, results=tex>>=
+#require(xtable)
+x <- directedRandomR::siginificant_timing(mutationanalysistiming, rtrn = "data", m = "mean")
+@
+
+
+\begin{table}[!ht]
+  \caption{\label{tab:timingmean}The table shows the mean of test generation timing.}
+  \begin{center}
+    \resizebox{\textwidth}{!}{
+      \begin{tabular}{lrrrr|rrrr}
+        \hline
+        \tableHeadingSchema
+        \hline
+<<manualtab1, results=tex,echo=FALSE>>=
+nr = nrow(x); nc = ncol(x)
+for (i in 1:nr)
+  for(j in 1:nc) {
+    cat(x[i,j])
+    if(j < nc)
+      cat("&")
+    else
+      cat("\\\\\n")
+  }
+@
+      \hline
+      \end{tabular}
+    }
+  \end{center}
+\end{table}
+
+<<coverage, echo=FALSE, results=tex>>=
+#require(xtable)
+x <- directedRandomR::siginificant_coverage(mutationanalysistiming, rtrn = "data", m = "mean")
+@
+
+
+\begin{table}[!ht]
+  \caption{\label{tab:coveragemeam}The table shows the mean of coverage.}
+  \begin{center}
+    \resizebox{\textwidth}{!}{
+      \begin{tabular}{lrrrr|rrrr}
+        \hline
+        \tableHeadingSchema
+        \hline
+<<manualtab2, results=tex,echo=FALSE>>=
+nr = nrow(x); nc = ncol(x)
+for (i in 1:nr)
+  for(j in 1:nc) {
+    cat(x[i,j])
+    if(j < nc)
+      cat("&")
+    else
+      cat("\\\\\n")
+  }
+@
+      \hline
+      \end{tabular}
+    }
+  \end{center}
+\end{table}
+
+<<schema_socre, echo=FALSE, results=tex>>=
+#require(xtable)
+x <- directedRandomR::siginificant_mutation_score(mutanttiming, rtrn = "data", m = "mean")
+@
+
+
+\begin{table}[!ht]
+  \caption{\label{tab:mutant_score_mean}The table shows the mean of Mutattion Score.}
+  \begin{center}
+    \resizebox{\textwidth}{!}{
+      \begin{tabular}{lrrrr|rrrr}
+        \hline
+        \tableHeadingSchema
+        \hline
+<<manualtab3, results=tex,echo=FALSE>>=
+nr = nrow(x); nc = ncol(x)
+for (i in 1:nr)
+  for(j in 1:nc) {
+    cat(x[i,j])
+    if(j < nc)
+      cat("&")
+    else
+      cat("\\\\\n")
+  }
+@
+      \hline
+      \end{tabular}
+    }
+  \end{center}
+\end{table}
+
+
+<<operators_socre, echo=FALSE, results=tex>>=
+#require(xtable)
+x <- directedRandomR::siginificant_mutant_operators_fixed(mutanttiming, rtrn = "data", m = "mean")
+@
+
+
+\begin{table}[!ht]
+  \caption{\label{tab:operators_mean}The table shows the mean of Mutattion Score for mutation operattors.}
+  \begin{center}
+    \resizebox{\textwidth}{!}{
+      \begin{tabular}{lrrrr|rrrr|rrrr}
+        \hline
+        \tableHeadingOperator
+        \hline
+<<manualtab4, results=tex,echo=FALSE>>=
+nr = nrow(x); nc = ncol(x)
+for (i in 1:nr)
+  for(j in 1:nc) {
+    cat(x[i,j])
+    if(j < nc)
+      cat("&")
+    else
+      cat("\\\\\n")
+  }
+@
+      \hline
+      \end{tabular}
+    }
+  \end{center}
+\end{table}
+
 \end{document}
