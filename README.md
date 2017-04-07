@@ -12,15 +12,14 @@ Copyright (C) 2017 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 ```
 
-You can type the next command in your R development environment if you want to want to install and then use this R
-package. This method is ideal if you plan to leverage, without modification, our existing functions and data sets in
+You can type the next command in your R development environment if you want to want to install the package using `devtools`. This method is ideal if you plan to leverage, without modification, our existing functions and data sets in
 your own work. 
 
 ```shell
 devtools::install_github("schemaanalyst/directedRandom-R-pkg")
 ```
 
-To Use the data within the package and Knit the files you have to clone the DATA repo
+To use the data with our package you have to clone the **data** repo:
 
 ```shell
 mkdir data
@@ -28,7 +27,7 @@ cd data
 git clone https://github.com/schemaanalyst/directedRandom-data.git
 cd directedRandom-data
 ```
-NOTE: use the R shell after those then go to the commands in sction Example Run
+NOTE: The data files include all data, plus RMarkDown, Sweave
 
 If you are interested in extending this package with new data sets and your own functions, then you can run the
 following command to first clone this repository:
@@ -37,31 +36,16 @@ following command to first clone this repository:
 git clone https://github.com/schemaanalyst/directedRandom-R-pkg.git
 ```
 
-### What is this repository for? ###
-
-* R/tables_generator.R is a file that have functions that generates the latex tables in Directed Random paper.
-* R/effecsize.R is what is used in virtual mutation paper.
-* R/collect.R has two functions that collect the data from the data folder. mutanttiming and mutationanalysistiming.
-* tests directory tests all the tables generated.
-* data directory (and this must be the working directory for R scripts to collect data)
-
-Major functions used in the paper is:
-
-* R/tables_generator.R `siginificant_timing(analysis, rtrn = "data", m = "median")`
-* R/tables_generator.R `siginificant_coverage(analysis, rtrn = "data", m = "median")`
-* R/tables_generator.R `siginificant_mutation_score(mutanttiming, rtrn = "data", m = "median")`
-* R/tables_generator.R `siginificant_mutant_operators_fixed(mutanttiming, rtrn = "data", m = "median")`
-
 ## Example Run
-In your data directory run the R shell and use the following commands
+In your data directory (the cloned data repo) run the R environment and use the following commands:
 
-* Collect Data
+* Collecting the data into a dataframe:
 
 ```shell
 mutants <- directedRandomR::collect_mutanttiming()
 analysis <- directedRandomR::collect_mutationanalysistime()
 ```
-* Generate Tables (Latex or dataframes) change `rtrn = "data"` for data frame or `rtrn = "tex"` for latex table. `m` parameter can print the table to `median` or `mean`
+* Generate Tables (Latex or dataframes), use the `rtrn` parameter to change `rtrn = "data"` for data frame or `rtrn = "tex"` for latex table. And the `m` parameter to print the table using `median` or `mean`:
 
 ```shell
 x1 <- directedRandomR::siginificant_timing(analysis, rtrn = "data")
@@ -70,9 +54,25 @@ x3 <- directedRandomR::siginificant_mutation_score(mutanttiming, rtrn = "data")
 x4 <- directedRandomR::siginificant_mutant_operators_fixed(mutanttiming, rtrn = "data")
 ```
 
+
+### What is this repository for? ###
+
+* R/tables_generator.R: is used to generate latex tables in Directed Random paper.
+* R/effecsize.R  used for effect size (A12) calculations.
+* R/collect.R has two functions that collect the data from the data folder. mutanttiming and mutationanalysistiming.
+* tests directory used tests all the tables generated.
+
+Major functions used in the paper is:
+
+* R/tables_generator.R `siginificant_timing(analysis, rtrn = "data", m = "median")`
+* R/tables_generator.R `siginificant_coverage(analysis, rtrn = "data", m = "median")`
+* R/tables_generator.R `siginificant_mutation_score(mutanttiming, rtrn = "data", m = "median")`
+* R/tables_generator.R `siginificant_mutant_operators_fixed(mutanttiming, rtrn = "data", m = "median")`
+
+
 ## Tests
 
-In an R shell you can run each of the following commands to build and test the R packages using `devtools`:
+In an R environment you can run each of the following commands to build and test our R packages using `devtools`:
 
 ```shell
 devtools::document()
@@ -83,7 +83,7 @@ devtools::test()
 
 ## Building Rmarkdown and Sweave (latex)
 
-the following commands are done in OS terminal command NOT in the R shell:
+The following commands are done in OS terminal command NOT in the R shell:
 
 ### Rmarkdown
 
