@@ -8,7 +8,7 @@
 #' @export
 
 transform_execution_times_for_threshold <- function(d, t) {
-  td <- d %>% dplyr::mutate(testgenerationtime=ifelse(testgenerationtime<t, 0, testgenerationtime))
+  td <- d %>% dplyr::mutate(testgenerationtime=ifelse(testgenerationtime<t, 0, (floor(testgenerationtime/t) * t )))
   return(td)
 }
 

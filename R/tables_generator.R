@@ -534,6 +534,7 @@ siginificant_timing <- function(d, rtrn = "tex", m = "median") {
   # d <- generate_15_schmea_mutation_analysis(d)
   d <- d %>% arrange(casestudy)
   d3 <- d
+  #browser()
   d1 <- directedRandomR::transform_execution_times_for_threshold(d, 1000)
   d2 <- d
   if (m == "mean") {
