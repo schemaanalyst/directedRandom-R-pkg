@@ -83,6 +83,8 @@ devtools::test()
 
 ## Building Rmarkdown and Sweave (latex)
 
+To build the RMarkDown and Sweave you would need the `pandoc` and `LateX` installed in your current OS.
+
 The following commands are done in OS terminal command NOT in the R shell:
 
 ### Rmarkdown
