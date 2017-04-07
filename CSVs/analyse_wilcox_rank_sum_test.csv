@@ -1,7 +1,0 @@
-"statistic","p.value","method","alternative","dbms","vs"
-432562.5,4.45623085309191e-11,"Wilcoxon rank sum test with continuity correction","two.sided","HyperSQL","AVM vs Directed Random Mutation Time"
-500286,0.637500422648513,"Wilcoxon rank sum test with continuity correction","two.sided","Postgres","AVM vs Directed Random Mutation Time"
-496791.5,0.0784616286107067,"Wilcoxon rank sum test with continuity correction","two.sided","SQLite","AVM vs Directed Random Mutation Time"
-1,1,"Wilcoxon rank sum test","two.sided","HyperSQL","AVM vs Directed Random Mutation Score"
-1,1,"Wilcoxon rank sum test","two.sided","Postgres","AVM vs Directed Random Mutation Score"
-1,1,"Wilcoxon rank sum test","two.sided","SQLite","AVM vs Directed Random Mutation Score"

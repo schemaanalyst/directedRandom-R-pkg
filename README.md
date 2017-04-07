@@ -20,13 +20,13 @@ your own work.
 devtools::install_github("schemaanalyst/directedRandom-R-pkg")
 ```
 
-To Use the data within the package and Knit the files you have to clone this repo
+To Use the data within the package and Knit the files you have to clone the DATA repo
 
 ```shell
 mkdir data
 cd data
-git clone https://github.com/schemaanalyst/directedRandom-R-pkg.git
-cd directedRandom-R-pkg
+git clone https://github.com/schemaanalyst/directedRandom-data.git
+cd directedRandom-data
 ```
 NOTE: use the R shell after those then go to the commands in sction Example Run
 
@@ -53,7 +53,7 @@ Major functions used in the paper is:
 * R/tables_generator.R `siginificant_mutant_operators_fixed(mutanttiming, rtrn = "data", m = "median")`
 
 ## Example Run
-All in the R shell
+In your data directory run the R shell and use the following commands
 
 * Collect Data
 
@@ -83,7 +83,7 @@ devtools::test()
 
 ## Building Rmarkdown and Sweave (latex)
 
-All done in terminal command NOT in the R shell
+the following commands are done in OS terminal command NOT in the R shell:
 
 ### Rmarkdown
 
