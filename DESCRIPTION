@@ -13,12 +13,14 @@ Depends:
     ggplot2,
     tables,
     xtable,
+    readr,
     kimisc,
     broom
 Imports:
     dplyr,
     reshape2,
     ggplot2,
+    readr,
     tables,
     xtable,
     kimisc,

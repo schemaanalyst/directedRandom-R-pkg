@@ -50,8 +50,12 @@ collect_mutationanalysistime <- function() {
   # allFrames <- rbind(allFrames, `mutation.analysis`)
   # #allFrames <- rbind(`mutation.analysis`, `Postgres.directedRandom.minusitrust.mutationanalysis`, `SQLite.directedRandom.minusitrust.mutationanalysis`)
   # allFrames$casestudy <- gsub("IsoFlav_R2Repaired", "IsoFlav_R2", allFrames$casestudy)
-  allFrames <- read.csv("data/analysis.csv")
-  return(allFrames)
+  # allFrames <- read.csv("data/analysis.csv")
+  # return(allFrames)
+
+  f <- system.file("extdata", "analysis.csv", package="directedRandomR")
+  d <- readr::read_csv(f)
+  return(dplyr::tbl_df(d))
 }
 
 #' FUNCTION: collect_mutanttiming
@@ -126,8 +130,13 @@ collect_mutanttiming <- function() {
     #                       `Postgres.avs.itrust.mutanttiming`
     # )
     # #mutanttiming$schema <- gsub("IsoFlav_R2Repaired", "IsoFlav_R2", schema$casestudy)
-  mutanttiming <- read.csv("data/mutants.csv")
-  return(mutanttiming)
+  # mutanttiming <- read.csv("data/mutants.csv")
+  # return(mutanttiming)
+
+  f <- system.file("extdata", "mutants.csv", package="directedRandomR")
+  d <- readr::read_csv(f)
+  return(dplyr::tbl_df(d))
+
 }
 
 

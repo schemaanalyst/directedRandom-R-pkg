@@ -18,7 +18,7 @@ your own work.
 ```shell
 devtools::install_github("schemaanalyst/directedRandom-R-pkg")
 ```
-
+<!--
 To use the data with our package you have to clone the **data** repo:
 
 ```shell
@@ -28,7 +28,7 @@ git clone https://github.com/schemaanalyst/directedRandom-data.git
 cd directedRandom-data
 ```
 NOTE: The data files include all data, plus RMarkDown, Sweave
-
+-->
 If you are interested in extending this package with new data sets and your own functions, then you can run the
 following command to first clone this repository:
 
@@ -37,7 +37,7 @@ git clone https://github.com/schemaanalyst/directedRandom-R-pkg.git
 ```
 
 ## Example Run
-In your data directory (the cloned data repo) run the R environment and use the following commands:
+In your run the R environment and use the following commands:
 
 * Collecting the data into a dataframe:
 
