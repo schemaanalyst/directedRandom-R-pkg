@@ -48,10 +48,10 @@ analysis <- directedRandomR::collect_mutationanalysistime()
 * Generate Tables (Latex or dataframes), use the `rtrn` parameter to change `rtrn = "data"` for data frame or `rtrn = "tex"` for latex table. And the `m` parameter to print the table using `median` or `mean`:
 
 ```shell
-x1 <- directedRandomR::siginificant_timing(analysis, rtrn = "data")
-x2 <- directedRandomR::siginificant_coverage(analysis, rtrn = "data")
-x3 <- directedRandomR::siginificant_mutation_score(mutanttiming, rtrn = "data")
-x4 <- directedRandomR::siginificant_mutant_operators_fixed(mutanttiming, rtrn = "data")
+x1 <- directedRandomR::siginificant_timing(analysis, rtrn = "data", m = "mean")
+x2 <- directedRandomR::siginificant_coverage(analysis, rtrn = "data", m = "mean")
+x3 <- directedRandomR::siginificant_mutation_score(mutanttiming, rtrn = "data", m = "mean")
+x4 <- directedRandomR::siginificant_mutant_operators_fixed(mutanttiming, rtrn = "data", m = "mean")
 ```
 
 
