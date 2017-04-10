@@ -56,17 +56,24 @@ siginificant_coverage <- function(d, rtrn = "tex", m = "median") {
   library(dplyr)
   library(reshape2)
   library(xtable)
+  # Generate 15 schemas from 34 schemas
   d <- generate_15_schmea_mutation_analysis(d)
   #d1 <- directedRandomR::transform_execution_times_for_threshold(d, 1000)
+  # Arrange dataframe by case study
   d <- d %>% arrange(casestudy)
+  # Store the dataframe into another var
   d1 <- d
+  # generate a DF for mean or median
   if (m == "mean") {
     d <- d %>% select(dbms, casestudy, datagenerator, coverage, randomseed) %>% group_by(dbms, casestudy, datagenerator) %>% summarise(coverage = format(round((mean(coverage)), 1), nsmall = 1))
   } else {
     d <- d %>% select(dbms, casestudy, datagenerator, coverage, randomseed) %>% group_by(dbms, casestudy, datagenerator) %>% summarise(coverage = format(round((median(coverage)), 1), nsmall = 1))
   }
+  # filp the data frame
   d <- dcast(d, casestudy ~ dbms + datagenerator)
+  # get header
   a1 <- d[1]
+  # Split by DBMS
   d2 <- d[2:13]
   d <- d2[ , order(names(d2))]
   c <- d[1:4]
@@ -75,21 +82,25 @@ siginificant_coverage <- function(d, rtrn = "tex", m = "median") {
   a <- a[c(3,1,2,4)]
   b <- d[9:12]
   b <- b[c(3,1,2,4)]
+  # change the schemas from fectors to char
   a1$casestudy <- as.character(a1$casestudy)
+  # get nunber of rows and itrate through them
   numberOfRows <- nrow(d)
   for (i in 1:numberOfRows) {
     schema <- a1[i,]
+    # get each generators
     dr <- d1 %>% filter(casestudy == schema, datagenerator == "directedRandom")
     avm <- d1 %>% filter(casestudy == schema, datagenerator == "avs")
     avmd <- d1 %>% filter(casestudy == schema, datagenerator == "avsDefaults")
     rand <- d1 %>% filter(casestudy == schema, datagenerator == "random")
     #a[i,] = ifelse(min(as.numeric(a[i,])) == as.numeric(a[i,]), paste("\\textbf{", a[i,], "}", sep = ""), as.numeric(a[i,]))
 
+    # Effect size for PSQL
     postgres_avm <- directedRandomR::effectsize_accurate((dr %>% filter(dbms == "Postgres"))$coverage, (avm %>% filter(dbms == "Postgres"))$coverage)$size
     postgres_avmd <- directedRandomR::effectsize_accurate((dr %>% filter(dbms == "Postgres"))$coverage, (avmd %>% filter(dbms == "Postgres"))$coverage)$size
     postgres_rand <- directedRandomR::effectsize_accurate((dr %>% filter(dbms == "Postgres"))$coverage, (rand %>% filter(dbms == "Postgres"))$coverage)$size
     #postgres <- NULL
-
+    # get generators
     drp <- d1 %>% filter(casestudy == schema, datagenerator == "directedRandom")
     avmp <- d1 %>% filter(casestudy == schema, datagenerator == "avs")
     avmdp <- d1 %>% filter(casestudy == schema, datagenerator == "avsDefaults")
@@ -106,9 +117,11 @@ siginificant_coverage <- function(d, rtrn = "tex", m = "median") {
     #   }
     # }
 
+    # get coverage
     dr_coverage <- (drp %>% filter(dbms == "Postgres"))$coverage
     avmr_coverage <- (avmp %>% filter(dbms == "Postgres"))$coverage
 
+    # U-test AVMR vs DR
     p1 <- wilcox.test(dr_coverage, avmr_coverage, alternative = "greater")$p.value <= 0.01
     p2 <- wilcox.test(dr_coverage, avmr_coverage, alternative = "less")$p.value <= 0.01
 
@@ -116,6 +129,8 @@ siginificant_coverage <- function(d, rtrn = "tex", m = "median") {
     #  # oh = paste("Schema => ", schema, " All False ", sep = "")
     #  # print(oh)
     #} else
+
+    # Check one-sided test
     if (p1 == TRUE & p2 == FALSE) {
       # oh = paste("Postgers Schema => ", schema, " DR YES ", a[i,1], " AVM-R NOT ", a[i,2], sep = "")
       # print(oh)
@@ -128,7 +143,7 @@ siginificant_coverage <- function(d, rtrn = "tex", m = "median") {
       # oh = paste("Postgers Schema => ", schema, " DR NOT ", a[i,1], " AVM-R NOT ", a[i,2], sep = "")
       # print(oh)
     }
-
+    # check effect
     if (postgres_avm == "large") {
       a[i,2] = paste("$^{\\ast\\ast\\ast}$",a[i,2], sep = "")
     } else if (postgres_avm == "medium") {
@@ -150,9 +165,9 @@ siginificant_coverage <- function(d, rtrn = "tex", m = "median") {
     #     a[i,3] = paste("\\textbf{",a[i,3],"}", sep = "")
     #   }
     # }
-
+    # get coverage
     avmd_coverage <- (avmdp %>% filter(dbms == "Postgres"))$coverage
-
+    # U-test AVMD vs DR
     p1 <- wilcox.test(dr_coverage, avmd_coverage, alternative = "greater")$p.value <= 0.01
     p2 <- wilcox.test(dr_coverage, avmd_coverage, alternative = "less")$p.value <= 0.01
 
@@ -160,6 +175,7 @@ siginificant_coverage <- function(d, rtrn = "tex", m = "median") {
     #  # oh = paste("Schema => ", schema, " All False ", sep = "")
     #  # print(oh)
     #} else
+    # Check results for one-sided test
     if (p1 == TRUE & p2 == FALSE) {
       # oh = paste("Postgers Schema => ", schema, " DR YES ", a[i,1], " AVM-R NOT ", a[i,2], sep = "")
       # print(oh)
@@ -172,7 +188,7 @@ siginificant_coverage <- function(d, rtrn = "tex", m = "median") {
       # oh = paste("Postgers Schema => ", schema, " DR NOT ", a[i,1], " AVM-R NOT ", a[i,2], sep = "")
       # print(oh)
     }
-
+    # effect size
     if (postgres_avmd == "large") {
       a[i,3] = paste("$^{\\ast\\ast\\ast}$",a[i,3], sep = "")
     } else if (postgres_avmd == "medium") {
@@ -199,6 +215,7 @@ siginificant_coverage <- function(d, rtrn = "tex", m = "median") {
     #   }
     # }
 
+    # U-test Random vs DR
     rand_coverage <- (randp %>% filter(dbms == "Postgres"))$coverage
 
     p1 <- wilcox.test(dr_coverage, rand_coverage, alternative = "greater")$p.value <= 0.01
@@ -208,6 +225,7 @@ siginificant_coverage <- function(d, rtrn = "tex", m = "median") {
     #  # oh = paste("Schema => ", schema, " All False ", sep = "")
     #  # print(oh)
     #} else
+    # check one-sided
     if (p1 == TRUE & p2 == FALSE) {
       # oh = paste("Postgers Schema => ", schema, " DR YES ", a[i,1], " AVM-R NOT ", a[i,2], sep = "")
       # print(oh)
@@ -220,7 +238,7 @@ siginificant_coverage <- function(d, rtrn = "tex", m = "median") {
       # oh = paste("Postgers Schema => ", schema, " DR NOT ", a[i,1], " AVM-R NOT ", a[i,2], sep = "")
       # print(oh)
     }
-
+    # effect size
     if (postgres_rand == "large") {
       a[i,4] = paste("$^{\\ast\\ast\\ast}$",a[i,4], sep = "")
     } else if (postgres_rand == "medium") {
@@ -239,6 +257,7 @@ siginificant_coverage <- function(d, rtrn = "tex", m = "median") {
     # }
 
     #b[i,] = ifelse(min(as.numeric(b[i,])) == as.numeric(b[i,]), paste("\\textbf{", b[i,], "}", sep = ""), as.numeric(b[i,]))
+    # get SQLite effect size
     sqlite_avm <- directedRandomR::effectsize_accurate((dr %>% filter(dbms == "SQLite"))$coverage, (avm %>% filter(dbms == "SQLite"))$coverage)$size
     sqlite_avmd <- directedRandomR::effectsize_accurate((dr %>% filter(dbms == "SQLite"))$coverage, (avmd %>% filter(dbms == "SQLite"))$coverage)$size
     sqlite_rand <- directedRandomR::effectsize_accurate((dr %>% filter(dbms == "SQLite"))$coverage, (rand %>% filter(dbms == "SQLite"))$coverage)$size
@@ -255,7 +274,7 @@ siginificant_coverage <- function(d, rtrn = "tex", m = "median") {
     #     b[i,2] = paste("\\textbf{",b[i,2],"}", sep = "")
     #   }
     # }
-
+    # U-test AVMR vs DR
     dr_coverage <- (drp %>% filter(dbms == "SQLite"))$coverage
     avmr_coverage <- (avmp %>% filter(dbms == "SQLite"))$coverage
 
@@ -295,6 +314,8 @@ siginificant_coverage <- function(d, rtrn = "tex", m = "median") {
     #     b[i,3] = paste("\\textbf{",b[i,3],"}", sep = "")
     #   }
     # }
+    # U-test AVMD vs DR
+
     avmd_coverage <- (avmdp %>% filter(dbms == "SQLite"))$coverage
 
     p1 <- wilcox.test(dr_coverage, avmd_coverage, alternative = "greater")$p.value <= 0.01
@@ -332,6 +353,7 @@ siginificant_coverage <- function(d, rtrn = "tex", m = "median") {
     #     b[i,4] = paste("\\textbf{",b[i,4],"}", sep = "")
     #   }
     # }
+    # U-test Random vs DR
 
     rand_coverage <- (randp %>% filter(dbms == "SQLite"))$coverage
 
@@ -366,7 +388,7 @@ siginificant_coverage <- function(d, rtrn = "tex", m = "median") {
     # } else {
     #   sqlite <- "^{\\ast}"
     # }
-
+    # calculate effect size for coverage for HSQL
     hsql_avm <- directedRandomR::effectsize_accurate((dr %>% filter(dbms == "HyperSQL"))$coverage, (avm %>% filter(dbms == "HyperSQL"))$coverage)$size
     hsql_avmd <- directedRandomR::effectsize_accurate((dr %>% filter(dbms == "HyperSQL"))$coverage, (avmd %>% filter(dbms == "HyperSQL"))$coverage)$size
     hsql_rand <- directedRandomR::effectsize_accurate((dr %>% filter(dbms == "HyperSQL"))$coverage, (rand %>% filter(dbms == "HyperSQL"))$coverage)$size
@@ -385,6 +407,7 @@ siginificant_coverage <- function(d, rtrn = "tex", m = "median") {
     #   }
     # }
 
+    # U-test AVMR vs DR
     dr_coverage <- (drp %>% filter(dbms == "HyperSQL"))$coverage
     avmr_coverage <- (avmp %>% filter(dbms == "HyperSQL"))$coverage
 
@@ -401,7 +424,7 @@ siginificant_coverage <- function(d, rtrn = "tex", m = "median") {
       c[i,2] = paste("\\textit{",c[i,2],"}", sep = "")
     } else {
     }
-
+    # effect size
     if (hsql_avm == "large") {
       c[i,2] = paste("$^{\\ast\\ast\\ast}$",c[i,2], sep = "")
     } else if (hsql_avm == "medium") {
@@ -462,6 +485,7 @@ siginificant_coverage <- function(d, rtrn = "tex", m = "median") {
     #   }
     # }
 
+    # U-test Random vs DR
     rand_coverage <- (randp %>% filter(dbms == "HyperSQL"))$coverage
 
     p1 <- wilcox.test(dr_coverage, rand_coverage, alternative = "greater")$p.value <= 0.01
@@ -496,6 +520,7 @@ siginificant_coverage <- function(d, rtrn = "tex", m = "median") {
     # } else {
     #   hsql <- "^{\\ast}"
     # }
+    # for latex purposes
     if (a1[i,] == "NistXTS749") {
       a1[i,] <- "NistXTSNine"
     }
@@ -505,6 +530,7 @@ siginificant_coverage <- function(d, rtrn = "tex", m = "median") {
     #b[i,] = ifelse(min(as.numeric(b[i,])) == as.numeric(b[i,]), paste("$",sqlite,"$","\\textbf{", b[i,], "}", sep = ""), as.numeric(b[i,]))
     #c[i,] = ifelse(min(as.numeric(c[i,])) == as.numeric(c[i,]), paste("$",hsql,"$","\\textbf{", c[i,], "}", sep = ""), as.numeric(c[i,]))
   }
+  # Combain data
   a <- a[c(1,4,3,2)]
   b <- b[c(1,4,3,2)]
   c <- c[c(1,4,3,2)]
@@ -531,19 +557,27 @@ siginificant_timing <- function(d, rtrn = "tex", m = "median") {
   library(dplyr)
   library(reshape2)
   library(xtable)
+  # Generate 15 schemas from 34 schemas
   # d <- generate_15_schmea_mutation_analysis(d)
+  # Arrange dataframe by case study
   d <- d %>% arrange(casestudy)
+  # copy values for Sig without transforming
   d3 <- d
   #browser()
+  # Transform data with rounding down
   d1 <- directedRandomR::transform_execution_times_for_threshold(d, 1000)
   d2 <- d
+  # generate a DF for mean or median
   if (m == "mean") {
     d <- d %>% select(dbms, casestudy, datagenerator, testgenerationtime, randomseed) %>% group_by(dbms, casestudy, datagenerator) %>% summarise(testgenerationtime = format(round((mean(testgenerationtime) / 1000), 2), nsmall = 2))
   } else {
     d <- d %>% select(dbms, casestudy, datagenerator, testgenerationtime, randomseed) %>% group_by(dbms, casestudy, datagenerator) %>% summarise(testgenerationtime = format(round((median(testgenerationtime) / 1000), 2), nsmall = 2))
   }
+  # filp the data frame
   d <- dcast(d, casestudy ~ dbms + datagenerator)
+  # get header
   a1 <- d[1]
+  # Split by DBMS
   d2 <- d[2:13]
   d <- d2[ , order(names(d2))]
   c <- d[1:4]
@@ -552,21 +586,24 @@ siginificant_timing <- function(d, rtrn = "tex", m = "median") {
   a <- a[c(3,1,2,4)]
   b <- d[9:12]
   b <- b[c(3,1,2,4)]
+  # get nunber of rows and itrate through them
   numberOfRows <- nrow(d)
+  # change the schemas from fectors to char
   a1$casestudy <- as.character(a1$casestudy)
   for (i in 1:numberOfRows) {
     schema <- a1[i,]
+    # get each generators for transformed data
     dr <- d1 %>% filter(casestudy == schema, datagenerator == "directedRandom")
     avm <- d1 %>% filter(casestudy == schema, datagenerator == "avs")
     avmd <- d1 %>% filter(casestudy == schema, datagenerator == "avsDefaults")
     rand <- d1 %>% filter(casestudy == schema, datagenerator == "random")
     #a[i,] = ifelse(min(as.numeric(a[i,])) == as.numeric(a[i,]), paste("\\textbf{", a[i,], "}", sep = ""), as.numeric(a[i,]))
-
+    # Effect size for PSQL
     postgres_avm <- directedRandomR::effectsize_accurate((dr %>% filter(dbms == "Postgres"))$testgenerationtime, (avm %>% filter(dbms == "Postgres"))$testgenerationtime)$size
     postgres_avmd <- directedRandomR::effectsize_accurate((dr %>% filter(dbms == "Postgres"))$testgenerationtime, (avmd %>% filter(dbms == "Postgres"))$testgenerationtime)$size
     postgres_rand <- directedRandomR::effectsize_accurate((dr %>% filter(dbms == "Postgres"))$testgenerationtime, (rand %>% filter(dbms == "Postgres"))$testgenerationtime)$size
     #postgres <- NULL
-
+    # get generators for non-transformed
     drp <- d3 %>% filter(casestudy == schema, datagenerator == "directedRandom")
     avmp <- d3 %>% filter(casestudy == schema, datagenerator == "avs")
     avmdp <- d3 %>% filter(casestudy == schema, datagenerator == "avsDefaults")
@@ -585,7 +622,7 @@ siginificant_timing <- function(d, rtrn = "tex", m = "median") {
 
     dr_time <- (drp %>% filter(dbms == "Postgres"))$testgenerationtime
     avmr_time <- (avmp %>% filter(dbms == "Postgres"))$testgenerationtime
-
+    # U-test AVMR vs DR
     p1 <- wilcox.test(dr_time, avmr_time, alternative = "greater")$p.value >= 0.01
     p2 <- wilcox.test(dr_time, avmr_time, alternative = "less")$p.value >= 0.01
 
@@ -593,6 +630,8 @@ siginificant_timing <- function(d, rtrn = "tex", m = "median") {
     #  # oh = paste("Schema => ", schema, " All False ", sep = "")
     #  # print(oh)
     #} else
+
+    # Check one-sided test
     if (p1 == TRUE & p2 == FALSE) {
       # oh = paste("Postgers Schema => ", schema, " DR YES ", a[i,1], " AVM-R NOT ", a[i,2], sep = "")
       # print(oh)
@@ -636,6 +675,8 @@ siginificant_timing <- function(d, rtrn = "tex", m = "median") {
     #  # oh = paste("Schema => ", schema, " All False ", sep = "")
     #  # print(oh)
     #} else
+
+    # Check one-sided test
     if (p1 == TRUE & p2 == FALSE) {
       # oh = paste("Postgers Schema => ", schema, " DR YES ", a[i,1], " AVM-R NOT ", a[i,3], sep = "")
       # print(oh)
@@ -684,6 +725,8 @@ siginificant_timing <- function(d, rtrn = "tex", m = "median") {
     #  # oh = paste("Schema => ", schema, " All False ", sep = "")
     #  # print(oh)
     #} else
+
+    # Check one-sided test
     if (p1 == TRUE & p2 == FALSE) {
       # oh = paste("Postgers Schema => ", schema, " DR YES ", a[i,1], " AVM-R NOT ", a[i,4], sep = "")
       # print(oh)
@@ -742,6 +785,8 @@ siginificant_timing <- function(d, rtrn = "tex", m = "median") {
     #  # oh = paste("Schema => ", schema, " All False ", sep = "")
     #  # print(oh)
     #} else
+
+    # Check one-sided test
     if (p1 == TRUE & p2 == FALSE) {
       # oh = paste("Postgers Schema => ", schema, " DR YES ", b[i,1], " AVM-R NOT ", b[i,2], sep = "")
       # print(oh)
@@ -786,6 +831,8 @@ siginificant_timing <- function(d, rtrn = "tex", m = "median") {
     #  # oh = paste("Schema => ", schema, " All False ", sep = "")
     #  # print(oh)
     #} else
+
+    # Check one-sided test
     if (p1 == TRUE & p2 == FALSE) {
       # oh = paste("Postgers Schema => ", schema, " DR YES ", b[i,1], " AVM-R NOT ", b[i,3], sep = "")
       # print(oh)
@@ -1008,6 +1055,8 @@ siginificant_timing <- function(d, rtrn = "tex", m = "median") {
     # } else {
     #   hsql <- "^{\\ast}"
     # }
+
+    # for latex purposes
     if (a1[i,] == "NistXTS749") {
       a1[i,] <- "NistXTSNine"
     }
@@ -1017,6 +1066,7 @@ siginificant_timing <- function(d, rtrn = "tex", m = "median") {
     #b[i,] = ifelse(min(as.numeric(b[i,])) == as.numeric(b[i,]), paste("$",sqlite,"$","\\textbf{", b[i,], "}", sep = ""), as.numeric(b[i,]))
     #c[i,] = ifelse(min(as.numeric(c[i,])) == as.numeric(c[i,]), paste("$",hsql,"$","\\textbf{", c[i,], "}", sep = ""), as.numeric(c[i,]))
   }
+  # Combain data
   a <- a[c(1,4,3,2)]
   b <- b[c(1,4,3,2)]
   c <- c[c(1,4,3,2)]
