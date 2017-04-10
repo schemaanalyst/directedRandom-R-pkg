@@ -2,7 +2,7 @@ library(testthat)
 library(directedRandomR)
 context("mutant-operators-hsql-CRelOpE")
 
-test_that("testing_operator_mutation_CRelOpE_hsql", {
+test_that("testing_operator_mutation_CRelOpE_ssqlite", {
   setwd('../../')
   library(dplyr)
   # setting to the data
@@ -12,7 +12,7 @@ test_that("testing_operator_mutation_CRelOpE_hsql", {
   mutant_operator <- directedRandomR::collect_mutanttiming()
   #setwd('~/phd_exper/mutantdata/bitbucket/directedrandomr/R/')
   selected_operator <- "CCRelationalExpressionOperatorE"
-  db <- "HyperSQL"
+  db <- "SQLite"
 
   # Filtering data from mutanttiming without iTrust
   filtered_data <- mutant_operator %>% filter(operator == selected_operator, schema != "iTrust", dbms == db) %>% group_by(identifier, dbms)
@@ -110,22 +110,21 @@ test_that("testing_operator_mutation_CRelOpE_hsql", {
 
   expect_equal(avmr_effectsize, "small")
 
-  expect_equal(avmd_effectsize, "large")
+  expect_equal(avmd_effectsize, "medium")
 
-  expect_equal(rand_effectsize, "large")
-
+  expect_equal(rand_effectsize, "small")
   # Testing if the mean is correct to the table
   average <- round(sum(dr$killed_mutants) / sum(dr$total_mutants) * 100, 2)
-  expect_equal(average, 88.82)
+  expect_equal(average, 82.33)
 
   average <- round(sum(avmr$killed_mutants) / sum(avmr$total_mutants) * 100, 2)
-  expect_equal(average, 88.52)
+  expect_equal(average,  82.56)
 
   average <- round(sum(avmd$killed_mutants) / sum(avmd$total_mutants) * 100, 2)
-  expect_equal(average, 84.55)
+  expect_equal(average, 81.67)
 
   average <- round(sum(rand$killed_mutants) / sum(rand$total_mutants) * 100, 2)
-  expect_equal(average, 87.09)
+  expect_equal(average, 82.72)
 
   # Testing Siginificant results to the table
   p <- wilcox.test(dr$mutationScore, avmr$mutationScore)$p.value <= 0.05
@@ -135,7 +134,7 @@ test_that("testing_operator_mutation_CRelOpE_hsql", {
   expect_true(p)
 
   p <- wilcox.test(dr$mutationScore, rand$mutationScore)$p.value <= 0.05
-  expect_true(p)
+  expect_false(p)
 
 
 })
