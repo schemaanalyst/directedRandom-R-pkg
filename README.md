@@ -18,23 +18,6 @@ your own work.
 ```shell
 devtools::install_github("schemaanalyst/directedRandom-R-pkg")
 ```
-<!--
-To use the data with our package you have to clone the **data** repo:
-
-```shell
-mkdir data
-cd data
-git clone https://github.com/schemaanalyst/directedRandom-data.git
-cd directedRandom-data
-```
-NOTE: The data files include all data, plus RMarkDown, Sweave
--->
-If you are interested in extending this package with new data sets and your own functions, then you can run the
-following command to first clone this repository:
-
-```shell
-git clone https://github.com/schemaanalyst/directedRandom-R-pkg.git
-```
 
 ## Example Run
 In your run the R environment and use the following commands:
@@ -70,7 +53,25 @@ Major functions used in the paper is:
 * R/tables_generator.R `siginificant_mutant_operators_fixed(mutanttiming, rtrn = "data", m = "median")`
 
 
-## Tests
+## Developement
+
+<!--
+To use the data with our package you have to clone the **data** repo:
+
+```shell
+mkdir data
+cd data
+git clone https://github.com/schemaanalyst/directedRandom-data.git
+cd directedRandom-data
+```
+NOTE: The data files include all data, plus RMarkDown, Sweave
+-->
+If you are interested in extending this package with new data sets and your own functions, then you can run the
+following command to first clone this repository:
+
+```shell
+git clone https://github.com/schemaanalyst/directedRandom-R-pkg.git
+```
 
 In an R environment you can run each of the following commands to build and test our R packages using `devtools`:
 
@@ -81,11 +82,17 @@ devtools::load_all()
 devtools::test()
 ```
 
-## Building Rmarkdown and Sweave (latex)
+## Generating Plots, RMarkDown, and Sweave
 
-To build the RMarkDown and Sweave you would need the `pandoc` and `LateX` installed in your current OS.
+To build the RMarkDown and Sweave to review our results, you would need the `pandoc` and `LateX` installed in your current OS.
 
-The following commands are done in OS terminal command NOT in the R shell:
+Also you would need the templates in the following repo:
+
+```shell
+git clone https://github.com/schemaanalyst/directedRandom-data
+```
+
+The following commands are done in OS terminal command, not in the R shell, and within the above cloned repo directory:
 
 ### Rmarkdown
 
