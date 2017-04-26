@@ -6,6 +6,12 @@
 \usage{
 generate_15_schmea_analysis(d)
 }
+\arguments{
+\item{d}{A data frame of analysis}
+}
+\value{
+A data frame with 15 schema randomly picked
+}
 \description{
-gets a 15 schemas from the dataset of analysis file, or mutantionanalysistime.dat.
+Gets a 15 schemas from the dataset of analysis file, or mutantionanalysistime.dat.
 }

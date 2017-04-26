@@ -1,8 +1,10 @@
 #' FUNCTION: plot_overall
 #'
 #' Perform a plotting for coverage, mutation score, evaluations and testgenerationtime
+#' File saved in plots/
+#' @param d Data frame of analysis
+#' @importFrom magrittr %>%
 #' @export
-
 plot_overall <- function(d) {
   library(ggplot2)
   library(dplyr)
@@ -46,6 +48,9 @@ plot_overall <- function(d) {
 #' FUNCTION: plot_heatmap_mutanttiming
 #'
 #' Perform a heating plot for each case
+#' File saved in plots/
+#' @param d Data frame of analysis
+#' @importFrom magrittr %>%
 #' @export
 plot_heatmap_mutanttiming <- function(d) {
   library(ggplot2)
@@ -55,7 +60,6 @@ plot_heatmap_mutanttiming <- function(d) {
   cases <- as.vector(distinct(allFrames, schema))[[1]]
 
   for(case in cases) {
-
     newdata <- allFrames %>% group_by(schema, generator, operator) %>% filter(schema == case, type == "NORMAL") %>% summarise(killed_mutants = (length(killed[killed == "true"]) / (length(killed[killed == "false"]) + (length(killed[killed == "true"])))) * 100 )
     data <- melt(newdata, id=c("schema", "generator", "operator"))
     heatmapGraph <- data  %>% ggplot(aes(operator, generator)) + facet_grid(. ~ schema) + geom_tile(aes(fill = value), colour = "white") + scale_fill_gradient(low = "white", high = "steelblue")+geom_text(aes(label=format(round(value, 2), nsmall = 2)))  + theme(axis.text.x = element_text(angle = 45, hjust = 1))
@@ -66,7 +70,6 @@ plot_heatmap_mutanttiming <- function(d) {
     png(filename = fileSaving, width = 1920, height = 1080, units = "px")
     plot(heatmapGraph)
     dev.off()
-
   }
 }
 
@@ -74,6 +77,10 @@ plot_heatmap_mutanttiming <- function(d) {
 #' FUNCTION: plot_heatmap_mutanttiming_allinone
 #'
 #' Perform a heating plot for all cases
+#' File saved in plots/
+#' @param d Data frame of analysis
+#' @return A Plot
+#' @importFrom magrittr %>%
 #' @export
 plot_heatmap_mutanttiming_allinone <- function(d) {
   library(ggplot2)
@@ -98,6 +105,10 @@ plot_heatmap_mutanttiming_allinone <- function(d) {
 #' FUNCTION: plot_heatmap_mutanttiming_allinone_dbms
 #'
 #' Perform a heating plot for all cases with dbms
+#' File saved in plots/
+#' @param d Data frame of analysis
+#' @return A Plot
+#' @importFrom magrittr %>%
 #' @export
 plot_heatmap_mutanttiming_allinone_dbms <- function(d) {
   library(ggplot2)
@@ -122,9 +133,11 @@ plot_heatmap_mutanttiming_allinone_dbms <- function(d) {
 #' FUNCTION: visual_grid_ten_schemas
 #'
 #' generates a plot grid of top 10 schemas
+#' @param d Data frame of analysis
+#' @return A Plot
 #' @importFrom magrittr %>%
 #' @export
-visual_grid_ten_schemas <- function(mutationanalysistiming) {
+visual_grid_ten_schemas <- function(d) {
   mutationanalysistiming %>% dplyr::group_by(casestudy, datagenerator, dbms) %>% dplyr::filter(datagenerator != "random", casestudy != "ArtistSimilarity", casestudy != "ArtistTerm", casestudy != "BankAccount", casestudy != "BookTown", casestudy != "Cloc",casestudy != "CoffeeOrders", casestudy != "DellStore", casestudy != "Employee", casestudy != "Examination", casestudy != "FrenchTowns", casestudy != "Inventory", casestudy != "Iso3166", casestudy != "IsoFlav_R2", casestudy != "JWhoisServer", casestudy != "MozillaExtensions", casestudy != "MozillaPermissions", casestudy != "NistDML181", casestudy != "NistDML183", casestudy != "NistWeather", casestudy != "NistXTS748", casestudy != "NistXTS749", casestudy != "Person", casestudy != "StackOverflow", casestudy != "StudentResidence", casestudy != "Usda", casestudy != "WordNet") %>% ggplot(aes(datagenerator, testgenerationtime / 1000)) + geom_boxplot() + facet_wrap( ~ casestudy, scales = "free") +  labs(y = "Test Generation Time For all runs per Schema (In Sceconds)")
 
   a <- mutationanalysistiming %>% dplyr::group_by(casestudy, datagenerator, dbms) %>% dplyr::filter(datagenerator != "random", casestudy == "iTrust") %>% ggplot(aes(datagenerator, testgenerationtime / 1000)) + geom_boxplot() + facet_grid(dbms ~ casestudy, scales = "free") +  labs(y = NULL, x = NULL) + theme(strip.text.x = element_text(angle = 90), axis.text.x = element_text(angle = 90, hjust = 1))  + scale_x_discrete(labels=c("directedRandom" = "DR", "avs" = "AVM", "avsDefaults" = "AVMD"))
@@ -136,6 +149,7 @@ visual_grid_ten_schemas <- function(mutationanalysistiming) {
   g <- mutationanalysistiming %>% dplyr::group_by(casestudy, datagenerator, dbms) %>% dplyr::filter(datagenerator != "random", casestudy == "RiskIt") %>% ggplot(aes(datagenerator, testgenerationtime / 1000)) + geom_boxplot() + facet_grid(dbms ~ casestudy, scales = "free") + labs(y = NULL, x = NULL) + theme(strip.text.x = element_text(angle = 90), axis.text.x = element_text(angle = 90, hjust = 1))  + scale_x_discrete(labels=c("directedRandom" = "DR", "avs" = "AVM", "avsDefaults" = "AVMD"))
   h <- mutationanalysistiming %>% dplyr::group_by(casestudy, datagenerator, dbms) %>% dplyr::filter(datagenerator != "random", casestudy == "UnixUsage") %>% ggplot(aes(datagenerator, testgenerationtime / 1000)) + geom_boxplot() + facet_grid(dbms ~ casestudy, scales = "free") + labs(y = NULL, x = NULL) + theme(strip.text.x = element_text(angle = 90), axis.text.x = element_text(angle = 90, hjust = 1))  + scale_x_discrete(labels=c("directedRandom" = "DR", "avs" = "AVM", "avsDefaults" = "AVMD"))
 
-  gridExtra::grid.arrange(a, b, c, d, e, f, g, h, nrow =1, left="Test Generation Time For all runs per Schema (In Sceconds)", bottom = "Generator")
+  p <- gridExtra::grid.arrange(a, b, c, d, e, f, g, h, nrow =1, left="Test Generation Time For all runs per Schema (In Sceconds)", bottom = "Generator")
 
+  return(p)
 }

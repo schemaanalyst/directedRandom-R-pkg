@@ -6,6 +6,14 @@
 \usage{
 analyse_vargha_delaney_effect_size_testgenerationtiming(d, e)
 }
+\arguments{
+\item{d}{A data frame of analysis}
+
+\item{e}{The effect size method}
+}
+\value{
+Data frame of A12 effect size results for testgeneratiotiming (Only AVM-D and DR)
+}
 \description{
-Perform an effect size analysis of the test generation timings for the AVM and Directed Random mutation analysis techniques.
+Perform an effect size analysis of the test generation timings for the AVM-D and Directed Random mutation analysis techniques.
 }

@@ -6,6 +6,12 @@
 \usage{
 preform_sum_of_samples(d)
 }
+\arguments{
+\item{d}{A data frame of analysis}
+}
+\value{
+Total results (summtion)
+}
 \description{
-average out all schemas for each data generators and DBMS for each run
+Total of all results per schema for each data generators and DBMS for each run.
 }

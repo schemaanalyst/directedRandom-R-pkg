@@ -6,6 +6,14 @@
 \usage{
 analyse_vargha_delaney_effect_size_except_testgnerationtiming(d, e)
 }
+\arguments{
+\item{d}{A data frame of analysis}
+
+\item{e}{The effect size method}
+}
+\value{
+Data frame of coverage, mutation score, and evaluations A12 effect size results (Only AVM-D and DR)
+}
 \description{
-Perform an effect size analysis of the coverage, mutation score, and evaluations for the AVM and Directed Random techniques.
+Perform an effect size analysis of the coverage, mutation score, and evaluations for the AVM-D and Directed Random techniques.
 }

@@ -6,6 +6,16 @@
 \usage{
 siginificant_mutant_operators(d, rtrn = "tex", m = "median")
 }
+\arguments{
+\item{d}{Data frame of mutants}
+
+\item{rtrn}{Latex (tex) or a data frame (data)}
+
+\item{m}{Results shown as median or mean}
+}
+\value{
+A A12 effect size and U-test of mutation score per operator compared pair wise
+}
 \description{
-generates a latex table for mutation operators table with effect size and U test.
+Generates a latex table or data frame for mutation operators table with effect size and U test.
 }

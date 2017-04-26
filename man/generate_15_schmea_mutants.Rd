@@ -6,6 +6,12 @@
 \usage{
 generate_15_schmea_mutants(d)
 }
+\arguments{
+\item{d}{A data frame of mutants}
+}
+\value{
+A data frame with 15 schema randomly picked
+}
 \description{
-gets a 15 schemas from the dataset of mutants file, or mutanttiming.dat.
+Gets a 15 schemas from the dataset of mutants file, or mutanttiming.dat.
 }

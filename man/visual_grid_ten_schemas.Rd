@@ -4,7 +4,13 @@
 \alias{visual_grid_ten_schemas}
 \title{FUNCTION: visual_grid_ten_schemas}
 \usage{
-visual_grid_ten_schemas(mutationanalysistiming)
+visual_grid_ten_schemas(d)
+}
+\arguments{
+\item{d}{Data frame of analysis}
+}
+\value{
+A Plot
 }
 \description{
 generates a plot grid of top 10 schemas

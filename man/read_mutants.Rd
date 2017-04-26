@@ -6,6 +6,9 @@
 \usage{
 read_mutants()
 }
+\value{
+A Data Frame of mutants
+}
 \description{
 Read the data file that contains the "time-constrained mutation" data. This is the data file containts all mutants,
 killed or alive. It is refered in SchemaAnalyst github repo as 'mutanttiming.dat'.

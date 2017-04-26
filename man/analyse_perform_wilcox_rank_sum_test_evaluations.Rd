@@ -6,6 +6,14 @@
 \usage{
 analyse_perform_wilcox_rank_sum_test_evaluations(s, v)
 }
+\arguments{
+\item{s}{Sample 1}
+
+\item{v}{Sample 2}
+}
+\value{
+A textual results
+}
 \description{
-Perform a single Wilcoxon rank-sum test for two input data sets for evaluations
+Perform a single Wilcoxon rank-sum test for two evaluation results samples
 }

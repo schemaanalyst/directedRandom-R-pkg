@@ -6,6 +6,12 @@
 \usage{
 preform_averaging_of_samples(d)
 }
+\arguments{
+\item{d}{A data frame of analysis}
+}
+\value{
+Averaged samples for all runs
+}
 \description{
-average out all schemas for each data generators and DBMS for each run
+Average out all schemas for each data generators and DBMS for each run.
 }

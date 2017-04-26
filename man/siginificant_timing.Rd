@@ -6,6 +6,16 @@
 \usage{
 siginificant_timing(d, rtrn = "tex", m = "median")
 }
+\arguments{
+\item{d}{Data frame of analysis}
+
+\item{rtrn}{Latex (tex) or a data frame (data)}
+
+\item{m}{Results shown as median or mean}
+}
+\value{
+A A12 effect size and U-test of test generation timing compared pair wise
+}
 \description{
-generates a latex table for test generation timing table with effect size and U test.
+Generates a latex table or data frame for test generation timing table with effect size and U test.
 }

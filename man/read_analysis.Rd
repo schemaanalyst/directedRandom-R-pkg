@@ -6,6 +6,9 @@
 \usage{
 read_analysis()
 }
+\value{
+A Data Frame of analysis
+}
 \description{
 Read the data file that contains the "analysis" data. This is the data containing all test generation times, coverages,
 evaluations etc. It is refered in SchemaAnalyst github repo as 'newmutationanalysis.dat'. And it allow us to compare

@@ -1,6 +1,10 @@
 #' FUNCTION: siginificant_coverage
 #'
-#' generates a latex table for coverage table with effect size and U test.
+#' Generates a latex table or a data frame for coverage table with effect size and U test.
+#' @param d Data frame of analysis
+#' @param rtrn Latex (tex) or a data frame (data)
+#' @param m Results shown as median or mean
+#' @return A A12 effect size and U-test of coverages compared pair wise
 #' @importFrom magrittr %>%
 #' @export
 siginificant_coverage <- function(d, rtrn = "tex", m = "median") {
@@ -290,7 +294,11 @@ siginificant_coverage <- function(d, rtrn = "tex", m = "median") {
 
 #' FUNCTION: siginificant_timing
 #'
-#' generates a latex table for test generation timing table with effect size and U test.
+#' Generates a latex table or data frame for test generation timing table with effect size and U test.
+#' @param d Data frame of analysis
+#' @param rtrn Latex (tex) or a data frame (data)
+#' @param m Results shown as median or mean
+#' @return A A12 effect size and U-test of test generation timing compared pair wise
 #' @importFrom magrittr %>%
 #' @export
 siginificant_timing <- function(d, rtrn = "tex", m = "median") {
@@ -590,7 +598,11 @@ siginificant_timing <- function(d, rtrn = "tex", m = "median") {
 
 #' FUNCTION: siginificant_mutation_score
 #'
-#' generates a latex table for mutation score per schema table with effect size and U test.
+#' Generates a latex table or data frame for mutation score per schema table with effect size and U test.
+#' @param d Data frame of mutants
+#' @param rtrn Latex (tex) or a data frame (data)
+#' @param m Results shown as median or mean
+#' @return A A12 effect size and U-test of mutation score per schema compared pair wise
 #' @importFrom magrittr %>%
 #' @export
 siginificant_mutation_score <- function(d, rtrn = "tex", m = "median") {
@@ -872,8 +884,11 @@ siginificant_mutation_score <- function(d, rtrn = "tex", m = "median") {
 
 #' FUNCTION: siginificant_mutant_operators
 #'
-
-#' generates a latex table for mutation operators table with effect size and U test.
+#' Generates a latex table or data frame for mutation operators table with effect size and U test.
+#' @param d Data frame of mutants
+#' @param rtrn Latex (tex) or a data frame (data)
+#' @param m Results shown as median or mean
+#' @return A A12 effect size and U-test of mutation score per operator compared pair wise
 #' @importFrom magrittr %>%
 #' @export
 siginificant_mutant_operators <- function(d, rtrn = "tex", m = "median") {
@@ -1162,7 +1177,9 @@ siginificant_mutant_operators <- function(d, rtrn = "tex", m = "median") {
 
 #' FUNCTION: ordering_mutants_per_schema
 #'
-#' generates a a data frame ready with runs for mutant timing file per schema.
+#' It generates an ordered data frame of mutants (normal type) grouped by each run per schema and its mutation score.
+#' @param d Data frame of mutants
+#' @return A data frame of ordred mutants and grouped by runs and mutation score per run per schema
 #' @importFrom magrittr %>%
 #' @export
 ordering_mutants_per_schema <- function(d) {
@@ -1262,7 +1279,9 @@ ordering_mutants_per_schema <- function(d) {
 
 #' FUNCTION: ordering_mutants_per_operator
 #'
-#' generates a a data frame ready with runs for mutant timing file per operator
+#' It generates an ordered data frame of mutants (normal type) grouped by each run per operator and its mutation score.
+#' @param d Data frame of mutants
+#' @return A data frame of ordred mutants and grouped by runs and mutation score per run per operator
 #' @importFrom magrittr %>%
 #' @export
 ordering_mutants_per_operator <- function(d) {

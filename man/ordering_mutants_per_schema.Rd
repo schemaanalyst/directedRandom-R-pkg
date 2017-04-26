@@ -6,6 +6,12 @@
 \usage{
 ordering_mutants_per_schema(d)
 }
+\arguments{
+\item{d}{Data frame of mutants}
+}
+\value{
+A data frame of ordred mutants and grouped by runs and mutation score per run per schema
+}
 \description{
-generates a a data frame ready with runs for mutant timing file per schema.
+It generates an ordered data frame of mutants (normal type) grouped by each run per schema and its mutation score.
 }

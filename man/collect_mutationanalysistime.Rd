@@ -6,6 +6,9 @@
 \usage{
 collect_mutationanalysistime()
 }
+\value{
+A Data Frame of analysis
+}
 \description{
 Preform binding for all split files for mutationanalysistime.
 }

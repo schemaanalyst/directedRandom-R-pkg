@@ -6,7 +6,12 @@
 \usage{
 analyse_wilcox_rank_sum_test(d)
 }
+\arguments{
+\item{d}{A data frame of analysis}
+}
+\value{
+returns U-Test results (coverage, mutation score, test generation timing,and evaluations)
+}
 \description{
-Perform a statistical analysis of the timings for the AVM and directed random mutation analysis techniques. Right now, this method
-simply returns textual output; it would be much better if it actually returned a single data frame.
+Perform a statistical analysis of the timings for the AVM and directed random mutation analysis techniques.
 }

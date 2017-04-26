@@ -6,6 +6,10 @@
 \usage{
 plot_heatmap_mutanttiming(d)
 }
+\arguments{
+\item{d}{Data frame of analysis}
+}
 \description{
 Perform a heating plot for each case
+File saved in plots/
 }

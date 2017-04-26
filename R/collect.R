@@ -1,7 +1,7 @@
 #' FUNCTION: collect_mutationanalysistime
 #'
-
 #' Preform binding for all split files for mutationanalysistime.
+#' @return A Data Frame of analysis
 #' @importFrom magrittr %>%
 #' @export
 collect_mutationanalysistime <- function() {
@@ -12,22 +12,21 @@ collect_mutationanalysistime <- function() {
 
 #' FUNCTION: collect_mutanttiming
 #'
-
 #' Preform binding for all split files for mutatnttimng.
+#' @return A Data Frame of mutants
 #' @importFrom magrittr %>%
 #' @export
 collect_mutanttiming <- function() {
   f <- system.file("extdata", "mutants.csv", package="directedRandomR")
   d <- readr::read_csv(f)
   return(dplyr::tbl_df(d))
-
 }
-
 
 #' FUNCTION: generate_15_schmea_mutation_analysis
 #'
-
-#' gets a 15 schemas from the dataset of analysis file, or mutantionanalysistime.dat.
+#' Gets a 15 schemas from the dataset of analysis file, or mutantionanalysistime.dat.
+#' @param d A data frame of analysis
+#' @return A data frame with 15 schema randomly picked
 #' @importFrom magrittr %>%
 #' @export
 generate_15_schmea_analysis <- function(d) {
@@ -43,8 +42,9 @@ generate_15_schmea_analysis <- function(d) {
 
 #' FUNCTION: generate_15_schmea_mutanttiming
 #'
-
-#' gets a 15 schemas from the dataset of mutants file, or mutanttiming.dat.
+#' Gets a 15 schemas from the dataset of mutants file, or mutanttiming.dat.
+#' @param d A data frame of mutants
+#' @return A data frame with 15 schema randomly picked
 #' @importFrom magrittr %>%
 #' @export
 generate_15_schmea_mutants <- function(d) {

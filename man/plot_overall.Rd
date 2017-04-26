@@ -6,6 +6,10 @@
 \usage{
 plot_overall(d)
 }
+\arguments{
+\item{d}{Data frame of analysis}
+}
 \description{
-Perform a plotting for coverage, mutation score, evaluations and testgenerationtimeGraph
+Perform a plotting for coverage, mutation score, evaluations and testgenerationtime
+File saved in plots/
 }

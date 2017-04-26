@@ -6,8 +6,14 @@
 \usage{
 analyse_vargha_delaney_effect_size_thresholding(d)
 }
+\arguments{
+\item{d}{A data frame of analysis}
+}
+\value{
+returns A12 effect size results with applying transformations (testgenerationtiming only)
+}
 \description{
-Perform an effect size analysis of the timings for the AVM and DR mutation analysis techniques.
+Perform an effect size analysis of the timings for the AVM-D and DR mutation analysis techniques.
 By default, specify that the calculation should use the effectsize_accurate function for calculating the statistic.
 But, investigate the effect size with different levels of thresholding, to establish sensitivity.
 }

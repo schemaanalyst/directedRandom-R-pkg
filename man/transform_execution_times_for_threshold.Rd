@@ -2,12 +2,19 @@
 % Please edit documentation in R/transform.R
 \name{transform_execution_times_for_threshold}
 \alias{transform_execution_times_for_threshold}
-\title{FUNCTION: transform_execution_times_for_threshold
-Transform the timing values so that they do not include any below a specified number of ms.}
+\title{FUNCTION: transform_execution_times_for_threshold}
 \usage{
 transform_execution_times_for_threshold(d, t)
 }
+\arguments{
+\item{d}{Data frame of mutants}
+
+\item{t}{A threshold time (ms)}
+}
+\value{
+A data frame of a transforemd test generation timing
+}
 \description{
-FUNCTION: transform_execution_times_for_threshold
 Transform the timing values so that they do not include any below a specified number of ms.
+Include rounding down
 }

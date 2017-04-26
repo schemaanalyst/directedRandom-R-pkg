@@ -6,6 +6,13 @@
 \usage{
 plot_heatmap_mutanttiming_allinone_dbms(d)
 }
+\arguments{
+\item{d}{Data frame of analysis}
+}
+\value{
+A Plot
+}
 \description{
 Perform a heating plot for all cases with dbms
+File saved in plots/
 }

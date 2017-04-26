@@ -6,7 +6,13 @@
 \usage{
 analyse_vargha_delaney_effect_size(d)
 }
+\arguments{
+\item{d}{A data frame of analysis}
+}
+\value{
+returns A12 effect size results (coverage, mutation score, and evaluations)
+}
 \description{
-Perform an effect size analysis of the timings for the AVM and DR mutation analysis techniques.
+Perform an effect size analysis of the timings for the AVM-D and DR mutation analysis techniques.
 By default, specify that the calculation should use the effectsize_accurate function for calculating the statistic.
 }

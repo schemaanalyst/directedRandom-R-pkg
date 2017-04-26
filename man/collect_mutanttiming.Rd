@@ -6,6 +6,9 @@
 \usage{
 collect_mutanttiming()
 }
+\value{
+A Data Frame of mutants
+}
 \description{
 Preform binding for all split files for mutatnttimng.
 }
