@@ -4,7 +4,7 @@
 \alias{siginificant_mutant_operators}
 \title{FUNCTION: siginificant_mutant_operators}
 \usage{
-siginificant_mutant_operators(d)
+siginificant_mutant_operators(d, rtrn = "tex", m = "median")
 }
 \description{
 generates a latex table for mutation operators table with effect size and U test.

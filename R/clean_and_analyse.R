@@ -1,7 +1,6 @@
-library(dplyr)
+#library(dplyr)
 #' FUNCTION: preform_averaging_of_samples
 #'
-
 #' average out all schemas for each data generators and DBMS for each run
 #' @importFrom magrittr %>%
 #' @export
@@ -59,66 +58,17 @@ preform_sum_of_samples <- function(d) {
   return(mean_results)
 }
 
-#' FUNCTION: analyse_vargha_delaney_effect_size_specify
+#' FUNCTION: analyse_vargha_delaney_effect_size_testgenerationtiming
 #'
 
-#' Perform an effect size analysis of the timings for the AVM and Directed Random mutation analysis techniques.
+#' Perform an effect size analysis of the test generation timings for the AVM and Directed Random mutation analysis techniques.
 #' @importFrom magrittr %>%
 #' @export
-analyse_vargha_delaney_effect_size_specify <- function(d, e) {
+analyse_vargha_delaney_effect_size_testgenerationtiming <- function(d, e) {
   # Mutation score
-  #d$mutationscore = ((d$scorenumerator/d$scoredenominator) * 100)
   dbmss <- as.vector(d %>% dplyr::group_by(dbms)  %>% dplyr::distinct(dbms))[[1]]
-  #dgens <- as.vector(dplyr::distinct(d, datagenerator))[[1]]
 
   mean_results <- NULL
-  #for (seed in 1:30) {
-    for (db in dbmss) {
-        d_dbms <- d %>% dplyr::filter(dbms %in% c(db))
-
-        avm <- d %>% dplyr::filter(dbms %in% c(db)) %>% dplyr::filter(datagenerator %in% c("avsDefaults"))# %>% dplyr::filter(randomseed == seed)
-        diR <- d %>% dplyr::filter(dbms %in% c(db)) %>% dplyr::filter(datagenerator %in% c("directedRandom"))# %>% dplyr::filter(randomseed == seed)
-        ran <- d %>% dplyr::filter(dbms %in% c(db)) %>% dplyr::filter(datagenerator %in% c("random"))# %>% dplyr::filter(randomseed == seed)
-
-        model <- e(diR$testgenerationtime, avm$testgenerationtime)
-        results <-as.data.frame(model)
-        namevector <- c("dbms")
-        results[,namevector] <- db
-        namevector <- c("vs")
-        results[,namevector] <- "Directed Random vs AVM Test Generation Time"
-        #namevector <- c("randomseed")
-        #results[,namevector] <- seed
-        mean_results <- rbind(mean_results, results)
-
-        # model <- e(diR$testgenerationtime, ran$testgenerationtime)
-        # results <-as.data.frame(model)
-        # namevector <- c("dbms")
-        # results[,namevector] <- db
-        # namevector <- c("vs")
-        # results[,namevector] <- "Directed Random vs Random Test Generation Time"
-        # namevector <- c("randomseed")
-        # results[,namevector] <- seed
-        # mean_results <- rbind(mean_results, results)
-    }
-  #}
-
-  return(mean_results)
-}
-
-#' FUNCTION: analyse_vargha_delaney_effect_size_specify
-#'
-
-#' Perform an effect size analysis of the timings for the AVM and Directed Random mutation analysis techniques.
-#' @importFrom magrittr %>%
-#' @export
-analyse_vargha_delaney_effect_size_specify_no_time <- function(d, e) {
-  # Mutation score
-  d$mutationscore = ((d$scorenumerator/d$scoredenominator) * 100)
-  dbmss <- as.vector(d %>% dplyr::group_by(dbms)  %>% dplyr::distinct(dbms))[[1]]
-  #dgens <- as.vector(dplyr::distinct(d, datagenerator))[[1]]
-
-  mean_results <- NULL
-  #for (seed in 1:30) {
   for (db in dbmss) {
     d_dbms <- d %>% dplyr::filter(dbms %in% c(db))
 
@@ -126,47 +76,66 @@ analyse_vargha_delaney_effect_size_specify_no_time <- function(d, e) {
     diR <- d %>% dplyr::filter(dbms %in% c(db)) %>% dplyr::filter(datagenerator %in% c("directedRandom"))# %>% dplyr::filter(randomseed == seed)
     ran <- d %>% dplyr::filter(dbms %in% c(db)) %>% dplyr::filter(datagenerator %in% c("random"))# %>% dplyr::filter(randomseed == seed)
 
+    model <- e(diR$testgenerationtime, avm$testgenerationtime)
+    results <-as.data.frame(model)
+    namevector <- c("dbms")
+    results[,namevector] <- db
+    namevector <- c("vs")
+    results[,namevector] <- "Directed Random vs AVM Test Generation Time"
+
+    mean_results <- rbind(mean_results, results)
+  }
+
+  return(mean_results)
+}
+
+#' FUNCTION: analyse_vargha_delaney_effect_size_except_testgnerationtiming
+#'
+
+#' Perform an effect size analysis of the coverage, mutation score, and evaluations for the AVM and Directed Random techniques.
+#' @importFrom magrittr %>%
+#' @export
+analyse_vargha_delaney_effect_size_except_testgnerationtiming <- function(d, e) {
+  # Mutation score
+  d$mutationscore = ((d$scorenumerator/d$scoredenominator) * 100)
+  dbmss <- as.vector(d %>% dplyr::group_by(dbms)  %>% dplyr::distinct(dbms))[[1]]
+  mean_results <- NULL
+
+  for (db in dbmss) {
+    d_dbms <- d %>% dplyr::filter(dbms %in% c(db))
+
+    avm <- d %>% dplyr::filter(dbms %in% c(db)) %>% dplyr::filter(datagenerator %in% c("avsDefaults"))# %>% dplyr::filter(randomseed == seed)
+    diR <- d %>% dplyr::filter(dbms %in% c(db)) %>% dplyr::filter(datagenerator %in% c("directedRandom"))# %>% dplyr::filter(randomseed == seed)
+    #ran <- d %>% dplyr::filter(dbms %in% c(db)) %>% dplyr::filter(datagenerator %in% c("random"))# %>% dplyr::filter(randomseed == seed)
+
+    # Directed Random vs AVM Mutation Score
     model <- e(diR$mutationscore, avm$mutationscore)
     results <-as.data.frame(model)
     namevector <- c("dbms")
     results[,namevector] <- db
     namevector <- c("vs")
     results[,namevector] <- "Directed Random vs AVM Mutation Score"
-    #namevector <- c("randomseed")
-    #results[,namevector] <- seed
     mean_results <- rbind(mean_results, results)
 
+    # Directed Random vs AVM Number of Evaluations
     model <- e(diR$evaluations, avm$evaluations)
     results <-as.data.frame(model)
     namevector <- c("dbms")
     results[,namevector] <- db
     namevector <- c("vs")
     results[,namevector] <- "Directed Random vs AVM Number of Evaluations"
-    #namevector <- c("randomseed")
-    #results[,namevector] <- seed
     mean_results <- rbind(mean_results, results)
 
+    # Directed Random vs AVM Coverage
     model <- e(diR$coverage, avm$coverage)
     results <-as.data.frame(model)
     namevector <- c("dbms")
     results[,namevector] <- db
     namevector <- c("vs")
     results[,namevector] <- "Directed Random vs AVM Coverage"
-    #namevector <- c("randomseed")
-    #results[,namevector] <- seed
     mean_results <- rbind(mean_results, results)
 
-    # model <- e(diR$testgenerationtime, ran$testgenerationtime)
-    # results <-as.data.frame(model)
-    # namevector <- c("dbms")
-    # results[,namevector] <- db
-    # namevector <- c("vs")
-    # results[,namevector] <- "Directed Random vs Random Test Generation Time"
-    # namevector <- c("randomseed")
-    # results[,namevector] <- seed
-    # mean_results <- rbind(mean_results, results)
   }
-  #}
 
   return(mean_results)
 }
@@ -185,7 +154,7 @@ analyse_vargha_delaney_effect_size_thresholding <- function(d) {
   for(threshold in seq(0, 1000, by=100)) {
     dt <-transform_execution_times_for_threshold(d, threshold)
     #print(threshold)
-    a <- analyse_vargha_delaney_effect_size_specify(dt, effectsize_accurate)
+    a <- analyse_vargha_delaney_effect_size_testgenerationtiming(dt, effectsize_accurate)
     namevector <- c("threshold")
     a[,namevector] <- threshold
     tobereturned <- rbind(tobereturned, a)
@@ -203,7 +172,7 @@ analyse_vargha_delaney_effect_size_thresholding <- function(d) {
 
 analyse_vargha_delaney_effect_size <- function(d) {
   #d <- preform_averaging_of_samples(d)
-  analyse_vargha_delaney_effect_size_specify_no_time(d, effectsize_accurate)
+  analyse_vargha_delaney_effect_size_except_testgnerationtiming(d, effectsize_accurate)
 }
 
 
@@ -221,15 +190,9 @@ analyse_wilcox_rank_sum_test <- function(d) {
   #d <- preform_averaging_of_samples(d)
   #a <- d %>% dplyr::group_by(dbms)  %>% dplyr::distinct(dbms)
   dbmss <- as.vector(d %>% dplyr::group_by(dbms)  %>% dplyr::distinct(dbms))[[1]]
-  #ranseed <- as.vector(dplyr::distinct(d, randomseed))[[1]]
 
-  #dgens <- as.vector(dplyr::distinct(d, datagenerator))[[1]]
-  #print(dbmss)
   mean_results <- NULL
-  #for (seed in 1:30) {
     for (db in dbmss) {
-      #d_dbms <- d %>% dplyr::filter(dbms %in% c(db))
-      # extract the relevant data values
       avm <- d %>% dplyr::filter(dbms %in% c(db)) %>% dplyr::filter(datagenerator %in% c("avsDefaults"))# %>% dplyr::filter(randomseed == seed)
       diR <- d %>% dplyr::filter(dbms %in% c(db)) %>% dplyr::filter(datagenerator %in% c("directedRandom"))# %>% dplyr::filter(randomseed == seed)
       ran <- d %>% dplyr::filter(dbms %in% c(db)) %>% dplyr::filter(datagenerator %in% c("random"))# %>% dplyr::filter(randomseed == seed)
@@ -243,19 +206,7 @@ analyse_wilcox_rank_sum_test <- function(d) {
       results[,namevector] <- db
       namevector <- c("vs")
       results[,namevector] <- "AVM vs Directed Random Test Generation Time"
-      #namevector <- c("randomseed")
-      #results[,namevector] <- seed
       mean_results <- rbind(mean_results, results)
-
-      # results <- analyse_perform_wilcox_rank_sum_test(ran, diR)
-      # namevector <- c("dbms")
-      # results[,namevector] <- db
-      # namevector <- c("vs")
-      # results[,namevector] <- "Random vs Directed Random Test Generation Time"
-      # #namevector <- c("randomseed")
-      # #results[,namevector] <- seed
-      # mean_results <- rbind(mean_results, results)
-      #
 
       # Mutation score
       results <- analyse_perform_wilcox_rank_sum_test_mutationScore(avm, diR)
@@ -263,18 +214,7 @@ analyse_wilcox_rank_sum_test <- function(d) {
       results[,namevector] <- db
       namevector <- c("vs")
       results[,namevector] <- "AVM vs Directed Random Mutation Score"
-      #namevector <- c("randomseed")
-      #results[,namevector] <- seed
       mean_results <- rbind(mean_results, results)
-
-      # results <- analyse_perform_wilcox_rank_sum_test_mutationScore(ran, diR)
-      # namevector <- c("dbms")
-      # results[,namevector] <- db
-      # namevector <- c("vs")
-      # results[,namevector] <- "Random vs Directed Random Mutation Score"
-      # #namevector <- c("randomseed")
-      # #results[,namevector] <- seed
-      # mean_results <- rbind(mean_results, results)
 
       # Evaluations
       results <- analyse_perform_wilcox_rank_sum_test_evaluations(avm, diR)
@@ -282,18 +222,7 @@ analyse_wilcox_rank_sum_test <- function(d) {
       results[,namevector] <- db
       namevector <- c("vs")
       results[,namevector] <- "AVM vs Directed Random Number Of evaluations"
-      #namevector <- c("randomseed")
-      #results[,namevector] <- seed
       mean_results <- rbind(mean_results, results)
-
-      # results <- analyse_perform_wilcox_rank_sum_test_evaluations(ran, diR)
-      # namevector <- c("dbms")
-      # results[,namevector] <- db
-      # namevector <- c("vs")
-      # results[,namevector] <- "Random vs Directed Random Number Of evaluations"
-      # #namevector <- c("randomseed")
-      # #results[,namevector] <- seed
-      # mean_results <- rbind(mean_results, results)
 
       # Coverage
       results <- analyse_perform_wilcox_rank_sum_test_coverage(avm, diR)
@@ -301,18 +230,7 @@ analyse_wilcox_rank_sum_test <- function(d) {
       results[,namevector] <- db
       namevector <- c("vs")
       results[,namevector] <- "AVM vs Directed Random Coverage"
-      #namevector <- c("randomseed")
-      #results[,namevector] <- seed
       mean_results <- rbind(mean_results, results)
-
-      # results <- analyse_perform_wilcox_rank_sum_test_coverage(ran, diR)
-      # namevector <- c("dbms")
-      # results[,namevector] <- db
-      # namevector <- c("vs")
-      # results[,namevector] <- "Random vs Directed Random Coverage"
-      # #namevector <- c("randomseed")
-      # #results[,namevector] <- seed
-      # mean_results <- rbind(mean_results, results)
 
     }
   #}
@@ -346,8 +264,6 @@ analyse_perform_wilcox_rank_sum_test_mutationScore <- function(s,v) {
   # perform the statistical analysis and return a "tidy" version of the model
   s$mutationscore = ((s$scorenumerator/s$scoredenominator) * 100)
   v$mutationscore = ((v$scorenumerator/v$scoredenominator) * 100)
-  #a <- v %>% dplyr::summarise(mutationscore = mean(mutationscore))
-  #b <- s %>% dplyr::summarise(mutationscore = mean(mutationscore))
   model <- wilcox.test(s$mutationscore, v$mutationscore)
   tidy_model <- model %>% broom::tidy()
   return(tidy_model)

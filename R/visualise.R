@@ -1,9 +1,6 @@
-
-
 #' FUNCTION: plot_overall
 #'
-
-#' Perform a plotting for coverage, mutation score, evaluations and testgenerationtimeGraph
+#' Perform a plotting for coverage, mutation score, evaluations and testgenerationtime
 #' @export
 
 plot_overall <- function(d) {
@@ -40,7 +37,6 @@ plot_overall <- function(d) {
   # testgenerationtime Graph CSV
   testgenerationtimeGraph <- d %>% mutate(realcasestudy = as.character(gsub("parsedcasestudy.","",realcasestudy))) %>% group_by(dbms, datagenerators_f, realcasestudy)# %>% summarise(testgenerationtime = mean(testgenerationtime))
   testgenerationtimeGraphPlot <- testgenerationtimeGraph %>%  filter(datagenerators_f != "random") %>% ggplot(aes(datagenerators_f, testgenerationtime)) + geom_boxplot() + facet_grid(dbms ~ realcasestudy) + theme(axis.text.x = element_text(angle = 45, hjust = 1)) + labs(y = "Test Generation Time (Mean)")
-  #testgenerationtimeGraphPlot <- testgenerationtimeGraph %>% ggplot(aes(realcasestudy, testgenerationtime)) + geom_bar(aes(fill = dbms), stat="identity") + facet_grid(. ~ datagenerator) + theme(axis.text.x = element_text(angle = 45, hjust = 1)) + labs(y = "Test Generation Time (Mean)")
 
   png(filename = "plots/testgenerationtimeGraph.png", width = 1920, height = 1080, units = "px")
   plot(testgenerationtimeGraphPlot)
@@ -49,7 +45,6 @@ plot_overall <- function(d) {
 
 #' FUNCTION: plot_heatmap_mutanttiming
 #'
-
 #' Perform a heating plot for each case
 #' @export
 plot_heatmap_mutanttiming <- function(d) {
@@ -73,15 +68,11 @@ plot_heatmap_mutanttiming <- function(d) {
     dev.off()
 
   }
-
-  #return(heatmapGraph)
-
 }
 
 
 #' FUNCTION: plot_heatmap_mutanttiming_allinone
 #'
-
 #' Perform a heating plot for all cases
 #' @export
 plot_heatmap_mutanttiming_allinone <- function(d) {
@@ -106,7 +97,6 @@ plot_heatmap_mutanttiming_allinone <- function(d) {
 
 #' FUNCTION: plot_heatmap_mutanttiming_allinone_dbms
 #'
-
 #' Perform a heating plot for all cases with dbms
 #' @export
 plot_heatmap_mutanttiming_allinone_dbms <- function(d) {
@@ -129,245 +119,23 @@ plot_heatmap_mutanttiming_allinone_dbms <- function(d) {
   return(heatmapGraph)
 }
 
-#' FUNCTION: testtimegeneration_table_bolding
+#' FUNCTION: visual_grid_ten_schemas
 #'
-
-#' Perform a latex bolding and returning a dataframe
+#' generates a plot grid of top 10 schemas
+#' @importFrom magrittr %>%
 #' @export
-testtimegeneration_table_bolding <- function(d) {
-  library(dplyr)
-  library(reshape2)
-  library(xtable)
-  d1 <- directedRandomR::transform_execution_times_for_threshold(d, 100)
-  d <- d %>% select(dbms, casestudy, datagenerator, testgenerationtime, randomseed) %>% group_by(dbms, casestudy, datagenerator) %>% summarise(testgenerationtime = round((mean(testgenerationtime) / 1000), 2))
-  d <- dcast(d, casestudy ~ dbms + datagenerator)
-  a1 <- d[1]
-  a <- d[2:5]
-  b <- d[6:9]
-  c <- d[10:13]
-  numberOfRows <- nrow(d)
-  for (i in 1:numberOfRows) {
-    schema <- a1[i,]
-    dr <- d1 %>% filter(casestudy == schema, datagenerator == "directedRandom")
-    avm <- d1 %>% filter(casestudy == schema, datagenerator == "avs")
-    avmd <- d1 %>% filter(casestudy == schema, datagenerator == "avsDefaults")
-    rand <- d1 %>% filter(casestudy == schema, datagenerator == "random")
-    #a[i,] = ifelse(min(as.numeric(a[i,])) == as.numeric(a[i,]), paste("\\textbf{", a[i,], "}", sep = ""), as.numeric(a[i,]))
+visual_grid_ten_schemas <- function(mutationanalysistiming) {
+  mutationanalysistiming %>% dplyr::group_by(casestudy, datagenerator, dbms) %>% dplyr::filter(datagenerator != "random", casestudy != "ArtistSimilarity", casestudy != "ArtistTerm", casestudy != "BankAccount", casestudy != "BookTown", casestudy != "Cloc",casestudy != "CoffeeOrders", casestudy != "DellStore", casestudy != "Employee", casestudy != "Examination", casestudy != "FrenchTowns", casestudy != "Inventory", casestudy != "Iso3166", casestudy != "IsoFlav_R2", casestudy != "JWhoisServer", casestudy != "MozillaExtensions", casestudy != "MozillaPermissions", casestudy != "NistDML181", casestudy != "NistDML183", casestudy != "NistWeather", casestudy != "NistXTS748", casestudy != "NistXTS749", casestudy != "Person", casestudy != "StackOverflow", casestudy != "StudentResidence", casestudy != "Usda", casestudy != "WordNet") %>% ggplot(aes(datagenerator, testgenerationtime / 1000)) + geom_boxplot() + facet_wrap( ~ casestudy, scales = "free") +  labs(y = "Test Generation Time For all runs per Schema (In Sceconds)")
 
-    postgres_avm <- directedRandomR::effectsize_accurate((dr %>% filter(dbms == "Postgres"))$testgenerationtime, (avm %>% filter(dbms == "Postgres"))$testgenerationtime)$size
-    postgres_avmd <- directedRandomR::effectsize_accurate((dr %>% filter(dbms == "Postgres"))$testgenerationtime, (avmd %>% filter(dbms == "Postgres"))$testgenerationtime)$size
-    postgres_rand <- directedRandomR::effectsize_accurate((dr %>% filter(dbms == "Postgres"))$testgenerationtime, (rand %>% filter(dbms == "Postgres"))$testgenerationtime)$size
-    #postgres <- NULL
+  a <- mutationanalysistiming %>% dplyr::group_by(casestudy, datagenerator, dbms) %>% dplyr::filter(datagenerator != "random", casestudy == "iTrust") %>% ggplot(aes(datagenerator, testgenerationtime / 1000)) + geom_boxplot() + facet_grid(dbms ~ casestudy, scales = "free") +  labs(y = NULL, x = NULL) + theme(strip.text.x = element_text(angle = 90), axis.text.x = element_text(angle = 90, hjust = 1))  + scale_x_discrete(labels=c("directedRandom" = "DR", "avs" = "AVM", "avsDefaults" = "AVMD"))
+  b <- mutationanalysistiming %>% dplyr::group_by(casestudy, datagenerator, dbms) %>% dplyr::filter(datagenerator != "random", casestudy == "BrowserCookies") %>% ggplot(aes(datagenerator, testgenerationtime / 1000)) + geom_boxplot() + facet_grid(dbms ~ casestudy, scales = "free") + labs(y = NULL, x = NULL) + theme(strip.text.x = element_text(angle = 90), axis.text.x = element_text(angle = 90, hjust = 1))  + scale_x_discrete(labels=c("directedRandom" = "DR", "avs" = "AVM", "avsDefaults" = "AVMD"))
+  c <- mutationanalysistiming %>% dplyr::group_by(casestudy, datagenerator, dbms) %>% dplyr::filter(datagenerator != "random", casestudy == "CustomerOrder") %>% ggplot(aes(datagenerator, testgenerationtime / 1000)) + geom_boxplot() + facet_grid(dbms ~ casestudy, scales = "free") + labs(y = NULL, x = NULL) + theme(strip.text.x = element_text(angle = 90), axis.text.x = element_text(angle = 90, hjust = 1))  + scale_x_discrete(labels=c("directedRandom" = "DR", "avs" = "AVM", "avsDefaults" = "AVMD"))
+  d <- mutationanalysistiming %>% dplyr::group_by(casestudy, datagenerator, dbms) %>% dplyr::filter(datagenerator != "random", casestudy == "Flights") %>% ggplot(aes(datagenerator, testgenerationtime / 1000)) + geom_boxplot() + facet_grid(dbms ~ casestudy, scales = "free") + labs(y = NULL, x = NULL) + theme(strip.text.x = element_text(angle = 90), axis.text.x = element_text(angle = 90, hjust = 1))  + scale_x_discrete(labels=c("directedRandom" = "DR", "avs" = "AVM", "avsDefaults" = "AVMD"))
+  e <- mutationanalysistiming %>% dplyr::group_by(casestudy, datagenerator, dbms) %>% dplyr::filter(datagenerator != "random", casestudy == "NistDML182") %>% ggplot(aes(datagenerator, testgenerationtime / 1000)) + geom_boxplot() + facet_grid(dbms ~ casestudy, scales = "free") + labs(y = NULL, x = NULL) + theme(strip.text.x = element_text(angle = 90), axis.text.x = element_text(angle = 90, hjust = 1))  + scale_x_discrete(labels=c("directedRandom" = "DR", "avs" = "AVM", "avsDefaults" = "AVMD"))
+  f <- mutationanalysistiming %>% dplyr::group_by(casestudy, datagenerator, dbms) %>% dplyr::filter(datagenerator != "random", casestudy == "Products") %>% ggplot(aes(datagenerator, testgenerationtime / 1000)) + geom_boxplot() + facet_grid(dbms ~ casestudy, scales = "free") + labs(y = NULL, x = NULL) + theme(strip.text.x = element_text(angle = 90), axis.text.x = element_text(angle = 90, hjust = 1))  + scale_x_discrete(labels=c("directedRandom" = "DR", "avs" = "AVM", "avsDefaults" = "AVMD"))
+  g <- mutationanalysistiming %>% dplyr::group_by(casestudy, datagenerator, dbms) %>% dplyr::filter(datagenerator != "random", casestudy == "RiskIt") %>% ggplot(aes(datagenerator, testgenerationtime / 1000)) + geom_boxplot() + facet_grid(dbms ~ casestudy, scales = "free") + labs(y = NULL, x = NULL) + theme(strip.text.x = element_text(angle = 90), axis.text.x = element_text(angle = 90, hjust = 1))  + scale_x_discrete(labels=c("directedRandom" = "DR", "avs" = "AVM", "avsDefaults" = "AVMD"))
+  h <- mutationanalysistiming %>% dplyr::group_by(casestudy, datagenerator, dbms) %>% dplyr::filter(datagenerator != "random", casestudy == "UnixUsage") %>% ggplot(aes(datagenerator, testgenerationtime / 1000)) + geom_boxplot() + facet_grid(dbms ~ casestudy, scales = "free") + labs(y = NULL, x = NULL) + theme(strip.text.x = element_text(angle = 90), axis.text.x = element_text(angle = 90, hjust = 1))  + scale_x_discrete(labels=c("directedRandom" = "DR", "avs" = "AVM", "avsDefaults" = "AVMD"))
 
-    if (postgres_avm == "large") {
-      a[i,2] = paste("$^{\\ast\\ast\\ast}$",a[i,2], sep = "")
-    } else if (postgres_avm == "medium") {
-      a[i,2] = paste("$^{\\ast\\ast}$",a[i,2], sep = "")
-    } else if (postgres_avm == "small") {
-      a[i,2] = paste("$^{\\ast}$",a[i,2], sep = "")
-    } else {
+  gridExtra::grid.arrange(a, b, c, d, e, f, g, h, nrow =1, left="Test Generation Time For all runs per Schema (In Sceconds)", bottom = "Generator")
 
-    }
-
-    p <- wilcox.test((avm %>% filter(dbms == "Postgres"))$testgenerationtime, (dr %>% filter(dbms == "Postgres"))$testgenerationtime)$p.value <= 0.05
-
-    if (p) {
-      a[i,2] = paste("\\textbf{",a[i,2],"}", sep = "")
-    } else {
-      a[i,2] = paste("\\textit{",a[i,2],"}", sep = "")
-    }
-
-    p <- wilcox.test((avm %>% filter(dbms == "Postgres"))$testgenerationtime, (dr %>% filter(dbms == "Postgres"))$testgenerationtime)$p.value <= 0.05
-
-    if (p) {
-      a[i,2] = paste("\\textbf{",a[i,2],"}", sep = "")
-    } else {
-      a[i,2] = paste("\\textit{",a[i,2],"}", sep = "")
-    }
-
-    if (postgres_avmd == "large") {
-      a[i,3] = paste("$^{\\ast\\ast\\ast}$",a[i,3], sep = "")
-    } else if (postgres_avmd == "medium") {
-      a[i,3] = paste("$^{\\ast\\ast}$",a[i,3], sep = "")
-    } else if (postgres_avmd == "small") {
-      a[i,3] = paste("$^{\\ast}$",a[i,3], sep = "")
-    } else {
-
-    }
-
-    p <- wilcox.test((avmd %>% filter(dbms == "Postgres"))$testgenerationtime, (dr %>% filter(dbms == "Postgres"))$testgenerationtime)$p.value <= 0.05
-
-    if (p) {
-      a[i,3] = paste("\\textbf{",a[i,3],"}", sep = "")
-    } else {
-      a[i,3] = paste("\\textit{",a[i,3],"}", sep = "")
-    }
-
-    if (postgres_rand == "large") {
-      a[i,4] = paste("$^{\\ast\\ast\\ast}$",a[i,4], sep = "")
-    } else if (postgres_rand == "medium") {
-      a[i,4] = paste("$^{\\ast\\ast}$",a[i,4], sep = "")
-    } else if (postgres_rand == "small") {
-      a[i,4] = paste("$^{\\ast}$",a[i,4], sep = "")
-    } else {
-
-    }
-
-    p <- wilcox.test((rand %>% filter(dbms == "Postgres"))$testgenerationtime, (dr %>% filter(dbms == "Postgres"))$testgenerationtime)$p.value <= 0.05
-
-    if (p) {
-      a[i,4] = paste("\\textbf{",a[i,4],"}", sep = "")
-    } else {
-      a[i,4] = paste("\\textit{",a[i,4],"}", sep = "")
-    }
-
-    # if (postgres_avm == "large" & postgres_rand == "large" & postgres_avmd == "large") {
-    #   postgres <- "^{\\ast\\ast\\ast}"
-    # } else if (postgres_avm == "medium" & postgres_rand == "medium" & postgres_avmd == "medium") {
-    #   postgres <- "^{\\ast\\ast}"
-    # } else {
-    #   postgres <- "^{\\ast}"
-    # }
-
-    #b[i,] = ifelse(min(as.numeric(b[i,])) == as.numeric(b[i,]), paste("\\textbf{", b[i,], "}", sep = ""), as.numeric(b[i,]))
-    sqlite_avm <- directedRandomR::effectsize_accurate((dr %>% filter(dbms == "SQLite"))$testgenerationtime, (avm %>% filter(dbms == "SQLite"))$testgenerationtime)$size
-    sqlite_avmd <- directedRandomR::effectsize_accurate((dr %>% filter(dbms == "SQLite"))$testgenerationtime, (avmd %>% filter(dbms == "SQLite"))$testgenerationtime)$size
-    sqlite_rand <- directedRandomR::effectsize_accurate((dr %>% filter(dbms == "SQLite"))$testgenerationtime, (rand %>% filter(dbms == "SQLite"))$testgenerationtime)$size
-    #sqlite <- NULL
-
-    if (sqlite_avm == "large") {
-      b[i,2] = paste("$^{\\ast\\ast\\ast}$",b[i,2], sep = "")
-    } else if (sqlite_avm == "medium") {
-      b[i,2] = paste("$^{\\ast\\ast}$",b[i,2], sep = "")
-    } else if (sqlite_avm == "small") {
-      b[i,2] = paste("$^{\\ast}$",b[i,2], sep = "")
-    } else {
-
-    }
-
-    p <- wilcox.test((avm %>% filter(dbms == "SQLite"))$testgenerationtime, (dr %>% filter(dbms == "SQLite"))$testgenerationtime)$p.value <= 0.05
-
-    if (p) {
-      b[i,2] = paste("\\textbf{",b[i,2],"}", sep = "")
-    } else {
-      b[i,2] = paste("\\textit{",b[i,2],"}", sep = "")
-    }
-
-    if (sqlite_avmd == "large") {
-      b[i,3] = paste("$^{\\ast\\ast\\ast}$",b[i,3], sep = "")
-    } else if (sqlite_avmd == "medium") {
-      b[i,3] = paste("$^{\\ast\\ast}$",b[i,3], sep = "")
-    } else if (sqlite_avmd == "small") {
-      b[i,3] = paste("$^{\\ast}$",b[i,3], sep = "")
-    } else {
-
-    }
-
-    p <- wilcox.test((avmd %>% filter(dbms == "SQLite"))$testgenerationtime, (dr %>% filter(dbms == "SQLite"))$testgenerationtime)$p.value <= 0.05
-
-    if (p) {
-      b[i,3] = paste("\\textbf{",b[i,3],"}", sep = "")
-    } else {
-      b[i,3] = paste("\\textit{",b[i,3],"}", sep = "")
-    }
-
-    if (sqlite_rand == "large") {
-      b[i,4] = paste("$^{\\ast\\ast\\ast}$",b[i,4], sep = "")
-    } else if (sqlite_rand == "medium") {
-      b[i,4] = paste("$^{\\ast\\ast}$",b[i,4], sep = "")
-    } else if (sqlite_rand == "small") {
-      b[i,4] = paste("$^{\\ast}$",b[i,4], sep = "")
-    } else {
-
-    }
-
-    p <- wilcox.test((rand %>% filter(dbms == "SQLite"))$testgenerationtime, (dr %>% filter(dbms == "SQLite"))$testgenerationtime)$p.value <= 0.05
-
-    if (p) {
-      b[i,4] = paste("\\textbf{",b[i,4],"}", sep = "")
-    } else {
-      b[i,4] = paste("\\textit{",b[i,4],"}", sep = "")
-    }
-    # if (sqlite_avm == "large" & sqlite_rand == "large" & sqlite_avmd == "large") {
-    #   sqlite <- "^{\\ast\\ast\\ast}"
-    # } else if (sqlite_avm == "medium" & sqlite_rand == "medium" & sqlite_avmd == "medium") {
-    #   sqlite <- "^{\\ast\\ast}"
-    # } else {
-    #   sqlite <- "^{\\ast}"
-    # }
-
-    hsql_avm <- directedRandomR::effectsize_accurate((dr %>% filter(dbms == "HyperSQL"))$testgenerationtime, (avm %>% filter(dbms == "HyperSQL"))$testgenerationtime)$size
-    hsql_avmd <- directedRandomR::effectsize_accurate((dr %>% filter(dbms == "HyperSQL"))$testgenerationtime, (avmd %>% filter(dbms == "HyperSQL"))$testgenerationtime)$size
-    hsql_rand <- directedRandomR::effectsize_accurate((dr %>% filter(dbms == "HyperSQL"))$testgenerationtime, (rand %>% filter(dbms == "HyperSQL"))$testgenerationtime)$size
-    #c[i,] = ifelse(min(as.numeric(c[i,])) == as.numeric(c[i,]), paste("\\textbf{", c[i,], "}", sep = ""), as.numeric(c[i,]))
-
-    if (hsql_avm == "large") {
-      c[i,2] = paste("$^{\\ast\\ast\\ast}$",c[i,2], sep = "")
-    } else if (hsql_avm == "medium") {
-      c[i,2] = paste("$^{\\ast\\ast}$",c[i,2], sep = "")
-    } else if (hsql_avm == "small") {
-      c[i,2] = paste("$^{\\ast}$",c[i,2], sep = "")
-    } else {
-
-    }
-
-    p <- wilcox.test((avm %>% filter(dbms == "HyperSQL"))$testgenerationtime, (dr %>% filter(dbms == "HyperSQL"))$testgenerationtime)$p.value <= 0.05
-
-    if (p) {
-      c[i,2] = paste("\\textbf{",c[i,2],"}", sep = "")
-    } else {
-      c[i,2] = paste("\\textit{",c[i,2],"}", sep = "")
-    }
-
-    if (hsql_avmd == "large") {
-      c[i,3] = paste("$^{\\ast\\ast\\ast}$",c[i,3], sep = "")
-    } else if (hsql_avmd == "medium") {
-      c[i,3] = paste("$^{\\ast\\ast}$",c[i,3], sep = "")
-    } else if (hsql_avmd == "small") {
-      c[i,3] = paste("$^{\\ast}$",c[i,3], sep = "")
-    } else {
-
-    }
-
-
-    p <- wilcox.test((avmd %>% filter(dbms == "HyperSQL"))$testgenerationtime, (dr %>% filter(dbms == "HyperSQL"))$testgenerationtime)$p.value <= 0.05
-
-    if (p) {
-      c[i,3] = paste("\\textbf{",c[i,3],"}", sep = "")
-    } else {
-      c[i,3] = paste("\\textit{",c[i,3],"}", sep = "")
-    }
-
-    if (hsql_rand == "large") {
-      c[i,4] = paste("$^{\\ast\\ast\\ast}$",c[i,4], sep = "")
-    } else if (hsql_rand == "medium") {
-      c[i,4] = paste("$^{\\ast\\ast}$",c[i,4], sep = "")
-    } else if (hsql_rand == "small") {
-      c[i,4] = paste("$^{\\ast}$",c[i,4], sep = "")
-    } else {
-
-    }
-    p <- wilcox.test((rand %>% filter(dbms == "HyperSQL"))$testgenerationtime, (dr %>% filter(dbms == "HyperSQL"))$testgenerationtime)$p.value <= 0.05
-
-    if (p) {
-      c[i,4] = paste("\\textbf{",c[i,4],"}", sep = "")
-    } else {
-      c[i,4] = paste("\\textit{",c[i,4],"}", sep = "")
-    }
-    # hsql <- NULL
-    # if (hsql_avm == "large" & hsql_rand == "large" & hsql_avmd == "large") {
-    #   hsql <- "^{\\ast\\ast\\ast}"
-    # } else if (hsql_avm == "medium" & hsql_rand == "medium" & hsql_avmd == "medium") {
-    #   hsql <- "^{\\ast\\ast}"
-    # } else {
-    #   hsql <- "^{\\ast}"
-    # }
-
-    #a[i,] = ifelse(min(as.numeric(a[i,])) == as.numeric(a[i,]), paste("$",postgres,"$","\\textbf{", a[i,], "}", sep = ""), as.numeric(a[i,]))
-    #b[i,] = ifelse(min(as.numeric(b[i,])) == as.numeric(b[i,]), paste("$",sqlite,"$","\\textbf{", b[i,], "}", sep = ""), as.numeric(b[i,]))
-    #c[i,] = ifelse(min(as.numeric(c[i,])) == as.numeric(c[i,]), paste("$",hsql,"$","\\textbf{", c[i,], "}", sep = ""), as.numeric(c[i,]))
-  }
-  d <- cbind(a1,a,b,c)
-  #return(d)
-  return(print(xtable(d), include.rownames=FALSE ,sanitize.text.function = function(x){x}))
 }

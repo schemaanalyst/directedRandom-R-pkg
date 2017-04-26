@@ -39,13 +39,13 @@ test_that("testing_coverage_table", {
 
 
   # Testing Siginificant results to the table
-  p <- wilcox.test(dr_StudentResidence$coverage, avmr_StudentResidence$coverage)$p.value <= 0.05
+  p <- wilcox.test(dr_StudentResidence$coverage, avmr_StudentResidence$coverage, exact = FALSE)$p.value <= 0.05
   expect_false(isTRUE(p))
 
-  p <- wilcox.test(dr_StudentResidence$coverage, avmd_StudentResidence$coverage)$p.value <= 0.05
+  p <- wilcox.test(dr_StudentResidence$coverage, avmd_StudentResidence$coverage, exact = FALSE)$p.value <= 0.05
   expect_false(isTRUE(p))
 
-  p <- wilcox.test(dr_StudentResidence$coverage, rand_StudentResidence$coverage)$p.value <= 0.05
+  p <- wilcox.test(dr_StudentResidence$coverage, rand_StudentResidence$coverage, exact = FALSE)$p.value <= 0.05
   expect_true(p)
 
   # Testing Effect size

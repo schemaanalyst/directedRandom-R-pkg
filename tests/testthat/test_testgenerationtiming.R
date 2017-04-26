@@ -45,15 +45,15 @@ test_that("testing_test_generation_timing_table", {
   rand_StudentResidence <- directedRandomR::transform_execution_times_for_threshold(rand_StudentResidence, 1000)
 
   # Testing Siginificant results to the table
-  p <- wilcox.test(dr_StudentResidence$testgenerationtime, avmr_StudentResidence$testgenerationtime)$p.value <= 0.05
+  p <- wilcox.test(dr_StudentResidence$testgenerationtime, avmr_StudentResidence$testgenerationtime, exact = FALSE)$p.value <= 0.05
   # Because of ties
   expect_true(p)
 
-  p <- wilcox.test(dr_StudentResidence$testgenerationtime, avmd_StudentResidence$testgenerationtime)$p.value <= 0.05
+  p <- wilcox.test(dr_StudentResidence$testgenerationtime, avmd_StudentResidence$testgenerationtime, exact = FALSE)$p.value <= 0.05
   # Because of ties
   expect_false(isTRUE(p))
 
-  p <- wilcox.test(dr_StudentResidence$testgenerationtime, rand_StudentResidence$testgenerationtime)$p.value <= 0.05
+  p <- wilcox.test(dr_StudentResidence$testgenerationtime, rand_StudentResidence$testgenerationtime, exact = FALSE)$p.value <= 0.05
   expect_true(p)
 
   # Testing Effect size

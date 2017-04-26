@@ -50,8 +50,8 @@ analysis <- directedRandomR::collect_mutationanalysistime()
 ```shell
 x1 <- directedRandomR::siginificant_timing(analysis, rtrn = "data", m = "mean")
 x2 <- directedRandomR::siginificant_coverage(analysis, rtrn = "data", m = "mean")
-x3 <- directedRandomR::siginificant_mutation_score(mutanttiming, rtrn = "data", m = "mean")
-x4 <- directedRandomR::siginificant_mutant_operators_fixed(mutanttiming, rtrn = "data", m = "mean")
+x3 <- directedRandomR::siginificant_mutation_score(mutants, rtrn = "data", m = "mean")
+x4 <- directedRandomR::siginificant_mutant_operators(mutants, rtrn = "data", m = "mean")
 ```
 
 
