@@ -1,6 +1,10 @@
 # README #
 
-An R package for Directed Random
+This repository contains the R package for "Directed Random" research paper. This R packge was implmented using `devtools` developement framework. The content of this repository is the following:
+
+* R functions that read the data sets, preform data manipulations, statistically analyze the results, and generates tables and plots of the results.
+* Data sets of our experiment.
+* Unit tests to mitigate the risk of our results.
 
 ## Installation Instructions
 
@@ -38,9 +42,9 @@ x4 <- directedRandomR::table_generator_mutant_operators(mutants, rtrn = "data", 
 ```
 
 
-### What is this repository for? ###
+### R Scripts
 
-* R/tables_generator.R: is used to generate latex tables in Directed Random paper.
+* R/tables_generator.R: is used to generate latex tables in Directed Random paper, and it includes the use of statistical analyze.
 * R/effecsize.R  used for effect size (A12) calculations.
 * R/collect.R has two functions that collect the data from the data folder. mutanttiming and mutationanalysistiming.
 * tests directory used tests all the tables generated.
