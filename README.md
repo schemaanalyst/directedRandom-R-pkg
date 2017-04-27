@@ -31,10 +31,10 @@ analysis <- directedRandomR::collect_mutationanalysistime()
 * Generate Tables (Latex or dataframes), use the `rtrn` parameter to change `rtrn = "data"` for data frame or `rtrn = "tex"` for latex table. And the `m` parameter to print the table using `median` or `mean`:
 
 ```shell
-x1 <- directedRandomR::siginificant_timing(analysis, rtrn = "data", m = "mean")
-x2 <- directedRandomR::siginificant_coverage(analysis, rtrn = "data", m = "mean")
-x3 <- directedRandomR::siginificant_mutation_score(mutants, rtrn = "data", m = "mean")
-x4 <- directedRandomR::siginificant_mutant_operators(mutants, rtrn = "data", m = "mean")
+x1 <- directedRandomR::table_generator_timing(analysis, rtrn = "data", m = "mean")
+x2 <- directedRandomR::table_generator_coverage(analysis, rtrn = "data", m = "mean")
+x3 <- directedRandomR::table_generator_mutation_score(mutants, rtrn = "data", m = "mean")
+x4 <- directedRandomR::table_generator_mutant_operators(mutants, rtrn = "data", m = "mean")
 ```
 
 
@@ -47,10 +47,10 @@ x4 <- directedRandomR::siginificant_mutant_operators(mutants, rtrn = "data", m =
 
 Major functions used in the paper is:
 
-* R/tables_generator.R `siginificant_timing(analysis, rtrn = "data", m = "median")`
-* R/tables_generator.R `siginificant_coverage(analysis, rtrn = "data", m = "median")`
-* R/tables_generator.R `siginificant_mutation_score(mutanttiming, rtrn = "data", m = "median")`
-* R/tables_generator.R `siginificant_mutant_operators_fixed(mutanttiming, rtrn = "data", m = "median")`
+* R/tables_generator.R `table_generator_timing(analysis, rtrn = "data", m = "median")`
+* R/tables_generator.R `table_generator_coverage(analysis, rtrn = "data", m = "median")`
+* R/tables_generator.R `table_generator_mutation_score(mutanttiming, rtrn = "data", m = "median")`
+* R/tables_generator.R `table_generator_mutant_operators_fixed(mutanttiming, rtrn = "data", m = "median")`
 
 
 ## Developement

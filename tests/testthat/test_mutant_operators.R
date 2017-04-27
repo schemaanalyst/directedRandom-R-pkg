@@ -6,8 +6,8 @@ test_that("testing_operator_mutation_CRelOpE_ssqlite", {
   setwd('../../')
   library(dplyr)
   # setting to the data
-  #setwd('~/phd_exper/mutantdata/bitbucket/directedrandomr/')
-  print(getwd())
+  # setwd('~/phd_exper/mutantdata/bitbucket/directedrandomr/')
+  # print(getwd())
   # Collecting mutant operators from mutant timing
   mutant_operator <- directedRandomR::collect_mutanttiming()
   #setwd('~/phd_exper/mutantdata/bitbucket/directedrandomr/R/')
