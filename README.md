@@ -1,6 +1,6 @@
 # README #
 
-This repository contains the R package for "Directed Random" research paper. This R packge was implmented using `devtools` developement framework. The content of this repository is the following:
+This repository contains the R package for "Directed Random" research paper. This R packge was implmented using `devtools` developement framework. The content of this repository are the following:
 
 * R functions that read the data sets, preform data manipulations, statistically analyze the results, and generates tables and plots of the results.
 * Data sets of our experiment.
@@ -24,15 +24,15 @@ devtools::install_github("schemaanalyst/directedRandom-R-pkg")
 ```
 
 ## Example Run
-In your run the R environment and use the following commands:
+In your R environment use the following commands:
 
-* Collecting the data into a dataframe:
+* Collecting the data sets into dataframes:
 
 ```shell
 mutants <- directedRandomR::collect_mutanttiming()
 analysis <- directedRandomR::collect_mutationanalysistime()
 ```
-* Generate Tables (Latex or dataframes), use the `rtrn` parameter to change `rtrn = "data"` for data frame or `rtrn = "tex"` for latex table. And the `m` parameter to print the table using `median` or `mean`:
+* Generate Tables (Latex or dataframes):
 
 ```shell
 x1 <- directedRandomR::table_generator_timing(analysis, rtrn = "data", m = "mean")
@@ -40,6 +40,8 @@ x2 <- directedRandomR::table_generator_coverage(analysis, rtrn = "data", m = "me
 x3 <- directedRandomR::table_generator_mutation_score(mutants, rtrn = "data", m = "mean")
 x4 <- directedRandomR::table_generator_mutant_operators(mutants, rtrn = "data", m = "mean")
 ```
+
+NOTE: The `rtrn` parameter is used to return either a dataframe (`rtrn = "data"`) or a latex table (`rtrn = "tex"`). The `m` parameter is used to print the table as `median` or `mean` results.
 
 
 ### R Scripts
