@@ -2,7 +2,7 @@
 
 This repository contains an R package for "Directed Random" research paper. The `devtools` development framework was used to implement this R package. The content of this repository are the following:
 
-* R functions that reads data sets, preform data manipulations, statistically analyse the results, and generates tables and plots.
+* R functions that read data sets, preform data manipulations, statistically analyse the results, and generate tables and plots.
 * Data sets of our experiment.
 * Unit tests to mitigate the risk of our results.
 
@@ -32,15 +32,18 @@ You can type the next command in your R development environment if you want to w
 devtools::install_github("schemaanalyst/directedRandom-R-pkg")
 ```
 
-For an example run, in your R environment, use the following commands:
+### Example
 
-* Collecting the data sets into dataframes:
+Within your R environment, use the following commands:
+
+* Reading data sets into dataframes:
 
 ```shell
-mutants <- directedRandomR::collect_mutanttiming()
-analysis <- directedRandomR::collect_mutationanalysistime()
+mutants <- directedRandomR::read_mutants()
+analysis <- directedRandomR::read_analysis()
 ```
-* Generate Tables (Latex or dataframes):
+
+* Generating Tables (Latex or dataframes):
 
 ```shell
 x1 <- directedRandomR::table_generator_timing(analysis, rtrn = "data", m = "mean")
@@ -51,6 +54,18 @@ x4 <- directedRandomR::table_generator_mutant_operators(mutants, rtrn = "data", 
 
 NOTE: The `rtrn` parameter is used to return either a dataframe (`rtrn = "data"`) or a latex table (`rtrn = "tex"`). The `m` parameter is used to print the table as `median` or `mean` results.
 
+* For more information about our functions please type this:
+
+```shell
+library(directedRandomR)
+?read_mutants
+?read_analysis()
+?table_generator_timing()
+?table_generator_coverage()
+?table_generator_mutation_score()
+?table_generator_mutant_operators()
+```
+
 ## Set-up for development
 
 If you are interested in extending this package with new data sets and your own functions, then you can run the
@@ -60,7 +75,7 @@ following command to first clone this repository:
 git clone https://github.com/schemaanalyst/directedRandom-R-pkg.git
 ```
 
-Furthermore, in an R environment, you can run each of the following commands to build, install, load, and test our R packages using `devtools`:
+Furthermore, in your R environment, you can run each of the following commands. This will help you to build, install, load, and test our R packages using `devtools`:
 
 ```shell
 devtools::document()
@@ -71,7 +86,7 @@ devtools::test()
 
 ### Running the tests
 
-Whilst running tests the following results will appear:
+Whilst running our tests, the following results will appear:
 
 ```shell
 coverages-sample-size: ....
@@ -97,7 +112,7 @@ DONE =========================================
 
 ### Coding style tests
 
-The conventions we use are explained in the following URLs:
+The conventions we have used are explained in the following URLs:
 
 * [R Packages](http://r-pkgs.had.co.nz/) -  A site for “R packages” development. It was published with O’Reilly in April 2015.
 * [README template](https://gist.github.com/PurpleBooth/109311bb0361f32d87a2).
