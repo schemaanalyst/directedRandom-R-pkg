@@ -26,7 +26,7 @@ You would need `devtools` to install our package:
 
 ### Installing
 
-You can type the next command in your R development environment if you want to want to install this package:
+You can type the next command in your R development environment if you want to install this package:
 
 ```shell
 devtools::install_github("schemaanalyst/directedRandom-R-pkg")
