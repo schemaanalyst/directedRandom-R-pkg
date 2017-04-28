@@ -2,13 +2,13 @@
 
 This repository contains an R package for "Directed Random" research paper. The `devtools` development framework was used to implement this R package. The content of this repository are the following:
 
-* R functions that read the data sets, preform data manipulations, statistically analyse the results, and generates tables and plots of the results.
+* R functions that reads data sets, preform data manipulations, statistically analyse the results, and generates tables and plots.
 * Data sets of our experiment.
 * Unit tests to mitigate the risk of our results.
 
 ## Getting Started
 
-The following instructions will get you a copy of the project up and running on your R environment and local machine. This method is ideal if you plan to leverage, without modification, our existing functions and data sets.
+The following instructions will get you a copy of the project up and running on your local R environment. This method is ideal if you plan to leverage, without modification, our existing functions and data sets.
 
 ### Prerequisites
 
@@ -69,7 +69,7 @@ devtools::load_all()
 devtools::test()
 ```
 
-## Running the tests
+### Running the tests
 
 Whilst running tests the following results will appear:
 
